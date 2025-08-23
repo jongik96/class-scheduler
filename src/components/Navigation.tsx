@@ -50,7 +50,6 @@ export default function Navigation() {
     }
   ] : [
     { href: '/auth/login', label: t('navigation.login'), icon: LogIn },
-    { href: '/auth/register', label: t('navigation.register'), icon: UserPlus },
   ];
 
   // 테마별 스타일 클래스
