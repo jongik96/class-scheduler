@@ -13,7 +13,7 @@ export default function Navigation() {
   const pathname = usePathname();
   const { t } = useLanguage();
   const { theme } = useTheme();
-  const { user, signOut } = useAuth();
+  const { user, profileComplete, signOut } = useAuth();
 
   const navItems = [
     { href: '/', label: t('navigation.home'), icon: Home },

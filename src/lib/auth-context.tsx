@@ -3,10 +3,10 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase, type AuthUser } from './supabase'
 
-
 interface AuthContextType {
   user: AuthUser | null
   loading: boolean
+  profileComplete: boolean
   signInWithGoogle: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
-  // const { t } = useLanguage() // 현재 사용되지 않음
+  const [profileComplete, setProfileComplete] = useState(false)
 
   useEffect(() => {
     // 현재 세션 확인
@@ -28,6 +28,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: session.user.email,
           user_metadata: session.user.user_metadata
         })
+        // 프로필 완성 상태 확인
+        await checkProfileStatus(session.user.id)
       }
       setLoading(false)
     }
@@ -43,8 +45,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: session.user.email,
             user_metadata: session.user.user_metadata
           })
+          // 프로필 완성 상태 확인
+          await checkProfileStatus(session.user.id)
         } else {
           setUser(null)
+          setProfileComplete(false)
         }
         setLoading(false)
       }
@@ -52,6 +57,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  const checkProfileStatus = async (userId: string) => {
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_profile_complete')
+        .eq('id', userId)
+        .single()
+
+      setProfileComplete(profile?.is_profile_complete || false)
+    } catch (error) {
+      console.error('프로필 상태 확인 오류:', error)
+      setProfileComplete(false)
+    }
+  }
 
   const signInWithGoogle = async () => {
     try {
@@ -68,13 +88,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-
-
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut()
       if (error) throw error
       setUser(null)
+      setProfileComplete(false)
     } catch (error) {
       console.error('로그아웃 오류:', error)
       throw error
@@ -84,6 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     user,
     loading,
+    profileComplete,
     signInWithGoogle,
     signOut
   }
