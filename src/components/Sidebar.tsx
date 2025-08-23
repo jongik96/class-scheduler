@@ -103,24 +103,26 @@ export default function Sidebar({
   };
 
   return (
-    <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()}`}>
+    <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
+      isCollapsed ? 'w-16' : 'w-64'
+    } ${isCollapsed ? 'hidden sm:block' : ''}`}>
       {/* Toggle Button */}
       <button
         onClick={onToggleCollapse}
         className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 ${
           isCollapsed ? 'rotate-180' : ''
-        }`}
+        } mobile-sidebar-toggle`}
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
 
       {/* Sidebar Content */}
-      <div className={`h-full transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+      <div className="h-full">
         <div className="h-full flex flex-col">
           {/* Logo/Title */}
           <div className={`p-4 border-b border-gray-200 dark:border-gray-600 ${isCollapsed ? 'text-center' : ''}`}>
             {!isCollapsed && (
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
                 {t('common.schedule')}
               </h2>
             )}
@@ -143,9 +145,9 @@ export default function Sidebar({
                   }`}
                   title={isCollapsed ? item.description : undefined}
                 >
-                  <Icon className={`w-5 h-5 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
+                  <Icon className={`w-5 h-5 flex-shrink-0 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                   {!isCollapsed && (
-                    <span className="truncate">{item.label}</span>
+                    <span className="truncate min-w-0">{item.label}</span>
                   )}
                 </button>
               );

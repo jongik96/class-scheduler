@@ -69,6 +69,8 @@
   --success-color: #f472b6;
   --warning-color: #f9a8d4;
   --error-color: #e91e63;
+  --orange-primary: #ea580c;
+  --orange-hover: #c2410c;
 }
 
 /* 기본 스타일 */
@@ -153,4 +155,103 @@ body {
     --border-color: #475569;
     --border-secondary: #64748b;
   }
+}
+
+/* 모바일 반응형 스타일 */
+@media (max-width: 640px) {
+  /* 모바일에서 버튼 그룹의 간격 조정 */
+  .mobile-button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .mobile-button-group button,
+  .mobile-button-group a {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* 모바일에서 드롭다운 위치 조정 */
+  .mobile-dropdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 320px;
+    z-index: 1000;
+  }
+  
+  /* 모바일에서 사이드바 토글 버튼 */
+  .mobile-sidebar-toggle {
+    display: block;
+  }
+  
+  /* 모바일에서 네비게이션 아이템 숨김 */
+  .mobile-nav-hidden {
+    display: none;
+  }
+}
+
+/* 테마별 가독성 개선 */
+.theme-black .text-gray-600,
+.theme-black .text-gray-500,
+.theme-black .text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+
+.theme-black .text-gray-300 {
+  color: var(--text-tertiary) !important;
+}
+
+.theme-pink .text-gray-600,
+.theme-pink .text-gray-500,
+.theme-pink .text-gray-400 {
+  color: var(--text-secondary) !important;
+}
+
+.theme-pink .text-gray-300 {
+  color: var(--text-tertiary) !important;
+}
+
+/* 버튼 가독성 개선 */
+.theme-black button:not(.bg-blue-600):not(.bg-green-600):not(.bg-red-600) {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.theme-pink button:not(.bg-blue-600):not(.bg-green-600):not(.bg-red-600) {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* 입력 필드 가독성 개선 */
+.theme-black input,
+.theme-black select,
+.theme-black textarea {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.theme-pink input,
+.theme-pink select,
+.theme-pink textarea {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* Pink 테마에서 파란색 버튼을 주황색으로 변경 */
+.theme-pink .bg-blue-600 {
+  background-color: var(--orange-primary) !important;
+}
+
+.theme-pink .bg-blue-600:hover,
+.theme-pink .hover\:bg-blue-700:hover {
+  background-color: var(--orange-hover) !important;
 }

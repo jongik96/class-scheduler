@@ -118,6 +118,7 @@ export default function Navigation() {
             </Link>
           </div>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               {navItems.map((item) => {
@@ -134,6 +135,29 @@ export default function Navigation() {
                   >
                     <Icon className="w-4 h-4" />
                     <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <div className="flex items-center space-x-2">
+              {navItems.slice(0, 2).map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center justify-center w-10 h-10 rounded-md text-sm font-medium transition-colors ${
+                      pathname === item.href
+                        ? getActiveClasses()
+                        : `${getTextClasses()} ${getHoverClasses()}`
+                    }`}
+                    title={item.label}
+                  >
+                    <Icon className="w-5 h-5" />
                   </Link>
                 );
               })}

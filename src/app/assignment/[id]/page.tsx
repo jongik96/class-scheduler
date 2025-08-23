@@ -97,14 +97,14 @@ export default function AssignmentDetailPage() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Assignment Details */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <div className="flex justify-between items-start mb-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('assignments.detail.assignmentInfo')}</h2>
-                <div className="flex space-x-2">
+                <div className="flex gap-2 mobile-button-group">
                   <Link
                     href={`/assignment/${assignment.id}/edit`}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
@@ -196,8 +196,8 @@ export default function AssignmentDetailPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Shared Friends */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                   <Share2 className="w-5 h-5 mr-2" />
                   {t('assignments.detail.sharedFriends')}
@@ -250,7 +250,7 @@ export default function AssignmentDetailPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.quickActions')}</h3>
               <div className="space-y-3">
                 <button className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
@@ -265,7 +265,7 @@ export default function AssignmentDetailPage() {
             </div>
 
             {/* Assignment Info */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.assignmentInfoSidebar')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">

@@ -65,17 +65,17 @@ export default function HomePage() {
           <p className={`text-xl ${heroStyles.description} mb-8 max-w-3xl mx-auto`}>
             {t('home.description')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mobile-button-group">
             <Link
               href="/schedule/add"
-              className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md transition-colors ${heroStyles.primaryButton}`}
+              className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md transition-colors ${heroStyles.primaryButton} w-full sm:w-auto`}
             >
               <Plus className="w-5 h-5 mr-2" />
               {t('home.addFirstCourse')}
             </Link>
             <Link
               href="/schedule/view"
-              className={`inline-flex items-center px-6 py-3 border text-base font-medium rounded-md transition-colors ${heroStyles.secondaryButton}`}
+              className={`inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-colors ${heroStyles.secondaryButton} w-full sm:w-auto`}
             >
               <Eye className="w-5 h-5 mr-2" />
               {t('home.viewSchedule')}

@@ -97,7 +97,7 @@ export default function LanguageSwitcher() {
       </button>
 
       {isOpen && (
-        <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg border z-50 ${getDropdownClasses()}`}>
+        <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg border z-50 ${getDropdownClasses()} mobile-dropdown`}>
           <div className="py-1">
             {languages.map((lang) => (
               <button
