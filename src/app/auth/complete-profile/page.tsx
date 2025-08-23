@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, GraduationCap, Hash, UserCheck } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
 import { supabase } from '@/lib/supabase';
 
 export default function CompleteProfilePage() {
-  const { t } = useLanguage();
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -19,18 +17,7 @@ export default function CompleteProfilePage() {
     nickname: ''
   });
 
-  useEffect(() => {
-    // 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
-    if (!user) {
-      router.push('/auth/login');
-      return;
-    }
-
-    // 이미 프로필이 완성된 사용자는 메인 페이지로 리다이렉트
-    checkProfileStatus();
-  }, [user, router]);
-
-  const checkProfileStatus = async () => {
+  const checkProfileStatus = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -46,7 +33,18 @@ export default function CompleteProfilePage() {
     } catch (error) {
       console.error('프로필 상태 확인 오류:', error);
     }
-  };
+  }, [user, router]);
+
+  useEffect(() => {
+    // 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
+    if (!user) {
+      router.push('/auth/login');
+      return;
+    }
+
+    // 이미 프로필이 완성된 사용자는 메인 페이지로 리다이렉트
+    checkProfileStatus();
+  }, [user, router, checkProfileStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

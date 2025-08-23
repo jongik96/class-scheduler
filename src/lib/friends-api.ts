@@ -366,8 +366,17 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
   }
 }
 
+// 사용자 프로필 타입 정의
+interface UserProfile {
+  id: string;
+  full_name: string;
+  nickname: string;
+  major?: string;
+  grade?: string;
+}
+
 // 친구 검색
-export async function searchUsers(query: string): Promise<any[]> {
+export async function searchUsers(query: string): Promise<UserProfile[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
@@ -458,8 +467,30 @@ export async function getAssignmentShares(assignmentId: string): Promise<Assignm
   }
 }
 
+// 공유된 과제 타입 정의
+interface SharedAssignment {
+  id: string;
+  assignment_id: string;
+  shared_by: string;
+  shared_with: string;
+  permission: 'view' | 'edit' | 'admin';
+  created_at: string;
+  assignment?: {
+    id: string;
+    title: string;
+    description?: string;
+    due_date?: string;
+    status?: string;
+  };
+  shared_by_profile?: {
+    full_name: string;
+    nickname: string;
+    avatar_url?: string;
+  };
+}
+
 // 공유된 과제 목록 조회
-export async function getSharedAssignments(): Promise<any[]> {
+export async function getSharedAssignments(): Promise<SharedAssignment[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('사용자가 로그인되지 않았습니다.');

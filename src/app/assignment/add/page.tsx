@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Users, UserPlus } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
 import { getFriends, shareAssignment, Friend } from '@/lib/friends-api';
 
 export default function AddAssignmentPage() {
-  const { t } = useLanguage();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: '',

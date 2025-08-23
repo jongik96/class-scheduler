@@ -3,14 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Edit, Trash2, Clock, MapPin, Users, Share2, Eye, Edit3, Crown } from 'lucide-react';
-import { useLanguage } from '@/lib/language-context';
+import { ArrowLeft, Edit, Trash2, Clock, Users, Share2, Eye, Edit3, Crown } from 'lucide-react';
 import { getAssignmentShares, AssignmentShare } from '@/lib/friends-api';
 
 export default function AssignmentDetailPage() {
   const params = useParams();
-  const { t } = useLanguage();
-  const [assignment, setAssignment] = useState({
+  const [assignment] = useState({
     id: '1',
     title: '웹 개발 프로젝트',
     description: 'React와 Node.js를 사용한 풀스택 웹 애플리케이션 개발',

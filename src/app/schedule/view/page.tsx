@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, Copy, QrCode, Search, UserPlus, X } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
@@ -352,7 +352,6 @@ export default function ScheduleViewPage() {
 
 // 친구 관리 페이지 컴포넌트
 function FriendsManagementPage() {
-  const { t } = useLanguage();
   const { user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [receivedInvites, setReceivedInvites] = useState<FriendInvite[]>([]);

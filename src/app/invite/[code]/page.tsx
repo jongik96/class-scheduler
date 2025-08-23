@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2, Users } from 'lucide-react';
 import { acceptFriendInvite } from '@/lib/friends-api';
@@ -9,23 +9,13 @@ import { useAuth } from '@/lib/auth-context';
 export default function InvitePage() {
   const params = useParams();
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
 
   const inviteCode = params.code as string;
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      setStatus('error');
-      setMessage('친구 초대를 수락하려면 로그인이 필요합니다.');
-      return;
-    }
-
-    handleInvite();
-  }, [isAuthenticated, inviteCode]);
-
-  const handleInvite = async () => {
+  const handleInvite = useCallback(async () => {
     try {
       setStatus('loading');
       setMessage('친구 초대를 처리하고 있습니다...');
@@ -44,11 +34,21 @@ export default function InvitePage() {
         setStatus('error');
         setMessage('친구 초대 수락에 실패했습니다. 초대 코드를 확인해주세요.');
       }
-    } catch (error) {
+    } catch {
       setStatus('error');
       setMessage('오류가 발생했습니다. 다시 시도해주세요.');
     }
-  };
+  }, [inviteCode, router]);
+
+  useEffect(() => {
+    if (!user) {
+      setStatus('error');
+      setMessage('친구 초대를 수락하려면 로그인이 필요합니다.');
+      return;
+    }
+
+    handleInvite();
+  }, [user, inviteCode, handleInvite]);
 
   const getStatusIcon = () => {
     switch (status) {

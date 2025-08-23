@@ -34,7 +34,7 @@ export default function AuthCallback() {
               // 프로필이 미완성인 경우 프로필 완성 페이지로
               router.push('/auth/complete-profile')
             }
-          } catch (profileError) {
+          } catch {
             // 프로필이 없는 경우 (새 사용자) 프로필 완성 페이지로
             console.log('새 사용자입니다. 프로필 완성 페이지로 이동합니다.')
             router.push('/auth/complete-profile')
