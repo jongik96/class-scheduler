@@ -108,6 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       console.log('✅ Google 로그인 리다이렉트 성공:', data)
+      console.log('🔄 리다이렉트 URL:', data.url)
     } catch (error) {
       console.error('❌ Google 로그인 예외:', error)
       throw error

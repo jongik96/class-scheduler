@@ -11,18 +11,33 @@ export default function AuthCallback() {
     const handleAuthCallback = async () => {
       try {
         console.log('🔄 OAuth 콜백 처리 시작...')
+        console.log('📍 현재 URL:', window.location.href)
         
-        // URL에서 해시 파라미터 확인
-        const hashParams = new URLSearchParams(window.location.hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
+        // URL에서 쿼리 파라미터 확인 (Supabase OAuth 방식)
+        const urlParams = new URLSearchParams(window.location.search)
+        const accessToken = urlParams.get('access_token')
+        const refreshToken = urlParams.get('refresh_token')
+        const error = urlParams.get('error')
+        const errorDescription = urlParams.get('error_description')
         
-        console.log('🔑 토큰 확인:', { accessToken: !!accessToken, refreshToken: !!refreshToken })
+        console.log('🔍 URL 파라미터:', {
+          accessToken: !!accessToken,
+          refreshToken: !!refreshToken,
+          error,
+          errorDescription
+        })
         
+        // 에러가 있는 경우
+        if (error) {
+          console.error('❌ OAuth 에러:', error, errorDescription)
+          router.push(`/auth/login?error=${error}`)
+          return
+        }
+        
+        // 토큰이 있는 경우 세션 설정
         if (accessToken && refreshToken) {
           console.log('✅ 토큰 발견, 세션 설정 중...')
           
-          // 세션 설정
           const { data: { session }, error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
             refresh_token: refreshToken
@@ -37,11 +52,14 @@ export default function AuthCallback() {
           console.log('✅ 세션 설정 완료:', session?.user?.email)
         }
         
-        // 세션 확인
-        const { data: { session }, error } = await supabase.auth.getSession()
+        // 잠시 대기 후 세션 확인 (Supabase가 자동으로 세션을 설정할 수 있도록)
+        await new Promise(resolve => setTimeout(resolve, 1000))
         
-        if (error) {
-          console.error('❌ 세션 확인 오류:', error)
+        // 세션 확인
+        const { data: { session }, error: sessionCheckError } = await supabase.auth.getSession()
+        
+        if (sessionCheckError) {
+          console.error('❌ 세션 확인 오류:', sessionCheckError)
           router.push('/auth/login?error=auth_failed')
           return
         }
