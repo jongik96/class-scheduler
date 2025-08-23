@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
+import { AuthGuard } from '@/components/AuthGuard';
 
 export default function LoginPage() {
   const { t } = useLanguage();
@@ -35,7 +36,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <AuthGuard requireAuth={false}>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -214,6 +216,7 @@ export default function LoginPage() {
           </form>
         </div>
       </div>
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

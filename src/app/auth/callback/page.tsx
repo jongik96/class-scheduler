@@ -30,7 +30,14 @@ export default function AuthCallback() {
         // 에러가 있는 경우
         if (error) {
           console.error('❌ OAuth 에러:', error, errorDescription)
-          router.push(`/auth/login?error=${error}`)
+          
+          // 서버 에러인 경우 더 자세한 정보 제공
+          if (error === 'server_error') {
+            console.error('🔍 서버 에러 상세:', errorDescription)
+            router.push('/auth/login?error=server_error&details=' + encodeURIComponent(errorDescription || ''))
+          } else {
+            router.push(`/auth/login?error=${error}`)
+          }
           return
         }
         

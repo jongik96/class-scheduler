@@ -7,6 +7,7 @@ import { Plus, Eye, CheckSquare, Calendar, Users } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import { useAuth } from '@/lib/auth-context';
+import { AuthGuard } from '@/components/AuthGuard';
 
 export default function HomePage() {
   const { t } = useLanguage();
@@ -66,9 +67,10 @@ export default function HomePage() {
   const heroStyles = getHeroStyles();
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className={`bg-gradient-to-br ${heroStyles.gradient} py-20 transition-all duration-300`}>
+    <AuthGuard requireAuth={false}>
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className={`bg-gradient-to-br ${heroStyles.gradient} py-20 transition-all duration-300`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className={`text-4xl md:text-6xl font-bold ${heroStyles.title} mb-6`}>
             <span className="block">{t('home.title')}</span>
@@ -226,6 +228,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </AuthGuard>
   );
 }

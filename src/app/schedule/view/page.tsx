@@ -6,6 +6,7 @@ import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, 
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
+import { AuthGuard } from '@/components/AuthGuard';
 import { 
   getFriends, 
   getReceivedInvites, 
@@ -312,41 +313,43 @@ export default function ScheduleViewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="flex h-screen">
-        {/* Sidebar */}
-        <Sidebar
-          selectedMenu={selectedMenu}
-          onMenuChange={handleMenuChange}
-          isCollapsed={isSidebarCollapsed}
-          onToggleCollapse={handleSidebarToggle}
-        />
+    <AuthGuard requireAuth={true}>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <Sidebar
+            selectedMenu={selectedMenu}
+            onMenuChange={handleMenuChange}
+            isCollapsed={isSidebarCollapsed}
+            onToggleCollapse={handleSidebarToggle}
+          />
 
-        {/* Main Content */}
-        <div className="flex-1 min-w-0 overflow-auto">
-          <div className="py-4 sm:py-8 px-4 sm:px-6">
-            {/* Header */}
-            <div className="mb-6 sm:mb-8">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                {selectedMenu === 'schedule' ? t('schedule.view.title') : 
-                 selectedMenu === 'assignments' ? t('assignments.list.title') :
-                 selectedMenu === 'courses' ? t('schedule.add.title') :
-                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
-                {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
-                 selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
-                 selectedMenu === 'courses' ? t('schedule.add.subtitle') :
-                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
-              </p>
+          {/* Main Content */}
+          <div className="flex-1 min-w-0 overflow-auto">
+            <div className="py-4 sm:py-8 px-4 sm:px-6">
+              {/* Header */}
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                  {selectedMenu === 'schedule' ? t('schedule.view.title') : 
+                   selectedMenu === 'assignments' ? t('assignments.list.title') :
+                   selectedMenu === 'courses' ? t('schedule.add.title') :
+                   selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
+                  {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
+                   selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
+                   selectedMenu === 'courses' ? t('schedule.add.subtitle') :
+                   selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
+                </p>
+              </div>
+
+              {/* Content */}
+              {renderContent()}
             </div>
-
-            {/* Content */}
-            {renderContent()}
           </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 }
 
