@@ -33,6 +33,20 @@ export const ja = {
     register: '登録',
   },
 
+  // サイドバー
+  sidebar: {
+    schedule: 'スケジュール',
+    assignments: '課題',
+    courses: '授業',
+    friends: '友達',
+    settings: '設定',
+    scheduleDescription: 'スケジュール表示',
+    assignmentsDescription: '課題一覧',
+    coursesDescription: '授業一覧',
+    friendsDescription: '友達一覧',
+    settingsDescription: 'プロフィール・設定'
+  },
+
   // ホームページ
   home: {
     title: '大学生のための',

@@ -33,6 +33,20 @@ export const ko = {
     register: '회원가입',
   },
 
+  // Sidebar
+  sidebar: {
+    schedule: '시간표',
+    assignments: '과제',
+    courses: '수업',
+    friends: '친구',
+    settings: '설정',
+    scheduleDescription: '시간표 보기',
+    assignmentsDescription: '과제 목록',
+    coursesDescription: '수업 목록',
+    friendsDescription: '친구 목록',
+    settingsDescription: '개인정보 및 설정'
+  },
+
   // 메인 페이지
   home: {
     title: '대학생을 위한',

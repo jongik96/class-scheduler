@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { 
   Calendar, 
   CheckSquare, 
@@ -34,33 +33,33 @@ export default function Sidebar({
   const menuItems = [
     {
       id: 'schedule' as SidebarMenu,
-      label: '시간표',
+      label: t('sidebar.schedule'),
       icon: Calendar,
-      description: '시간표 보기'
+      description: t('sidebar.scheduleDescription')
     },
     {
       id: 'assignments' as SidebarMenu,
-      label: '과제',
+      label: t('sidebar.assignments'),
       icon: CheckSquare,
-      description: '과제 목록'
+      description: t('sidebar.assignmentsDescription')
     },
     {
       id: 'courses' as SidebarMenu,
-      label: '수업',
+      label: t('sidebar.courses'),
       icon: BookOpen,
-      description: '수업 목록'
+      description: t('sidebar.coursesDescription')
     },
     {
       id: 'friends' as SidebarMenu,
-      label: '친구',
+      label: t('sidebar.friends'),
       icon: Users,
-      description: '친구 목록'
+      description: t('sidebar.friendsDescription')
     },
     {
       id: 'settings' as SidebarMenu,
-      label: '설정',
+      label: t('sidebar.settings'),
       icon: Settings,
-      description: '개인정보 및 설정'
+      description: t('sidebar.settingsDescription')
     }
   ];
 
@@ -104,7 +103,7 @@ export default function Sidebar({
   };
 
   return (
-    <div className={`relative border-r transition-all duration-300 ${getThemeClasses()}`}>
+    <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()}`}>
       {/* Toggle Button */}
       <button
         onClick={onToggleCollapse}
@@ -116,10 +115,10 @@ export default function Sidebar({
       </button>
 
       {/* Sidebar Content */}
-      <div className={`transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-        <div className="p-4">
+      <div className={`h-full transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+        <div className="h-full flex flex-col">
           {/* Logo/Title */}
-          <div className={`mb-6 ${isCollapsed ? 'text-center' : ''}`}>
+          <div className={`p-4 border-b border-gray-200 dark:border-gray-600 ${isCollapsed ? 'text-center' : ''}`}>
             {!isCollapsed && (
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {t('common.schedule')}
@@ -128,7 +127,7 @@ export default function Sidebar({
           </div>
 
           {/* Menu Items */}
-          <nav className="space-y-2">
+          <nav className="flex-1 p-4 space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = selectedMenu === item.id;

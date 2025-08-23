@@ -307,7 +307,7 @@ export default function ScheduleViewPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="flex">
+      <div className="flex h-screen">
         {/* Sidebar */}
         <Sidebar
           selectedMenu={selectedMenu}
@@ -317,7 +317,7 @@ export default function ScheduleViewPage() {
         />
 
         {/* Main Content */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 overflow-auto">
           <div className="py-8 px-6">
             {/* Header */}
             <div className="mb-8">

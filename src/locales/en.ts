@@ -33,6 +33,20 @@ export const en = {
     register: 'Register',
   },
 
+  // Sidebar
+  sidebar: {
+    schedule: 'Schedule',
+    assignments: 'Assignments',
+    courses: 'Courses',
+    friends: 'Friends',
+    settings: 'Settings',
+    scheduleDescription: 'View Schedule',
+    assignmentsDescription: 'Assignment List',
+    coursesDescription: 'Course List',
+    friendsDescription: 'Friends List',
+    settingsDescription: 'Profile & Settings'
+  },
+
   // Home page
   home: {
     title: 'Smart Scheduler for',
