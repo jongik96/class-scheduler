@@ -1,10 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, Copy, QrCode, Search, UserPlus, X } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
+import { useAuth } from '@/lib/auth-context';
+import { 
+  getFriends, 
+  getReceivedInvites, 
+  createFriendInvite, 
+  searchUsers, 
+  removeFriend,
+  Friend,
+  FriendInvite
+} from '@/lib/friends-api';
 
 // 임시 데이터
 const sampleCourses = [
@@ -284,11 +294,7 @@ export default function ScheduleViewPage() {
 
       case 'friends':
         return (
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">친구 목록</h2>
-            <p className="text-gray-600 dark:text-gray-400">친구 관리 기능이 여기에 표시됩니다.</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">아직 구현되지 않았습니다.</p>
-          </div>
+          <FriendsManagementPage />
         );
 
       case 'settings':
@@ -338,6 +344,302 @@ export default function ScheduleViewPage() {
             {/* Content */}
             {renderContent()}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 친구 관리 페이지 컴포넌트
+function FriendsManagementPage() {
+  const { t } = useLanguage();
+  const { user } = useAuth();
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [receivedInvites, setReceivedInvites] = useState<FriendInvite[]>([]);
+  const [inviteLink, setInviteLink] = useState<string>('');
+  const [isGeneratingInvite, setIsGeneratingInvite] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Array<{
+    id: string;
+    full_name: string;
+    nickname: string;
+    major?: string;
+    grade?: string;
+  }>>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      loadFriends();
+      loadReceivedInvites();
+    }
+  }, [user]);
+
+  const loadFriends = async () => {
+    const friendsList = await getFriends();
+    setFriends(friendsList);
+  };
+
+  const loadReceivedInvites = async () => {
+    const invites = await getReceivedInvites();
+    setReceivedInvites(invites);
+  };
+
+  const handleGenerateInvite = async () => {
+    setIsGeneratingInvite(true);
+    try {
+      const result = await createFriendInvite();
+      if (result) {
+        setInviteLink(result.invite_url);
+      }
+    } catch (error) {
+      console.error('초대 링크 생성 오류:', error);
+    } finally {
+      setIsGeneratingInvite(false);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('링크 복사 오류:', error);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    try {
+      const results = await searchUsers(searchQuery);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('검색 오류:', error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleRemoveFriend = async (friendId: string) => {
+    if (confirm('정말로 이 친구를 삭제하시겠습니까?')) {
+      const success = await removeFriend(friendId);
+      if (success) {
+        await loadFriends();
+      }
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">친구 관리</h2>
+        <div className="flex space-x-3">
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            <Search className="w-4 h-4 mr-2" />
+            친구 찾기
+          </button>
+          <button
+            onClick={handleGenerateInvite}
+            disabled={isGeneratingInvite}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            <Users className="w-4 h-4 mr-2" />
+            {isGeneratingInvite ? '생성 중...' : '친구 초대하기'}
+          </button>
+        </div>
+      </div>
+
+      {/* 친구 검색 */}
+      {showSearch && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">친구 찾기</h3>
+          <div className="flex space-x-3 mb-4">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="이름, 닉네임, 전공으로 검색"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            />
+            <button
+              onClick={handleSearch}
+              disabled={isSearching}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm transition-colors disabled:opacity-50"
+            >
+              {isSearching ? '검색 중...' : '검색'}
+            </button>
+          </div>
+          
+          {searchResults.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="font-medium text-gray-900 dark:text-white">검색 결과</h4>
+              {searchResults.map((user) => (
+                <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">{user.nickname}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.full_name} • {user.major}</p>
+                  </div>
+                  <button className="text-blue-600 hover:text-blue-500 text-sm font-medium">
+                    초대하기
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* 친구 초대 섹션 */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">친구 초대하기</h3>
+        <div className="grid md:grid-cols-2 gap-6">
+          {/* 링크로 초대하기 */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-white">링크로 초대하기</h4>
+            {inviteLink ? (
+              <div className="space-y-3">
+                <div className="flex space-x-2">
+                  <input
+                    type="text"
+                    value={inviteLink}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+                  />
+                  <button
+                    onClick={handleCopyLink}
+                    className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                      copied 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-green-600 hover:bg-green-700 text-white'
+                    }`}
+                  >
+                    {copied ? '복사됨!' : '복사'}
+                  </button>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  이 링크를 친구에게 보내서 초대하세요
+                </p>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400 mb-2">아직 초대 링크가 생성되지 않았습니다</p>
+                <button
+                  onClick={handleGenerateInvite}
+                  className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+                >
+                  초대 링크 생성하기
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* QR코드로 초대하기 */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-gray-900 dark:text-white">QR코드로 초대하기</h4>
+            <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+              <QrCode className="w-16 h-16 text-gray-400" />
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              친구가 QR코드를 스캔하면 자동으로 추가됩니다
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">
+              (추후 구현 예정)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 친구 목록 */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">친구 목록 ({friends.length})</h3>
+        </div>
+        <div className="p-6">
+          {friends.length === 0 ? (
+            <div className="text-center py-8">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500 dark:text-gray-400 mb-2">아직 친구가 없습니다</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500">
+                친구 초대하기 버튼을 눌러서 친구를 추가해보세요
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {friends.map((friend) => (
+                <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {friend.friend_profile?.nickname || '알 수 없음'}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {friend.friend_profile?.full_name} • {friend.friend_profile?.major} • {friend.friend_profile?.grade}학년
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveFriend(friend.friend_id)}
+                    className="text-red-600 hover:text-red-500 text-sm font-medium"
+                  >
+                    삭제
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 받은 초대 */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">받은 초대 ({receivedInvites.length})</h3>
+        </div>
+        <div className="p-6">
+          {receivedInvites.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500 dark:text-gray-400">받은 초대가 없습니다</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {receivedInvites.map((invite) => (
+                <div key={invite.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                      <UserPlus className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {invite.inviter_profile?.nickname || '알 수 없음'}님이 친구 초대
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {invite.inviter_profile?.full_name} • {new Date(invite.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition-colors">
+                      수락
+                    </button>
+                    <button className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition-colors">
+                      거절
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
