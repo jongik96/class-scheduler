@@ -21,8 +21,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // 현재 세션 확인
     const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
+      console.log('🔍 현재 세션 확인 중...')
+      const { data: { session }, error } = await supabase.auth.getSession()
+      
+      if (error) {
+        console.error('❌ 세션 확인 오류:', error)
+      }
+      
+      console.log('📋 세션 데이터:', session)
+      
       if (session?.user) {
+        console.log('✅ 사용자 세션 발견:', session.user)
         setUser({
           id: session.user.id,
           email: session.user.email,
@@ -30,6 +39,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         })
         // 프로필 완성 상태 확인
         await checkProfileStatus(session.user.id)
+      } else {
+        console.log('❌ 사용자 세션 없음')
       }
       setLoading(false)
     }
@@ -39,7 +50,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // 인증 상태 변경 감지
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('🔄 인증 상태 변경:', event, session?.user?.email)
+        
         if (session?.user) {
+          console.log('✅ 로그인 상태 감지:', session.user)
           setUser({
             id: session.user.id,
             email: session.user.email,
@@ -48,6 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // 프로필 완성 상태 확인
           await checkProfileStatus(session.user.id)
         } else {
+          console.log('❌ 로그아웃 상태 감지')
           setUser(null)
           setProfileComplete(false)
         }
@@ -75,15 +90,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log('🚀 Google 로그인 시작...')
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          }
         }
       })
-      if (error) throw error
+      
+      if (error) {
+        console.error('❌ Google 로그인 오류:', error)
+        throw error
+      }
+      
+      console.log('✅ Google 로그인 리다이렉트 성공:', data)
     } catch (error) {
-      console.error('Google 로그인 오류:', error)
+      console.error('❌ Google 로그인 예외:', error)
       throw error
     }
   }
