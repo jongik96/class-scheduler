@@ -1,0 +1,179 @@
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Calendar, Plus, Eye, BookOpen, CheckSquare, Home, LogIn, UserPlus } from 'lucide-react';
+import ThemeSwitcher from './ThemeSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '@/lib/language-context';
+import { useTheme } from '@/lib/theme-context';
+import { useAuth } from '@/lib/auth-context';
+
+export default function Navigation() {
+  const pathname = usePathname();
+  const { t } = useLanguage();
+  const { theme } = useTheme();
+  const { user, signOut } = useAuth();
+
+  const navItems = [
+    { href: '/', label: t('navigation.home'), icon: Home },
+    { href: '/schedule/view', label: t('navigation.scheduleView'), icon: Eye },
+    { href: '/schedule/add', label: t('navigation.addCourse'), icon: Plus },
+    { href: '/assignment/list', label: t('navigation.assignmentList'), icon: CheckSquare },
+  ];
+
+  type AuthItem = {
+    href?: string;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+    onClick?: () => void | Promise<void>;
+  };
+
+  const authItems: AuthItem[] = user ? [
+    { 
+      href: '#', 
+      label: user.user_metadata?.name || user.email || '사용자', 
+      icon: UserPlus,
+      onClick: () => {} // 사용자 프로필 드롭다운을 위한 플레이스홀더
+    },
+    { 
+      href: '#', 
+      label: '로그아웃', 
+      icon: LogIn,
+      onClick: async () => {
+        try {
+          await signOut();
+        } catch (error) {
+          console.error('로그아웃 오류:', error);
+        }
+      }
+    }
+  ] : [
+    { href: '/auth/login', label: t('navigation.login'), icon: LogIn },
+    { href: '/auth/register', label: t('navigation.register'), icon: UserPlus },
+  ];
+
+  // 테마별 스타일 클래스
+  const getThemeClasses = () => {
+    switch (theme) {
+      case 'white':
+        return 'bg-white border-gray-200 text-gray-900';
+      case 'black':
+        return 'bg-gray-800 border-gray-600 text-white';
+      case 'pink':
+        return 'bg-pink-50 border-pink-200 text-pink-900';
+      default:
+        return 'bg-white border-gray-200 text-gray-900';
+    }
+  };
+
+  const getHoverClasses = () => {
+    switch (theme) {
+      case 'white':
+        return 'hover:bg-gray-100 hover:text-gray-900';
+      case 'black':
+        return 'hover:bg-gray-700 hover:text-white';
+      case 'pink':
+        return 'hover:bg-pink-100 hover:text-pink-900';
+      default:
+        return 'hover:bg-gray-100 hover:text-gray-900';
+    }
+  };
+
+  const getActiveClasses = () => {
+    switch (theme) {
+      case 'white':
+        return 'bg-blue-100 text-blue-700';
+      case 'black':
+        return 'bg-gray-600 text-white';
+      case 'pink':
+        return 'bg-pink-200 text-pink-800';
+      default:
+        return 'bg-blue-100 text-blue-700';
+    }
+  };
+
+  const getTextClasses = () => {
+    switch (theme) {
+      case 'white':
+        return 'text-gray-600';
+      case 'black':
+        return 'text-gray-300';
+      case 'pink':
+        return 'text-pink-700';
+      default:
+        return 'text-gray-600';
+    }
+  };
+
+  return (
+    <nav className={`border-b transition-all duration-300 ${getThemeClasses()}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center space-x-2">
+              <Calendar className="w-8 h-8 text-blue-600" />
+              <span className="text-xl font-bold">
+                {t('common.schedule')}
+              </span>
+            </Link>
+          </div>
+
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      pathname === item.href
+                        ? getActiveClasses()
+                        : `${getTextClasses()} ${getHoverClasses()}`
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <LanguageSwitcher />
+            <ThemeSwitcher />
+            <div className="flex items-center space-x-2">
+              {authItems.map((item) => {
+                const Icon = item.icon;
+                if (item.onClick) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={item.onClick}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${getHoverClasses()}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                }
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href || '#'}
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${getHoverClasses()}`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
