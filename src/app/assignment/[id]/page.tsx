@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowLeft, Edit, Trash2, Clock, Users, Share2, Eye, Edit3, Crown } from 'lucide-react';
+import { useLanguage } from '@/lib/language-context';
 import { getAssignmentShares, AssignmentShare } from '@/lib/friends-api';
 
 export default function AssignmentDetailPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const [assignment] = useState({
     id: '1',
@@ -68,10 +70,10 @@ export default function AssignmentDetailPage() {
 
   const getPermissionText = (permission: string) => {
     switch (permission) {
-      case 'admin': return '관리자';
-      case 'edit': return '편집';
-      case 'view': return '보기';
-      default: return '보기';
+      case 'admin': return t('assignments.detail.admin');
+      case 'edit': return t('assignments.detail.editPermission');
+      case 'view': return t('assignments.detail.viewPermission');
+      default: return t('assignments.detail.viewPermission');
     }
   };
 
@@ -85,13 +87,13 @@ export default function AssignmentDetailPage() {
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            과제 목록으로 돌아가기
+            {t('assignments.detail.backToList')}
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {assignment.title}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            과제 상세 정보 및 공유 현황
+            {t('assignments.detail.subtitle')}
           </p>
         </div>
 
@@ -101,18 +103,18 @@ export default function AssignmentDetailPage() {
             {/* Assignment Details */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">과제 정보</h2>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{t('assignments.detail.assignmentInfo')}</h2>
                 <div className="flex space-x-2">
                   <Link
                     href={`/assignment/${assignment.id}/edit`}
                     className="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                   >
                     <Edit className="w-4 h-4 mr-2" />
-                    수정
+                    {t('assignments.detail.edit')}
                   </Link>
                   <button className="inline-flex items-center px-3 py-2 border border-red-300 dark:border-red-600 text-sm font-medium rounded-md text-red-700 dark:text-red-300 bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                     <Trash2 className="w-4 h-4 mr-2" />
-                    삭제
+                    {t('assignments.detail.delete')}
                   </button>
                 </div>
               </div>
@@ -120,14 +122,14 @@ export default function AssignmentDetailPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    과제 제목
+                    {t('assignments.detail.assignmentTitle')}
                   </label>
                   <p className="text-lg text-gray-900 dark:text-white">{assignment.title}</p>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    과제 설명
+                    {t('assignments.detail.assignmentDescription')}
                   </label>
                   <p className="text-gray-900 dark:text-white">{assignment.description}</p>
                 </div>
@@ -135,13 +137,13 @@ export default function AssignmentDetailPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      과목
+                      {t('assignments.detail.course')}
                     </label>
                     <p className="text-gray-900 dark:text-white">{assignment.course}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      마감일
+                      {t('assignments.detail.dueDate')}
                     </label>
                     <div className="flex items-center text-gray-900 dark:text-white">
                       <Clock className="w-4 h-4 mr-2" />
@@ -153,18 +155,18 @@ export default function AssignmentDetailPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      우선순위
+                      {t('assignments.detail.priority')}
                     </label>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getPriorityColor(assignment.priority)}`}>
-                      {assignment.priority === 'high' ? '높음' : assignment.priority === 'medium' ? '보통' : '낮음'}
+                      {t(`priority.${assignment.priority}`)}
                     </span>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                      상태
+                      {t('assignments.detail.status')}
                     </label>
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(assignment.status)}`}>
-                      {assignment.status === 'completed' ? '완료' : assignment.status === 'in_progress' ? '진행중' : '대기중'}
+                      {t(`assignments.detail.status.${assignment.status}`)}
                     </span>
                   </div>
                 </div>
@@ -173,11 +175,11 @@ export default function AssignmentDetailPage() {
 
             {/* Progress Tracking */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">진행 상황</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.progress')}</h3>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                    <span>전체 진행률</span>
+                    <span>{t('assignments.detail.progressPercent')}</span>
                     <span>0%</span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -185,7 +187,7 @@ export default function AssignmentDetailPage() {
                   </div>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  아직 진행 상황이 기록되지 않았습니다.
+                  {t('assignments.detail.noProgress')}
                 </p>
               </div>
             </div>
@@ -198,24 +200,24 @@ export default function AssignmentDetailPage() {
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                   <Share2 className="w-5 h-5 mr-2" />
-                  공유된 친구
+                  {t('assignments.detail.sharedFriends')}
                 </h3>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {sharedFriends.length}명
+                  {t('assignments.detail.sharedFriendsCount', { count: sharedFriends.length })}
                 </span>
               </div>
 
               {isLoadingShares ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">로딩 중...</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('assignments.detail.loading')}</p>
                 </div>
               ) : sharedFriends.length === 0 ? (
                 <div className="text-center py-8">
                   <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 dark:text-gray-400 mb-2">공유된 친구가 없습니다</p>
+                  <p className="text-gray-500 dark:text-gray-400 mb-2">{t('assignments.detail.noSharedFriends')}</p>
                   <p className="text-sm text-gray-400 dark:text-gray-500">
-                    과제를 친구와 공유해보세요
+                    {t('assignments.detail.shareWithFriends')}
                   </p>
                 </div>
               ) : (
@@ -228,7 +230,7 @@ export default function AssignmentDetailPage() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {share.shared_with_profile?.nickname || '알 수 없음'}
+                            {share.shared_with_profile?.nickname || t('common.unknown')}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
                             {share.shared_with_profile?.full_name}
@@ -249,29 +251,29 @@ export default function AssignmentDetailPage() {
 
             {/* Quick Actions */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">빠른 작업</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.quickActions')}</h3>
               <div className="space-y-3">
                 <button className="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors">
                   <Share2 className="w-4 h-4 mr-2" />
-                  친구와 공유하기
+                  {t('assignments.detail.shareAssignment')}
                 </button>
                 <button className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                   <Clock className="w-4 h-4 mr-2" />
-                  진행 상황 업데이트
+                  {t('assignments.detail.updateProgress')}
                 </button>
               </div>
             </div>
 
             {/* Assignment Info */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">과제 정보</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.assignmentInfoSidebar')}</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">생성일</span>
+                  <span className="text-gray-500 dark:text-gray-400">{t('assignments.detail.createdDate')}</span>
                   <span className="text-gray-900 dark:text-white">{assignment.createdAt}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">과제 ID</span>
+                  <span className="text-gray-500 dark:text-gray-400">{t('assignments.detail.assignmentId')}</span>
                   <span className="text-gray-900 dark:text-white font-mono">{assignment.id}</span>
                 </div>
               </div>

@@ -21,6 +21,7 @@ export const ko = {
     theme: '테마',
     actions: '작업',
     and: '및',
+    unknown: '알 수 없음',
   },
 
   // 네비게이션
@@ -78,8 +79,17 @@ export const ko = {
       title: '빠른 시작',
       subtitle: '지금 바로 시작해보세요',
       addCourse: '수업 추가하기',
+      addCourseDesc: '새로운 수업을 시간표에 추가하고 관리하세요',
       viewSchedule: '시간표 보기',
-      checkAssignments: '과제 확인'
+      viewScheduleDesc: '현재 시간표를 확인하고 수정하세요',
+      checkAssignments: '과제 확인',
+      checkAssignmentsDesc: '과제 현황을 확인하고 관리하세요'
+    },
+    footer: {
+      description: '대학생을 위한 스마트한 시간표 및 과제 관리 시스템',
+      copyright: '© 2024 Smart Scheduler',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service'
     }
   },
 
@@ -95,6 +105,8 @@ export const ko = {
       loginButton: '로그인',
       or: '또는',
       googleLogin: 'Google로 로그인',
+      googleLoginError: 'Google 로그인에 실패했습니다. 다시 시도해주세요.',
+      loggingIn: '로그인 중...',
       emailPlaceholder: '이메일을 입력하세요',
       passwordPlaceholder: '비밀번호를 입력하세요'
     },
@@ -182,6 +194,62 @@ export const ko = {
       total: '전체 과제',
       inProgress: '진행중',
       overdue: '기한 지남'
+    },
+    add: {
+      title: '새 과제 추가',
+      subtitle: '새로운 과제를 추가하세요',
+      backToList: '과제 목록으로 돌아가기',
+      assignmentTitle: '과제 제목',
+      assignmentTitlePlaceholder: '과제 제목을 입력하세요',
+      description: '설명',
+      descriptionPlaceholder: '과제에 대한 설명을 입력하세요',
+      course: '과목',
+      coursePlaceholder: '과목을 선택하세요',
+      dueDate: '마감일',
+      priority: '우선순위',
+      status: '상태',
+      shareWithFriends: '친구와 공유',
+      selectFriends: '공유할 친구를 선택하세요',
+      noFriends: '등록된 친구가 없습니다',
+      addFirstFriend: '친구를 먼저 추가해보세요',
+      loadingFriends: '친구 목록 로딩 중...',
+      creating: '과제 생성 중...',
+      create: '과제 생성',
+      sharingWithFriends: '{count}명의 친구와 과제를 공유합니다'
+    },
+    detail: {
+      backToList: '과제 목록으로 돌아가기',
+      subtitle: '과제 상세 정보 및 공유 현황',
+      assignmentInfo: '과제 정보',
+      assignmentTitle: '과제 제목',
+      assignmentDescription: '과제 설명',
+      course: '과목',
+      dueDate: '마감일',
+      priority: '우선순위',
+      status: {
+        completed: '완료',
+        in_progress: '진행중',
+        pending: '대기중'
+      },
+      progress: '진행 상황',
+      progressPercent: '전체 진행률',
+      noProgress: '아직 진행 상황이 기록되지 않았습니다.',
+      sharedFriends: '공유된 친구',
+      sharedFriendsCount: '{count}명',
+      noSharedFriends: '공유된 친구가 없습니다',
+      shareWithFriends: '과제를 친구와 공유해보세요',
+      quickActions: '빠른 작업',
+      shareAssignment: '친구와 공유하기',
+      updateProgress: '진행 상황 업데이트',
+      assignmentInfoSidebar: '과제 정보',
+      createdDate: '생성일',
+      assignmentId: '과제 ID',
+      edit: '수정',
+      delete: '삭제',
+      admin: '관리자',
+      editPermission: '편집',
+      viewPermission: '보기',
+      loading: '로딩 중...'
     }
   },
 
@@ -211,5 +279,99 @@ export const ko = {
     today: '오늘 마감',
     tomorrow: '내일 마감',
     daysLeft: '{days}일 남음'
+  },
+
+  // 친구 관리
+  friends: {
+    title: '친구 관리',
+    inviteFriends: '친구 초대하기',
+    generateInviteLink: '초대 링크 생성',
+    inviteLink: '초대 링크',
+    copyLink: '링크 복사',
+    linkCopied: '링크가 복사되었습니다!',
+    qrCode: 'QR 코드',
+    comingSoon: '곧 출시 예정',
+    findFriends: '친구 찾기',
+    searchPlaceholder: '이름, 닉네임, 전공으로 검색...',
+    search: '검색',
+    searching: '검색 중...',
+    noSearchResults: '검색 결과가 없습니다',
+    searchResults: '검색 결과',
+    invite: '초대하기',
+    friendsList: '친구 목록',
+    noFriends: '친구가 없습니다',
+    addFirstFriend: '첫 친구를 추가해보세요',
+    loading: '로딩 중...',
+    removeFriend: '친구 삭제',
+    confirmRemove: '정말로 이 친구를 삭제하시겠습니까?',
+    receivedInvites: '받은 초대',
+    noInvites: '받은 초대가 없습니다',
+    accept: '수락',
+    reject: '거절',
+    from: '보낸이',
+    generating: '생성 중...'
+  },
+
+  // 친구 초대 페이지
+  invite: {
+    title: '친구 초대',
+    processing: '처리 중...',
+    success: '초대 수락 완료!',
+    error: '오류 발생',
+    successMessage: '친구 초대를 성공적으로 수락했습니다!',
+    errorMessage: '친구 초대 수락에 실패했습니다. 초대 코드를 확인해주세요.',
+    loginRequired: '친구 초대를 수락하려면 로그인이 필요합니다.',
+    generalError: '오류가 발생했습니다. 다시 시도해주세요.',
+    loginButton: '로그인하기',
+    viewFriends: '친구 목록 보기',
+    inviteCode: '초대 코드'
+  },
+
+  // 프로필 완성
+  profile: {
+    complete: {
+      title: '프로필 완성하기',
+      subtitle: '학생 정보를 입력하여 프로필을 완성해주세요',
+      studentInfo: '학생 정보',
+      studentId: '학번',
+      studentIdPlaceholder: '학번을 입력하세요',
+      major: '전공',
+      majorPlaceholder: '전공을 입력하세요',
+      grade: '학년',
+      nickname: '닉네임',
+      nicknamePlaceholder: '닉네임을 입력하세요',
+      grade1: '1학년',
+      grade2: '2학년',
+      grade3: '3학년',
+      grade4: '4학년',
+      grade5: '5학년',
+      grade6: '6학년',
+      completeButton: '프로필 완성하기'
+    }
+  },
+
+  // 사이드바 콘텐츠
+  sidebarContent: {
+    assignments: {
+      title: '과제 목록',
+      description: '과제 관리 기능이 여기에 표시됩니다.',
+      goToList: '과제 목록 페이지로 이동'
+    },
+    courses: {
+      title: '수업 목록',
+      description: '수업 관리 기능이 여기에 표시됩니다.',
+      goToList: '수업 목록 페이지로 이동'
+    },
+    settings: {
+      title: '설정',
+      description: '개인정보 및 설정 기능이 여기에 표시됩니다.',
+      goToSettings: '설정 페이지로 이동'
+    }
+  },
+
+  // 친구 초대 메시지
+  friendInvite: {
+    sentInvite: '님이 친구 초대',
+    grade: '학년'
   }
 };

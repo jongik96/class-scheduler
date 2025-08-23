@@ -4,9 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, GraduationCap, Hash, UserCheck } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { supabase } from '@/lib/supabase';
 
 export default function CompleteProfilePage() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,18 +33,18 @@ export default function CompleteProfilePage() {
         router.push('/');
       }
     } catch (error) {
-      console.error('프로필 상태 확인 오류:', error);
+      console.error('Profile status check error:', error);
     }
   }, [user, router]);
 
   useEffect(() => {
-    // 로그인하지 않은 사용자는 로그인 페이지로 리다이렉트
+    // Redirect unauthenticated users to login page
     if (!user) {
       router.push('/auth/login');
       return;
     }
 
-    // 이미 프로필이 완성된 사용자는 메인 페이지로 리다이렉트
+    // Redirect users with completed profiles to main page
     checkProfileStatus();
   }, [user, router, checkProfileStatus]);
 
@@ -52,7 +54,7 @@ export default function CompleteProfilePage() {
 
     setIsLoading(true);
     try {
-      // 프로필 정보 저장
+      // Save profile information
       const { error } = await supabase
         .from('profiles')
         .upsert({
@@ -69,11 +71,11 @@ export default function CompleteProfilePage() {
 
       if (error) throw error;
 
-      // 메인 페이지로 리다이렉트
-      router.push('/');
-    } catch (error) {
-      console.error('프로필 저장 오류:', error);
-      alert('프로필 저장에 실패했습니다. 다시 시도해주세요.');
+              // Redirect to main page
+        router.push('/');
+      } catch (error) {
+        console.error('Profile save error:', error);
+        alert('Failed to save profile. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -95,10 +97,10 @@ export default function CompleteProfilePage() {
             <UserCheck className="h-6 w-6 text-blue-600 dark:text-blue-400" />
           </div>
           <h2 className="mt-6 text-3xl font-bold text-gray-900 dark:text-white">
-            프로필 완성하기
+            {t('profile.complete.title')}
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            추가 정보를 입력하여 프로필을 완성해주세요
+            {t('profile.complete.subtitle')}
           </p>
         </div>
       </div>
@@ -109,7 +111,7 @@ export default function CompleteProfilePage() {
             {/* Student ID */}
             <div>
               <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                학번
+                {t('profile.complete.studentId')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -122,7 +124,7 @@ export default function CompleteProfilePage() {
                   required
                   value={formData.studentId}
                   onChange={(e) => handleInputChange('studentId', e.target.value)}
-                  placeholder="예: 20240001"
+                  placeholder={t('profile.complete.studentIdPlaceholder')}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                 />
               </div>
@@ -131,7 +133,7 @@ export default function CompleteProfilePage() {
             {/* Major */}
             <div>
               <label htmlFor="major" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                전공/학과
+                {t('profile.complete.major')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -144,7 +146,7 @@ export default function CompleteProfilePage() {
                   required
                   value={formData.major}
                   onChange={(e) => handleInputChange('major', e.target.value)}
-                  placeholder="예: 컴퓨터공학과"
+                  placeholder={t('profile.complete.majorPlaceholder')}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                 />
               </div>
@@ -153,7 +155,7 @@ export default function CompleteProfilePage() {
             {/* Grade */}
             <div>
               <label htmlFor="grade" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                학년
+                {t('profile.complete.grade')}
               </label>
               <select
                 id="grade"
@@ -163,19 +165,19 @@ export default function CompleteProfilePage() {
                 onChange={(e) => handleInputChange('grade', parseInt(e.target.value))}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
               >
-                <option value={1}>1학년</option>
-                <option value={2}>2학년</option>
-                <option value={3}>3학년</option>
-                <option value={4}>4학년</option>
-                <option value={5}>5학년</option>
-                <option value={6}>6학년</option>
+                <option value={1}>{t('profile.complete.grade1')}</option>
+                <option value={2}>{t('profile.complete.grade2')}</option>
+                <option value={3}>{t('profile.complete.grade3')}</option>
+                <option value={4}>{t('profile.complete.grade4')}</option>
+                <option value={5}>{t('profile.complete.grade5')}</option>
+                <option value={6}>{t('profile.complete.grade6')}</option>
               </select>
             </div>
 
             {/* Nickname */}
             <div>
               <label htmlFor="nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                닉네임
+                {t('profile.complete.nickname')}
               </label>
               <div className="mt-1 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -188,7 +190,7 @@ export default function CompleteProfilePage() {
                   required
                   value={formData.nickname}
                   onChange={(e) => handleInputChange('nickname', e.target.value)}
-                  placeholder="예: 코딩마스터"
+                  placeholder={t('profile.complete.nicknamePlaceholder')}
                   className="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white sm:text-sm"
                 />
               </div>
@@ -204,7 +206,7 @@ export default function CompleteProfilePage() {
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 ) : (
-                  '프로필 완성하기'
+                  t('profile.complete.completeButton')
                 )}
               </button>
             </div>

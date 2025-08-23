@@ -21,6 +21,7 @@ export const ja = {
     theme: 'テーマ',
     actions: 'アクション',
     and: 'および',
+    unknown: '不明',
   },
 
   // ナビゲーション
@@ -78,8 +79,17 @@ export const ja = {
       title: 'クイックスタート',
       subtitle: '今すぐ始めましょう',
       addCourse: '授業追加',
+      addCourseDesc: '新しいコースをスケジュールに追加して管理しましょう',
       viewSchedule: 'スケジュール表示',
-      checkAssignments: '課題確認'
+      viewScheduleDesc: '現在のスケジュールを確認して修正しましょう',
+      checkAssignments: '課題確認',
+      checkAssignmentsDesc: '課題の状況を確認して管理しましょう'
+    },
+    footer: {
+      description: '大学生のためのスマートなスケジュールと課題管理システム',
+      copyright: '© 2024 Smart Scheduler',
+      privacy: 'Privacy Policy',
+      terms: 'Terms of Service'
     }
   },
 
@@ -95,6 +105,8 @@ export const ja = {
       loginButton: 'ログイン',
       or: 'または',
       googleLogin: 'Googleでログイン',
+      googleLoginError: 'Googleログインに失敗しました。再度お試しください。',
+      loggingIn: 'ログイン中...',
       emailPlaceholder: 'メールアドレスを入力してください',
       passwordPlaceholder: 'パスワードを入力してください'
     },
@@ -181,6 +193,62 @@ export const ja = {
       total: '総課題数',
       inProgress: '進行中',
       overdue: '期限切れ'
+    },
+    add: {
+      title: '新しい課題を追加',
+      subtitle: '新しい課題を追加しましょう',
+      backToList: '課題一覧に戻る',
+      assignmentTitle: '課題タイトル',
+      assignmentTitlePlaceholder: '課題タイトルを入力してください',
+      description: '説明',
+      descriptionPlaceholder: '課題の説明を入力してください',
+      course: '科目',
+      coursePlaceholder: '科目を選択してください',
+      dueDate: '締切日',
+      priority: '優先度',
+      status: '状態',
+      shareWithFriends: '友達と共有',
+      selectFriends: '共有する友達を選択してください',
+      noFriends: '登録された友達がいません',
+      addFirstFriend: 'まず友達を追加してください',
+      loadingFriends: '友達一覧読み込み中...',
+      creating: '課題作成中...',
+      create: '課題作成',
+      sharingWithFriends: '{count}人の友達と課題を共有しています'
+    },
+    detail: {
+      backToList: '課題一覧に戻る',
+      subtitle: '課題詳細情報と共有状況',
+      assignmentInfo: '課題情報',
+      assignmentTitle: '課題タイトル',
+      assignmentDescription: '課題説明',
+      course: '科目',
+      dueDate: '締切日',
+      priority: '優先度',
+      status: {
+        completed: '完了',
+        in_progress: '進行中',
+        pending: '待機中'
+      },
+      progress: '進捗状況',
+      progressPercent: '全体進捗',
+      noProgress: 'まだ進捗が記録されていません。',
+      sharedFriends: '共有されている友達',
+      sharedFriendsCount: '{count}人',
+      noSharedFriends: '共有されている友達がいません',
+      shareWithFriends: 'この課題を友達と共有しましょう',
+      quickActions: 'クイックアク션',
+      shareAssignment: '友達と共有',
+      updateProgress: '進捗更新',
+      assignmentInfoSidebar: '課題情報',
+      createdDate: '作成日',
+      assignmentId: '課題ID',
+      edit: '編集',
+      delete: '削除',
+      admin: '管理者',
+      editPermission: '編集',
+      viewPermission: '表示',
+      loading: '読み込み中...'
     }
   },
 
@@ -210,5 +278,99 @@ export const ja = {
     today: '今日が期限',
     tomorrow: '明日が期限',
     daysLeft: 'あと{days}日'
+  },
+
+  // 友達管理
+  friends: {
+    title: '友達管理',
+    inviteFriends: '友達招待',
+    generateInviteLink: '招待リンク生成',
+    inviteLink: '招待リンク',
+    copyLink: 'リンクコピー',
+    linkCopied: 'リンクがコピーされました！',
+    qrCode: 'QRコード',
+    comingSoon: '近日公開',
+    findFriends: '友達検索',
+    searchPlaceholder: '名前、ニックネーム、専攻で検索...',
+    search: '検索',
+    searching: '検索中...',
+    noSearchResults: '検索結果がありません',
+    searchResults: '検索結果',
+    invite: '招待',
+    friendsList: '友達一覧',
+    noFriends: '友達がいません',
+    addFirstFriend: '最初の友達を追加しましょう',
+    loading: '読み込み中...',
+    removeFriend: '友達削除',
+    confirmRemove: 'この友達を削除してもよろしいですか？',
+    receivedInvites: '受信した招待',
+    noInvites: '受信した招待がありません',
+    accept: '承認',
+    reject: '拒否',
+    from: '送信者',
+    generating: '生成中...'
+  },
+
+  // 友達招待ページ
+  invite: {
+    title: '友達招待',
+    processing: '処理中...',
+    success: '招待承認完了！',
+    error: 'エラーが発生しました',
+    successMessage: '友達招待を正常に承認しました！',
+    errorMessage: '友達招待の承認に失敗しました。招待コードを確認してください。',
+    loginRequired: '友達招待を承認するにはログインが必要です。',
+    generalError: 'エラーが発生しました。再度お試しください。',
+    loginButton: 'ログイン',
+    viewFriends: '友達一覧を見る',
+    inviteCode: '招待コード'
+  },
+
+  // プロフィール完成
+  profile: {
+    complete: {
+      title: 'プロフィール完成',
+      subtitle: '学生情報を入力してプロフィールを完成させてください',
+      studentInfo: '学生情報',
+      studentId: '学籍番号',
+      studentIdPlaceholder: '学籍番号を入力してください',
+      major: '専攻',
+      majorPlaceholder: '専攻を入力してください',
+      grade: '学年',
+      nickname: 'ニックネーム',
+      nicknamePlaceholder: 'ニックネームを入力してください',
+      grade1: '1年生',
+      grade2: '2年生',
+      grade3: '3年生',
+      grade4: '4年生',
+      grade5: '5年生',
+      grade6: '6年生',
+      completeButton: 'プロフィール完成'
+    }
+  },
+
+  // サイドバーコンテンツ
+  sidebarContent: {
+    assignments: {
+      title: '課題一覧',
+      description: '課題管理機能がここに表示されます。',
+      goToList: '課題一覧ページへ移動'
+    },
+    courses: {
+      title: '授業一覧',
+      description: '授業管理機能がここに表示されます。',
+      goToList: '授業一覧ページへ移動'
+    },
+    settings: {
+      title: '設定',
+      description: 'プロフィール・設定機能がここに表示されます。',
+      goToSettings: '設定ページへ移動'
+    }
+  },
+
+  // 友達招待メッセージ
+  friendInvite: {
+    sentInvite: 'が友達招待',
+    grade: '年生'
   }
 };

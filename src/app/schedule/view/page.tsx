@@ -267,13 +267,13 @@ export default function ScheduleViewPage() {
       case 'assignments':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">과제 목록</h2>
-            <p className="text-gray-600 dark:text-gray-400">과제 관리 기능이 여기에 표시됩니다.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.assignments.title')}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.assignments.description')}</p>
             <Link
               href="/assignment/list"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
-              과제 목록 페이지로 이동
+              {t('sidebarContent.assignments.goToList')}
             </Link>
           </div>
         );
@@ -281,13 +281,13 @@ export default function ScheduleViewPage() {
       case 'courses':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">수업 목록</h2>
-            <p className="text-gray-600 dark:text-gray-400">수업 관리 기능이 여기에 표시됩니다.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.courses.title')}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.courses.description')}</p>
             <Link
               href="/schedule/add"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
-              새 수업 추가
+              {t('schedule.add.title')}
             </Link>
           </div>
         );
@@ -300,9 +300,9 @@ export default function ScheduleViewPage() {
       case 'settings':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">설정</h2>
-            <p className="text-gray-600 dark:text-gray-400">개인정보 및 앱 설정이 여기에 표시됩니다.</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">아직 구현되지 않았습니다.</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.settings.title')}</h2>
+            <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.settings.description')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Not implemented yet.</p>
           </div>
         );
 
@@ -329,15 +329,15 @@ export default function ScheduleViewPage() {
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 {selectedMenu === 'schedule' ? t('schedule.view.title') : 
-                 selectedMenu === 'assignments' ? '과제 관리' :
-                 selectedMenu === 'courses' ? '수업 관리' :
-                 selectedMenu === 'friends' ? '친구 관리' : '설정'}
+                 selectedMenu === 'assignments' ? t('assignments.list.title') :
+                 selectedMenu === 'courses' ? t('schedule.add.title') :
+                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
               </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-2">
                 {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
-                 selectedMenu === 'assignments' ? '과제를 체계적으로 관리하세요' :
-                 selectedMenu === 'courses' ? '수업 정보를 관리하세요' :
-                 selectedMenu === 'friends' ? '친구와 함께 학습하세요' : '앱 설정을 관리하세요'}
+                 selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
+                 selectedMenu === 'courses' ? t('schedule.add.subtitle') :
+                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
               </p>
             </div>
 
@@ -352,6 +352,7 @@ export default function ScheduleViewPage() {
 
 // 친구 관리 페이지 컴포넌트
 function FriendsManagementPage() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [receivedInvites, setReceivedInvites] = useState<FriendInvite[]>([]);
@@ -394,7 +395,7 @@ function FriendsManagementPage() {
         setInviteLink(result.invite_url);
       }
     } catch (error) {
-      console.error('초대 링크 생성 오류:', error);
+      console.error('Invite link generation error:', error);
     } finally {
       setIsGeneratingInvite(false);
     }
@@ -406,7 +407,7 @@ function FriendsManagementPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('링크 복사 오류:', error);
+      console.error('Link copy error:', error);
     }
   };
 
@@ -418,14 +419,14 @@ function FriendsManagementPage() {
       const results = await searchUsers(searchQuery);
       setSearchResults(results);
     } catch (error) {
-      console.error('검색 오류:', error);
+      console.error('Search error:', error);
     } finally {
       setIsSearching(false);
     }
   };
 
   const handleRemoveFriend = async (friendId: string) => {
-    if (confirm('정말로 이 친구를 삭제하시겠습니까?')) {
+    if (confirm(t('friends.confirmRemove'))) {
       const success = await removeFriend(friendId);
       if (success) {
         await loadFriends();
@@ -436,14 +437,14 @@ function FriendsManagementPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">친구 관리</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('friends.title')}</h2>
         <div className="flex space-x-3">
           <button
             onClick={() => setShowSearch(!showSearch)}
             className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <Search className="w-4 h-4 mr-2" />
-            친구 찾기
+            {t('friends.findFriends')}
           </button>
           <button
             onClick={handleGenerateInvite}
@@ -451,21 +452,21 @@ function FriendsManagementPage() {
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
           >
             <Users className="w-4 h-4 mr-2" />
-            {isGeneratingInvite ? '생성 중...' : '친구 초대하기'}
+            {isGeneratingInvite ? t('friends.generating') : t('friends.inviteFriends')}
           </button>
         </div>
       </div>
 
-      {/* 친구 검색 */}
+      {/* Friend Search */}
       {showSearch && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">친구 찾기</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('friends.findFriends')}</h3>
           <div className="flex space-x-3 mb-4">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="이름, 닉네임, 전공으로 검색"
+              placeholder={t('friends.searchPlaceholder')}
               className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             />
             <button
@@ -473,13 +474,13 @@ function FriendsManagementPage() {
               disabled={isSearching}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm transition-colors disabled:opacity-50"
             >
-              {isSearching ? '검색 중...' : '검색'}
+              {isSearching ? t('friends.searching') : t('friends.search')}
             </button>
           </div>
           
           {searchResults.length > 0 && (
             <div className="space-y-3">
-              <h4 className="font-medium text-gray-900 dark:text-white">검색 결과</h4>
+              <h4 className="font-medium text-gray-900 dark:text-white">{t('friends.searchResults')}</h4>
               {searchResults.map((user) => (
                 <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div>
@@ -487,7 +488,7 @@ function FriendsManagementPage() {
                     <p className="text-sm text-gray-500 dark:text-gray-400">{user.full_name} • {user.major}</p>
                   </div>
                   <button className="text-blue-600 hover:text-blue-500 text-sm font-medium">
-                    초대하기
+                    {t('friends.invite')}
                   </button>
                 </div>
               ))}
@@ -496,13 +497,13 @@ function FriendsManagementPage() {
         </div>
       )}
       
-      {/* 친구 초대 섹션 */}
+      {/* Friend Invitation Section */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">친구 초대하기</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('friends.inviteFriends')}</h3>
         <div className="grid md:grid-cols-2 gap-6">
-          {/* 링크로 초대하기 */}
+          {/* Invite by Link */}
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900 dark:text-white">링크로 초대하기</h4>
+            <h4 className="font-medium text-gray-900 dark:text-white">{t('friends.generateInviteLink')}</h4>
             {inviteLink ? (
               <div className="space-y-3">
                 <div className="flex space-x-2">
@@ -520,54 +521,54 @@ function FriendsManagementPage() {
                         : 'bg-green-600 hover:bg-green-700 text-white'
                     }`}
                   >
-                    {copied ? '복사됨!' : '복사'}
+                    {copied ? t('friends.linkCopied') : t('friends.copyLink')}
                   </button>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  이 링크를 친구에게 보내서 초대하세요
+                  Send this link to your friends to invite them
                 </p>
               </div>
             ) : (
               <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400 mb-2">아직 초대 링크가 생성되지 않았습니다</p>
+                <p className="text-gray-500 dark:text-gray-400 mb-2">No invite link generated yet</p>
                 <button
                   onClick={handleGenerateInvite}
                   className="text-blue-600 hover:text-blue-500 text-sm font-medium"
                 >
-                  초대 링크 생성하기
+                  {t('friends.generateInviteLink')}
                 </button>
               </div>
             )}
           </div>
 
-          {/* QR코드로 초대하기 */}
+          {/* Invite by QR Code */}
           <div className="space-y-3">
-            <h4 className="font-medium text-gray-900 dark:text-white">QR코드로 초대하기</h4>
+            <h4 className="font-medium text-gray-900 dark:text-white">{t('friends.qrCode')}</h4>
             <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
               <QrCode className="w-16 h-16 text-gray-400" />
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              친구가 QR코드를 스캔하면 자동으로 추가됩니다
+              Friends will be automatically added when they scan the QR code
             </p>
             <p className="text-xs text-gray-400 dark:text-gray-500">
-              (추후 구현 예정)
+              (Coming soon)
             </p>
           </div>
         </div>
       </div>
 
-      {/* 친구 목록 */}
+      {/* Friends List */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">친구 목록 ({friends.length})</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('friends.friendsList')} ({friends.length})</h3>
         </div>
         <div className="p-6">
           {friends.length === 0 ? (
             <div className="text-center py-8">
               <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500 dark:text-gray-400 mb-2">아직 친구가 없습니다</p>
+              <p className="text-gray-500 dark:text-gray-400 mb-2">{t('friends.noFriends')}</p>
               <p className="text-sm text-gray-400 dark:text-gray-500">
-                친구 초대하기 버튼을 눌러서 친구를 추가해보세요
+                Click the invite friends button to add friends
               </p>
             </div>
           ) : (
@@ -580,10 +581,10 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.nickname || '알 수 없음'}
+                        {friend.friend_profile?.nickname || t('common.unknown')}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {friend.friend_profile?.full_name} • {friend.friend_profile?.major} • {friend.friend_profile?.grade}학년
+                        {friend.friend_profile?.full_name} • {friend.friend_profile?.major} • {friend.friend_profile?.grade}{t('friendInvite.grade')}
                       </p>
                     </div>
                   </div>
@@ -591,7 +592,7 @@ function FriendsManagementPage() {
                     onClick={() => handleRemoveFriend(friend.friend_id)}
                     className="text-red-600 hover:text-red-500 text-sm font-medium"
                   >
-                    삭제
+                    {t('common.delete')}
                   </button>
                 </div>
               ))}
@@ -600,15 +601,15 @@ function FriendsManagementPage() {
         </div>
       </div>
 
-      {/* 받은 초대 */}
+      {/* Received Invites */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">받은 초대 ({receivedInvites.length})</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('friends.receivedInvites')} ({receivedInvites.length})</h3>
         </div>
         <div className="p-6">
           {receivedInvites.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 dark:text-gray-400">받은 초대가 없습니다</p>
+              <p className="text-gray-500 dark:text-gray-400">{t('friends.noInvites')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -620,7 +621,7 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {invite.inviter_profile?.nickname || '알 수 없음'}님이 친구 초대
+                        {invite.inviter_profile?.nickname || t('common.unknown')}{t('friendInvite.sentInvite')}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         {invite.inviter_profile?.full_name} • {new Date(invite.created_at).toLocaleDateString()}
@@ -629,10 +630,10 @@ function FriendsManagementPage() {
                   </div>
                   <div className="flex space-x-2">
                     <button className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                      수락
+                      {t('friends.accept')}
                     </button>
                     <button className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md transition-colors">
-                      거절
+                      {t('friends.reject')}
                     </button>
                   </div>
                 </div>

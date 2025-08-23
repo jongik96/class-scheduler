@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Plus, Users, UserPlus } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
+import { useLanguage } from '@/lib/language-context';
 import { getFriends, shareAssignment, Friend } from '@/lib/friends-api';
 
 export default function AddAssignmentPage() {
+  const { t } = useLanguage();
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     title: '',
@@ -33,7 +35,7 @@ export default function AddAssignmentPage() {
       const friendsList = await getFriends();
       setFriends(friendsList);
     } catch (error) {
-      console.error('친구 목록 로드 오류:', error);
+      console.error('Friends list load error:', error);
     } finally {
       setIsLoadingFriends(false);
     }
@@ -44,28 +46,28 @@ export default function AddAssignmentPage() {
     setIsLoading(true);
     
     try {
-      // TODO: Supabase에 과제 추가 로직 구현
-      console.log('과제 추가:', formData);
-      console.log('공유할 친구:', selectedFriends);
+      // TODO: Implement assignment addition logic in Supabase
+      console.log('Assignment addition:', formData);
+      console.log('Friends to share with:', selectedFriends);
       
-      // 과제가 성공적으로 생성된 후 친구와 공유
+      // Share with friends after assignment is successfully created
       if (selectedFriends.length > 0) {
-        // 임시 과제 ID (실제로는 생성된 과제의 ID를 사용)
+        // Temporary assignment ID (should use actual generated assignment ID)
         const tempAssignmentId = 'temp_' + Date.now();
         const success = await shareAssignment(tempAssignmentId, selectedFriends, 'view');
         
         if (success) {
-          console.log('친구와 과제 공유 완료');
+          console.log('Assignment shared with friends successfully');
         } else {
-          console.error('친구와 과제 공유 실패');
+          console.error('Failed to share assignment with friends');
         }
       }
       
-      // 성공 후 과제 목록 페이지로 이동
+      // Redirect to assignment list page after success
       // router.push('/assignment/list');
       
     } catch (error) {
-      console.error('과제 생성 오류:', error);
+      console.error('Assignment creation error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -93,13 +95,13 @@ export default function AddAssignmentPage() {
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            과제 목록으로 돌아가기
+            {t('assignments.add.backToList')}
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            새 과제 추가
+            {t('assignments.add.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            새로운 과제를 추가하고 친구와 공유하세요
+            {t('assignments.add.subtitle')}
           </p>
         </div>
 
@@ -111,13 +113,13 @@ export default function AddAssignmentPage() {
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    과제 제목
+                    {t('assignments.add.assignmentTitle')}
                   </label>
                   <input
                     type="text"
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="과제 제목을 입력하세요"
+                    placeholder={t('assignments.add.assignmentTitlePlaceholder')}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
                   />
@@ -126,12 +128,12 @@ export default function AddAssignmentPage() {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    과제 설명
+                    {t('assignments.add.description')}
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="과제에 대한 자세한 설명을 입력하세요"
+                    placeholder={t('assignments.add.descriptionPlaceholder')}
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
@@ -141,13 +143,13 @@ export default function AddAssignmentPage() {
                 {/* Course */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    과목
+                    {t('assignments.add.course')}
                   </label>
                   <input
                     type="text"
                     value={formData.course}
                     onChange={(e) => handleInputChange('course', e.target.value)}
-                    placeholder="과목명을 입력하세요"
+                    placeholder={t('assignments.add.coursePlaceholder')}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
                   />
@@ -156,7 +158,7 @@ export default function AddAssignmentPage() {
                 {/* Due Date */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    마감일
+                    {t('assignments.add.dueDate')}
                   </label>
                   <input
                     type="date"
@@ -170,16 +172,16 @@ export default function AddAssignmentPage() {
                 {/* Priority */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    우선순위
+                    {t('assignments.add.priority')}
                   </label>
                   <select
                     value={formData.priority}
                     onChange={(e) => handleInputChange('priority', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   >
-                    <option value="low">낮음</option>
-                    <option value="medium">보통</option>
-                    <option value="high">높음</option>
+                    <option value="low">{t('priority.low')}</option>
+                    <option value="medium">{t('priority.medium')}</option>
+                    <option value="high">{t('priority.high')}</option>
                   </select>
                 </div>
 
@@ -195,7 +197,7 @@ export default function AddAssignmentPage() {
                     ) : (
                       <>
                         <Plus className="w-5 h-5 mr-2" />
-                        과제 추가하기
+                        {isLoading ? t('assignments.add.creating') : t('assignments.add.create')}
                       </>
                     )}
                   </button>
@@ -204,34 +206,34 @@ export default function AddAssignmentPage() {
             </form>
           </div>
 
-          {/* Sidebar - 친구 공유 */}
+          {/* Sidebar - Share with Friends */}
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                 <Users className="w-5 h-5 mr-2" />
-                친구와 공유하기
+                {t('assignments.add.shareWithFriends')}
               </h3>
               
               {isLoadingFriends ? (
                 <div className="text-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">친구 목록을 불러오는 중...</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{t('assignments.add.loadingFriends')}</p>
                 </div>
               ) : friends.length === 0 ? (
                 <div className="text-center py-8">
                   <UserPlus className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-500 dark:text-gray-400 mb-2">아직 친구가 없습니다</p>
+                  <p className="text-gray-500 dark:text-gray-400 mb-2">{t('assignments.add.noFriends')}</p>
                   <Link
                     href="/schedule/view?menu=friends"
                     className="text-blue-600 hover:text-blue-500 text-sm"
                   >
-                    친구 추가하기
+                    {t('assignments.add.addFirstFriend')}
                   </Link>
                 </div>
               ) : (
                 <div className="space-y-3">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    이 과제를 공유할 친구를 선택하세요
+                    {t('assignments.add.selectFriends')}
                   </p>
                   
                   {friends.map((friend) => (
@@ -244,7 +246,7 @@ export default function AddAssignmentPage() {
                       />
                       <div>
                         <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          {friend.friend_profile?.nickname || '알 수 없음'}
+                          {friend.friend_profile?.nickname || t('common.unknown')}
                         </span>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                           {friend.friend_profile?.full_name} • {friend.friend_profile?.major}
@@ -256,7 +258,7 @@ export default function AddAssignmentPage() {
                   {selectedFriends.length > 0 && (
                     <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
                       <p className="text-sm text-blue-800 dark:text-blue-200">
-                        {selectedFriends.length}명의 친구와 과제를 공유합니다
+                        {t('assignments.add.sharingWithFriends', { count: selectedFriends.length })}
                       </p>
                     </div>
                   )}

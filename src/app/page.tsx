@@ -162,7 +162,7 @@ export default function HomePage() {
                 {t('home.quickActions.addCourse')}
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                새로운 수업을 시간표에 추가하고 관리하세요
+                {t('home.quickActions.addCourseDesc')}
               </p>
             </Link>
             
@@ -175,7 +175,7 @@ export default function HomePage() {
                 {t('home.quickActions.viewSchedule')}
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                현재 시간표를 확인하고 수정하세요
+                {t('home.quickActions.viewScheduleDesc')}
               </p>
             </Link>
             
@@ -188,7 +188,7 @@ export default function HomePage() {
                 {t('home.quickActions.checkAssignments')}
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                과제 현황을 확인하고 관리하세요
+                {t('home.quickActions.checkAssignmentsDesc')}
               </p>
             </Link>
           </div>
@@ -203,14 +203,14 @@ export default function HomePage() {
             <span className="text-2xl font-bold">Smart Scheduler</span>
           </div>
           <p className="text-gray-400 mb-4">
-            대학생을 위한 스마트한 시간표 및 과제 관리 시스템
+            {t('home.footer.description')}
           </p>
           <div className="flex justify-center space-x-6 text-sm text-gray-400">
-            <span>© 2024 Smart Scheduler</span>
+            <span>{t('home.footer.copyright')}</span>
             <span>•</span>
-            <span>Privacy Policy</span>
+            <span>{t('home.footer.privacy')}</span>
             <span>•</span>
-            <span>Terms of Service</span>
+            <span>{t('home.footer.terms')}</span>
           </div>
         </div>
       </footer>
