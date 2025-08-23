@@ -53,16 +53,17 @@ export default function AssignmentListPage() {
     }
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return t('assignments.list.completed');
-      case 'overdue':
-        return t('assignments.list.overdue');
-      default:
-        return t('assignments.list.pending');
-    }
-  };
+  // getStatusText 함수는 현재 사용되지 않지만 향후 사용을 위해 주석 처리
+  // const getStatusText = (status: string) => {
+  //   switch (status) {
+  //     case 'completed':
+  //       return t('assignments.list.completed');
+  //     case 'overdue':
+  //       return t('assignments.list.overdue');
+  //     default:
+  //       return t('assignments.list.pending');
+  //   }
+  // };
 
   const getPriorityText = (priority: string) => {
     switch (priority) {

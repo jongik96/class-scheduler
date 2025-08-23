@@ -166,7 +166,6 @@ export const en = {
       noAssignments: 'No assignments registered yet.',
       total: 'Total Assignments',
       inProgress: 'In Progress',
-      completed: 'Completed',
       overdue: 'Overdue'
     }
   },

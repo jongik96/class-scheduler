@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Palette } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 
 export default function AddCoursePage() {

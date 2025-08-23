@@ -2,13 +2,12 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase, type AuthUser } from './supabase'
-import { useLanguage } from './language-context'
+
 
 interface AuthContextType {
   user: AuthUser | null
   loading: boolean
   signInWithGoogle: () => Promise<void>
-  signInWithLine: () => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -17,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
-  const { t } = useLanguage()
+  // const { t } = useLanguage() // 현재 사용되지 않음
 
   useEffect(() => {
     // 현재 세션 확인
@@ -69,20 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const signInWithLine = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'line',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`
-        }
-      })
-      if (error) throw error
-    } catch (error) {
-      console.error('LINE 로그인 오류:', error)
-      throw error
-    }
-  }
+
 
   const signOut = async () => {
     try {
@@ -99,7 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     loading,
     signInWithGoogle,
-    signInWithLine,
     signOut
   }
 

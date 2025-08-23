@@ -11,7 +11,7 @@ const translations = { ko, en, ja };
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string | number>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -35,19 +35,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [language]);
 
   // 번역 함수
-  const t = (key: string): string => {
+  const t = (key: string, params?: Record<string, string | number>): string => {
     const keys = key.split('.');
-    let value: any = translations[language];
+    let value: unknown = translations[language];
     
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
-        value = value[k];
+        value = (value as Record<string, unknown>)[k];
       } else {
         // 번역이 없으면 한국어로 폴백
         value = ko;
         for (const fallbackKey of keys) {
           if (value && typeof value === 'object' && fallbackKey in value) {
-            value = value[fallbackKey];
+            value = (value as Record<string, unknown>)[k];
           } else {
             return key; // 최종적으로 키 반환
           }
@@ -56,7 +56,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
     
-    return typeof value === 'string' ? value : key;
+    let result = typeof value === 'string' ? value : key;
+    
+    // 매개변수 치환
+    if (params && typeof result === 'string') {
+      Object.entries(params).forEach(([paramKey, paramValue]) => {
+        result = result.replace(new RegExp(`{${paramKey}}`, 'g'), String(paramValue));
+      });
+    }
+    
+    return result;
   };
 
   return (

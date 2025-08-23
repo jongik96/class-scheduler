@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Plus, Eye, BookOpen, CheckSquare, Home, LogIn, UserPlus } from 'lucide-react';
+import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus } from 'lucide-react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from '@/lib/language-context';

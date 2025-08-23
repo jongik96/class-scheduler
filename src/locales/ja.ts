@@ -166,7 +166,6 @@ export const ja = {
       noAssignments: 'まだ登録された課題がありません。',
       total: '総課題数',
       inProgress: '進行中',
-      completed: '完了',
       overdue: '期限切れ'
     }
   },

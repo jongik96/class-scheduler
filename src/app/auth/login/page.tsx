@@ -1,17 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
 
 export default function LoginPage() {
   const { t } = useLanguage();
-  const { signInWithGoogle, signInWithLine } = useAuth();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const { signInWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -20,16 +17,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // URL 파라미터에서 에러 메시지 확인
-  useEffect(() => {
-    const errorParam = searchParams.get('error');
-    if (errorParam === 'auth_failed') {
-      setError('인증에 실패했습니다. 다시 시도해주세요.');
-    } else if (errorParam === 'callback_failed') {
-      setError('인증 콜백 처리에 실패했습니다. 다시 시도해주세요.');
-    }
-  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,7 +190,7 @@ export default function LoginPage() {
                     setIsLoading(true);
                     setError(null);
                     await signInWithGoogle();
-                  } catch (error) {
+                  } catch {
                     setError('Google 로그인에 실패했습니다. 다시 시도해주세요.');
                   } finally {
                     setIsLoading(false);
@@ -234,30 +221,7 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* LINE Login */}
-            <div>
-              <button
-                type="button"
-                onClick={async () => {
-                  try {
-                    setIsLoading(true);
-                    setError(null);
-                    await signInWithLine();
-                  } catch (error) {
-                    setError('LINE 로그인에 실패했습니다. 다시 시도해주세요.');
-                  } finally {
-                    setIsLoading(false);
-                  }
-                }}
-                disabled={isLoading}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#00B900">
-                  <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63h2.396c.679 0 1.231.552 1.231 1.231 0 .678-.552 1.23-1.231 1.23h-.096v1.125c0 .344-.279.629-.63.629zm-.63-2.464h-.096c-.345 0-.63-.279-.63-.63 0-.345.285-.63.63-.63h.096v1.26zm7.693-2.464c.679 0 1.231.552 1.231 1.231 0 .678-.552 1.23-1.231 1.23h-.096v1.125c0 .344-.279.629-.63.629H8.933c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63h2.396zm-.63 1.26h-.096c-.345 0-.63-.279-.63-.63 0-.345.285-.63.63-.63h.096v1.26z"/>
-                </svg>
-                {isLoading ? '로그인 중...' : 'LINE으로 로그인'}
-              </button>
-            </div>
+
           </form>
         </div>
       </div>

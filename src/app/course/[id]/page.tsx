@@ -40,6 +40,9 @@ const sampleAssignments = [
 export default function CourseDetailPage({ params }: { params: { id: string } }) {
   const { t } = useLanguage();
   const [assignments] = useState(sampleAssignments);
+  
+  // params.id는 현재 사용되지 않지만 향후 동적 데이터 로딩을 위해 유지
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   const getPriorityText = (priority: string) => {
     switch (priority) {

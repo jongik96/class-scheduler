@@ -62,9 +62,10 @@ export default function ScheduleViewPage() {
     { value: 'sunday', label: t('schedule.view.sunday') }
   ];
 
-  const getCoursesForDay = (day: string) => {
-    return sampleCourses.filter(course => course.dayOfWeek === day);
-  };
+  // getCoursesForDay 함수는 현재 사용되지 않지만 향후 사용을 위해 주석 처리
+  // const getCoursesForDay = (day: string) => {
+  //   return sampleCourses.filter(course => course.dayOfWeek === day);
+  // };
 
   const getCoursesForTimeSlot = (day: string, time: string) => {
     return sampleCourses.filter(course => 

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Plus, Eye, CheckSquare, Calendar, BookOpen, Users, Clock } from 'lucide-react';
+import { Plus, Eye, CheckSquare, Calendar, Users } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 

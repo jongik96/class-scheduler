@@ -167,7 +167,6 @@ export const ko = {
       noAssignments: '아직 등록된 과제가 없습니다.',
       total: '전체 과제',
       inProgress: '진행중',
-      completed: '완료',
       overdue: '기한 지남'
     }
   },
