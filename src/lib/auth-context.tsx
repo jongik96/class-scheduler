@@ -91,10 +91,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     try {
       console.log('🚀 Google 로그인 시작...')
+      
+      // 현재 환경에 따른 리다이렉트 URL 설정
+      const isProduction = window.location.hostname !== 'localhost'
+      const redirectTo = isProduction 
+        ? 'https://class-scheduler-nine.vercel.app/auth/callback'
+        : `${window.location.origin}/auth/callback`
+      
+      console.log('🌐 환경:', isProduction ? 'Production' : 'Development')
+      console.log('🔄 콜백 URL:', redirectTo)
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent'

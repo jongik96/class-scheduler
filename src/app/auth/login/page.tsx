@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
 
-export default function LoginPage() {
+function LoginContent() {
   const { t } = useLanguage();
   const { signInWithGoogle } = useAuth();
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,6 +20,35 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // URL 파라미터에서 에러 정보 읽기
+  useEffect(() => {
+    const urlError = searchParams.get('error');
+    const details = searchParams.get('details');
+    
+    if (urlError) {
+      let errorMessage = '';
+      
+      switch (urlError) {
+        case 'server_error':
+          errorMessage = '서버 오류가 발생했습니다. Google Cloud Console 설정을 확인해주세요.';
+          if (details) {
+            errorMessage += `\n상세: ${decodeURIComponent(details)}`;
+          }
+          break;
+        case 'access_denied':
+          errorMessage = '접근이 거부되었습니다. 권한을 확인해주세요.';
+          break;
+        case 'invalid_request':
+          errorMessage = '잘못된 요청입니다. 설정을 확인해주세요.';
+          break;
+        default:
+          errorMessage = `인증 오류: ${urlError}`;
+      }
+      
+      setError(errorMessage);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +96,16 @@ export default function LoginPage() {
                   <AlertCircle className="h-5 w-5 text-red-400 dark:text-red-300 flex-shrink-0" />
                   <div className="ml-3">
                     <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+                    {error.includes('server_error') && (
+                      <div className="mt-2 text-xs text-red-600 dark:text-red-400">
+                        <p><strong>해결 방법:</strong></p>
+                        <ol className="list-decimal list-inside mt-1 space-y-1">
+                          <li>Google Cloud Console에서 승인된 리디렉션 URI를 확인하세요</li>
+                          <li>Supabase OAuth 설정을 다시 확인하세요</li>
+                          <li>몇 분 후 다시 시도해보세요</li>
+                        </ol>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -218,5 +259,22 @@ export default function LoginPage() {
       </div>
       </div>
     </AuthGuard>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">로딩 중...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
