@@ -101,7 +101,6 @@ export const ko = {
       email: '이메일',
       password: '비밀번호',
       rememberMe: '로그인 상태 유지',
-      forgotPassword: '비밀번호를 잊으셨나요?',
       loginButton: '로그인',
       or: '또는',
       googleLogin: 'Google로 로그인',

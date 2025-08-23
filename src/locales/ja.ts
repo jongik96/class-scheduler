@@ -101,7 +101,6 @@ export const ja = {
       email: 'メールアドレス',
       password: 'パスワード',
       rememberMe: 'ログイン状態を保持',
-      forgotPassword: 'パスワードをお忘れですか？',
       loginButton: 'ログイン',
       or: 'または',
       googleLogin: 'Googleでログイン',

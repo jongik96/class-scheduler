@@ -28,8 +28,8 @@ export default function AuthCallback() {
               .single()
 
             if (profile?.is_profile_complete) {
-              // 프로필이 완성된 경우 메인 페이지로
-              router.push('/')
+              // 프로필이 완성된 경우 바로 View Schedule Page로
+              router.push('/schedule/view')
             } else {
               // 프로필이 미완성인 경우 프로필 완성 페이지로
               router.push('/auth/complete-profile')

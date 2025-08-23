@@ -101,7 +101,6 @@ export const en = {
       email: 'Email',
       password: 'Password',
       rememberMe: 'Remember me',
-      forgotPassword: 'Forgot your password?',
       loginButton: 'Login',
       or: 'or',
       googleLogin: 'Login with Google',

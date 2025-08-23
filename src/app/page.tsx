@@ -1,13 +1,25 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Plus, Eye, CheckSquare, Calendar, Users } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
+import { useAuth } from '@/lib/auth-context';
 
 export default function HomePage() {
   const { t } = useLanguage();
   const { theme } = useTheme();
+  const { user, profileComplete, loading } = useAuth();
+  const router = useRouter();
+
+  // 로그인된 사용자는 View Schedule Page로 리다이렉트
+  useEffect(() => {
+    if (!loading && user && profileComplete) {
+      router.push('/schedule/view');
+    }
+  }, [user, profileComplete, loading, router]);
 
   // 테마별 히어로 섹션 스타일
   const getHeroStyles = () => {
