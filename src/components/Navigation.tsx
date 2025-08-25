@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus } from 'lucide-react';
+import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { useState } from 'react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from '@/lib/language-context';
@@ -14,6 +15,7 @@ export default function Navigation() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { user, signOut } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
     { href: '/', label: t('navigation.home'), icon: Home },
@@ -105,8 +107,12 @@ export default function Navigation() {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <nav className={`border-b transition-all duration-300 ${getThemeClasses()}`}>
+    <nav className={`border-b transition-all duration-300 ${getThemeClasses()} relative`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
@@ -127,7 +133,7 @@ export default function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${
                       pathname === item.href
                         ? getActiveClasses()
                         : `${getTextClasses()} ${getHoverClasses()}`
@@ -141,33 +147,25 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <div className="flex items-center space-x-2">
-              {navItems.slice(0, 2).map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center justify-center w-10 h-10 rounded-md text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? getActiveClasses()
-                        : `${getTextClasses()} ${getHoverClasses()}`
-                    }`}
-                    title={item.label}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </Link>
-                );
-              })}
-            </div>
+            <button
+              onClick={toggleMobileMenu}
+              className={`p-2 rounded-md transition-all duration-200 hover:scale-105 mobile-touch-target ${getTextClasses()}`}
+              aria-label="메뉴 열기"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
           </div>
 
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
             <ThemeSwitcher />
-            <div className="flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-2">
               {authItems.map((item) => {
                 const Icon = item.icon;
                 if (item.onClick) {
@@ -175,7 +173,7 @@ export default function Navigation() {
                     <button
                       key={item.label}
                       onClick={item.onClick}
-                      className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${getHoverClasses()}`}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${getHoverClasses()}`}
                     >
                       <Icon className="w-4 h-4" />
                       <span>{item.label}</span>
@@ -186,7 +184,7 @@ export default function Navigation() {
                   <Link
                     key={item.href}
                     href={item.href || '#'}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${getHoverClasses()}`}
+                    className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${getHoverClasses()}`}
                   >
                     <Icon className="w-4 h-4" />
                     <span>{item.label}</span>
@@ -196,6 +194,65 @@ export default function Navigation() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600 shadow-lg">
+            <div className="px-4 py-2 space-y-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${
+                      pathname === item.href
+                        ? getActiveClasses()
+                        : `${getTextClasses()} ${getHoverClasses()}`
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+              
+              {/* Mobile Auth Items */}
+              <div className="pt-2 border-t border-gray-200 dark:border-gray-600">
+                {authItems.map((item) => {
+                  const Icon = item.icon;
+                  if (item.onClick) {
+                    return (
+                      <button
+                        key={item.label}
+                        onClick={() => {
+                          item.onClick?.();
+                          setIsMobileMenuOpen(false);
+                        }}
+                        className={`w-full flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${getHoverClasses()}`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  }
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href || '#'}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`w-full flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${getHoverClasses()}`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

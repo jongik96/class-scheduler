@@ -70,164 +70,164 @@ export default function HomePage() {
     <AuthGuard requireAuth={false}>
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className={`bg-gradient-to-br ${heroStyles.gradient} py-20 transition-all duration-300`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className={`text-4xl md:text-6xl font-bold ${heroStyles.title} mb-6`}>
-            <span className="block">{t('home.title')}</span>
-            <span className={`block ${heroStyles.subtitle}`}>{t('home.subtitle')}</span>
-          </h1>
-          <p className={`text-xl ${heroStyles.description} mb-8 max-w-3xl mx-auto`}>
-            {t('home.description')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mobile-button-group">
-            <Link
-              href="/schedule/add"
-              className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md transition-colors ${heroStyles.primaryButton} w-full sm:w-auto`}
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              {t('home.addFirstCourse')}
-            </Link>
-            <Link
-              href="/schedule/view"
-              className={`inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-colors ${heroStyles.secondaryButton} w-full sm:w-auto`}
-            >
-              <Eye className="w-5 h-5 mr-2" />
-              {t('home.viewSchedule')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              {t('home.features.title')}
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {t('home.features.subtitle')}
+        <section className={`bg-gradient-to-br ${heroStyles.gradient} py-12 sm:py-16 md:py-20 transition-all duration-300`}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 className={`text-3xl sm:text-4xl md:text-6xl font-bold ${heroStyles.title} mb-4 sm:mb-6`}>
+              <span className="block">{t('home.title')}</span>
+              <span className={`block ${heroStyles.subtitle}`}>{t('home.subtitle')}</span>
+            </h1>
+            <p className={`text-lg sm:text-xl ${heroStyles.description} mb-6 sm:mb-8 max-w-3xl mx-auto px-4`}>
+              {t('home.description')}
             </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
-              <Calendar className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.features.schedule.title')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.features.schedule.description')}
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
-              <Plus className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.features.addCourse.title')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.features.addCourse.description')}
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
-              <CheckSquare className="w-12 h-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.features.assignments.title')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.features.assignments.description')}
-              </p>
-            </div>
-            
-            <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-shadow">
-              <Users className="w-12 h-12 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.features.sharing.title')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.features.sharing.description')}
-              </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mobile-button-group">
+              <Link
+                href="/schedule/add"
+                className={`inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md transition-all duration-200 hover:scale-105 ${heroStyles.primaryButton} w-full sm:w-auto mobile-touch-target`}
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                {t('home.addFirstCourse')}
+              </Link>
+              <Link
+                href="/schedule/view"
+                className={`inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-all duration-200 hover:scale-105 ${heroStyles.secondaryButton} w-full sm:w-auto mobile-touch-target`}
+              >
+                <Eye className="w-5 h-5 mr-2" />
+                {t('home.viewSchedule')}
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Quick Actions Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              {t('home.quickActions.title')}
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {t('home.quickActions.subtitle')}
+        {/* Features Section */}
+        <section className="py-12 sm:py-16 md:py-20 bg-white dark:bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                {t('home.features.title')}
+              </h2>
+              <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+                {t('home.features.subtitle')}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mobile-grid-1 sm:mobile-grid-2 lg:mobile-grid-1">
+              <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
+                <Calendar className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.features.schedule.title')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.features.schedule.description')}
+                </p>
+              </div>
+              
+              <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
+                <Plus className="w-12 h-12 text-green-600 dark:text-green-400 mx-auto mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.features.addCourse.title')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.features.addCourse.description')}
+                </p>
+              </div>
+              
+              <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
+                <CheckSquare className="w-12 h-12 text-purple-600 dark:text-purple-400 mx-auto mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.features.assignments.title')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.features.assignments.description')}
+                </p>
+              </div>
+              
+              <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
+                <Users className="w-12 h-12 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.features.sharing.title')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.features.sharing.description')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Actions Section */}
+        <section className="py-12 sm:py-16 md:py-20 bg-gray-50 dark:bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                {t('home.quickActions.title')}
+              </h2>
+              <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4">
+                {t('home.quickActions.subtitle')}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mobile-grid-1 tablet-grid-2 lg:grid-cols-3">
+              <Link
+                href="/schedule/add"
+                className="group p-6 sm:p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200 dark:border-gray-600"
+              >
+                <Plus className="w-12 h-12 text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.quickActions.addCourse')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.quickActions.addCourseDesc')}
+                </p>
+              </Link>
+              
+              <Link
+                href="/schedule/view"
+                className="group p-6 sm:p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200 dark:border-gray-600"
+              >
+                <Eye className="w-12 h-12 text-green-600 dark:text-green-400 mb-4 group-hover:scale-110 transition-transform" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.quickActions.viewSchedule')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.quickActions.viewScheduleDesc')}
+                </p>
+              </Link>
+              
+              <Link
+                href="/assignment/list"
+                className="group p-6 sm:p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-200 dark:border-gray-600 md:col-span-1 lg:col-span-1"
+              >
+                <CheckSquare className="w-12 h-12 text-purple-600 dark:text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  {t('home.quickActions.checkAssignments')}
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  {t('home.quickActions.checkAssignmentsDesc')}
+                </p>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="bg-gray-900 text-white py-8 sm:py-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div className="flex items-center justify-center mb-4 sm:mb-6">
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mr-3" />
+              <span className="text-xl sm:text-2xl font-bold">Smart Scheduler</span>
+            </div>
+            <p className="text-sm sm:text-base text-gray-400 mb-4 px-4">
+              {t('home.footer.description')}
             </p>
+            <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm text-gray-400">
+              <span>{t('home.footer.copyright')}</span>
+              <span className="hidden sm:inline">•</span>
+              <span>{t('home.footer.privacy')}</span>
+              <span className="hidden sm:inline">•</span>
+              <span>{t('home.footer.terms')}</span>
+            </div>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Link
-              href="/schedule/add"
-              className="group p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <Plus className="w-12 h-12 text-blue-600 dark:text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.quickActions.addCourse')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.quickActions.addCourseDesc')}
-              </p>
-            </Link>
-            
-            <Link
-              href="/schedule/view"
-              className="group p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <Eye className="w-12 h-12 text-green-600 dark:text-green-400 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.quickActions.viewSchedule')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.quickActions.viewScheduleDesc')}
-              </p>
-            </Link>
-            
-            <Link
-              href="/assignment/list"
-              className="group p-8 bg-white dark:bg-gray-700 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
-            >
-              <CheckSquare className="w-12 h-12 text-purple-600 dark:text-purple-400 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                {t('home.quickActions.checkAssignments')}
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('home.quickActions.checkAssignmentsDesc')}
-              </p>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Calendar className="w-8 h-8 text-blue-400 mr-3" />
-            <span className="text-2xl font-bold">Smart Scheduler</span>
-          </div>
-          <p className="text-gray-400 mb-4">
-            {t('home.footer.description')}
-          </p>
-          <div className="flex justify-center space-x-6 text-sm text-gray-400">
-            <span>{t('home.footer.copyright')}</span>
-            <span>•</span>
-            <span>{t('home.footer.privacy')}</span>
-            <span>•</span>
-            <span>{t('home.footer.terms')}</span>
-          </div>
-        </div>
-      </footer>
+        </footer>
       </div>
     </AuthGuard>
   );

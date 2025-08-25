@@ -105,13 +105,14 @@ export default function Sidebar({
   return (
     <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
       isCollapsed ? 'w-16' : 'w-64'
-    } ${isCollapsed ? 'hidden sm:block' : ''}`}>
+    } ${isCollapsed ? 'hidden sm:block' : ''} relative`}>
       {/* Toggle Button */}
       <button
         onClick={onToggleCollapse}
-        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 ${
+        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 mobile-touch-target ${
           isCollapsed ? 'rotate-180' : ''
         } mobile-sidebar-toggle`}
+        aria-label={isCollapsed ? '사이드바 확장' : '사이드바 축소'}
       >
         {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>
@@ -126,10 +127,13 @@ export default function Sidebar({
                 {t('common.schedule')}
               </h2>
             )}
+            {isCollapsed && (
+              <Calendar className="w-8 h-8 text-blue-600 dark:text-blue-400 mx-auto" />
+            )}
           </div>
 
           {/* Menu Items */}
-          <nav className="flex-1 p-4 space-y-2">
+          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = selectedMenu === item.id;
@@ -138,12 +142,13 @@ export default function Sidebar({
                 <button
                   key={item.id}
                   onClick={() => onMenuChange(item.id)}
-                  className={`w-full flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`w-full flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 mobile-touch-target ${
                     isActive 
                       ? getActiveClasses()
                       : `${getHoverClasses()} text-gray-600 dark:text-gray-300`
                   }`}
                   title={isCollapsed ? item.description : undefined}
+                  aria-label={item.label}
                 >
                   <Icon className={`w-5 h-5 flex-shrink-0 ${isCollapsed ? 'mx-auto' : 'mr-3'}`} />
                   {!isCollapsed && (
@@ -155,6 +160,11 @@ export default function Sidebar({
           </nav>
         </div>
       </div>
+
+      {/* Mobile Overlay */}
+      <div className="sm:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300" 
+           style={{ display: isCollapsed ? 'none' : 'block' }}
+           onClick={onToggleCollapse} />
     </div>
   );
 }

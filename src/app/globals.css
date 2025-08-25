@@ -2,15 +2,15 @@
 @import "tailwindcss/preflight";
 @import "tailwindcss/utilities";
 
-/* CSS 변수 정의 */
+/* CSS 변수 정의 - 가독성 향상 */
 :root {
   /* White 테마 (기본) */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
+  --text-secondary: #334155;
+  --text-tertiary: #475569;
   --border-color: #e2e8f0;
   --border-secondary: #cbd5e1;
   --accent-color: #3b82f6;
@@ -26,8 +26,8 @@
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
   --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
+  --text-secondary: #334155;
+  --text-tertiary: #475569;
   --border-color: #e2e8f0;
   --border-secondary: #cbd5e1;
   --accent-color: #3b82f6;
@@ -37,7 +37,7 @@
   --error-color: #ef4444;
 }
 
-/* Black 테마 - 어두운 색상으로 모든 구성요소 통일 */
+/* Black 테마 - 가독성 향상 */
 .theme-black {
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
@@ -54,14 +54,14 @@
   --error-color: #f87171;
 }
 
-/* Pink 테마 - 핑크 계열 색상으로 모든 구성요소 통일 */
+/* Pink 테마 - 가독성 향상 */
 .theme-pink {
   --bg-primary: #fdf2f8;
   --bg-secondary: #fce7f3;
   --bg-tertiary: #fbcfe8;
-  --text-primary: #831843;
-  --text-secondary: #be185d;
-  --text-tertiary: #e91e63;
+  --text-primary: #581c87;
+  --text-secondary: #7c3aed;
+  --text-tertiary: #a855f7;
   --border-color: #f9a8d4;
   --border-secondary: #f472b6;
   --accent-color: #ec4899;
@@ -78,6 +78,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.6;
 }
 
 /* 테마별 네비게이션 스타일 */
@@ -157,20 +158,24 @@ body {
   }
 }
 
-/* 모바일 반응형 스타일 */
+/* 모바일 반응형 스타일 - 개선된 버전 */
 @media (max-width: 640px) {
   /* 모바일에서 버튼 그룹의 간격 조정 */
   .mobile-button-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
     width: 100%;
+    padding: 0 1rem;
   }
   
   .mobile-button-group button,
   .mobile-button-group a {
     width: 100%;
     justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
   }
   
   /* 모바일에서 드롭다운 위치 조정 */
@@ -182,6 +187,8 @@ body {
     width: 90vw;
     max-width: 320px;
     z-index: 1000;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   }
   
   /* 모바일에서 사이드바 토글 버튼 */
@@ -193,9 +200,58 @@ body {
   .mobile-nav-hidden {
     display: none;
   }
+
+  /* 모바일에서 텍스트 크기 조정 */
+  .mobile-text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .mobile-text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  /* 모바일에서 패딩 조정 */
+  .mobile-px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .mobile-py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  /* 모바일에서 그리드 조정 */
+  .mobile-grid-1 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .mobile-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
 }
 
-/* 테마별 가독성 개선 */
+/* 태블릿 반응형 스타일 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .tablet-px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* 테마별 가독성 개선 - 더 강한 대비 */
 .theme-black .text-gray-600,
 .theme-black .text-gray-500,
 .theme-black .text-gray-400 {
@@ -254,4 +310,234 @@ body {
 .theme-pink .bg-blue-600:hover,
 .theme-pink .hover\:bg-blue-700:hover {
   background-color: var(--orange-hover) !important;
+}
+
+/* 추가 가독성 개선 */
+.theme-black .bg-gray-50,
+.theme-black .bg-gray-100 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.theme-black .bg-gray-200 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.theme-pink .bg-gray-50,
+.theme-pink .bg-gray-100 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.theme-pink .bg-gray-200 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* 테마별 텍스트 가독성 추가 개선 */
+.theme-black .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.theme-black .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+.theme-black .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+.theme-pink .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.theme-pink .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+.theme-pink .text-gray-900 {
+  color: var(--text-primary) !important;
+}
+
+/* 테마별 링크 색상 개선 */
+.theme-black a:not(.text-blue-600):not(.text-green-600):not(.text-red-600) {
+  color: var(--text-secondary);
+}
+
+.theme-black a:hover:not(.text-blue-600):not(.text-green-600):not(.text-red-600) {
+  color: var(--text-primary);
+}
+
+.theme-pink a:not(.text-blue-600):not(.text-green-600):not(.text-red-600) {
+  color: var(--text-secondary);
+}
+
+.theme-pink a:hover:not(.text-blue-600):not(.text-green-600):not(.text-red-600) {
+  color: var(--text-primary);
+}
+
+/* 모바일에서 더 나은 터치 타겟 */
+@media (max-width: 640px) {
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .mobile-touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* 모바일에서 스크롤바 숨김 */
+  ::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  /* 모바일에서 포커스 링 표시 개선 */
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  a:focus {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 2px;
+  }
+}
+
+/* 태블릿에서의 개선사항 */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* 스크롤바 스타일링 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-secondary);
+}
+
+/* 포커스 스타일 개선 */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+a:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* 애니메이션 개선 */
+.transition-all {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:scale-110:hover {
+  transform: scale(1.1);
+}
+
+/* 테마별 그림자 개선 */
+.theme-black .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.theme-black .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+.theme-pink .shadow-md {
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.2), 0 2px 4px -1px rgba(236, 72, 153, 0.1);
+}
+
+.theme-pink .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.3), 0 4px 6px -2px rgba(236, 72, 153, 0.2);
+}
+
+/* 로딩 상태 개선 */
+.loading-skeleton {
+  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 테마별 로딩 스피너 */
+.theme-black .loading-spinner {
+  border-color: var(--border-color);
+  border-top-color: var(--accent-color);
+}
+
+.theme-pink .loading-spinner {
+  border-color: var(--border-color);
+  border-top-color: var(--accent-color);
+}
+
+/* 접근성 개선 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+  :root {
+    --border-color: #000000;
+    --border-secondary: #000000;
+  }
+  
+  .theme-black {
+    --border-color: #ffffff;
+    --border-secondary: #ffffff;
+  }
+  
+  .theme-pink {
+    --border-color: #000000;
+    --border-secondary: #000000;
+  }
+}
+
+/* 모션 감소 설정 지원 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .hover\:scale-105:hover,
+  .hover\:scale-110:hover {
+    transform: none;
+  }
 }
