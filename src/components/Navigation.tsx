@@ -130,18 +130,6 @@ export default function Navigation() {
               <div className="ml-10 flex items-baseline space-x-4">
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  if (item.onClick) {
-                    return (
-                      <button
-                        key={item.label}
-                        onClick={item.onClick}
-                        className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${getHoverClasses()}`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  }
                   return (
                     <Link
                       key={item.href}
@@ -214,21 +202,6 @@ export default function Navigation() {
               <div className="px-4 py-2 space-y-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  if (item.onClick) {
-                    return (
-                      <button
-                        key={item.label}
-                        onClick={() => {
-                          item.onClick?.();
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`w-full flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${getHoverClasses()}`}
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  }
                   return (
                     <Link
                       key={item.href}
