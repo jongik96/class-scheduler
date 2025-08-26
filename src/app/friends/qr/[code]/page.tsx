@@ -47,11 +47,11 @@ export default function QRCodePage() {
         {/* 헤더 */}
         <div className="mb-8">
           <Link 
-            href="/friends"
+            href="/schedule/view"
             className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-4"
           >
             <ArrowLeft size={20} />
-            <span>친구 관리로 돌아가기</span>
+            <span>시간표 보기로 돌아가기</span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             친구 초대 QR 코드
@@ -100,7 +100,7 @@ export default function QRCodePage() {
               <div className="space-y-3">
                 <button
                   onClick={copyToClipboard}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 transition-colors"
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 transition-colors"
                 >
                   <Copy size={16} />
                   <span>{copied ? '복사됨!' : '링크 복사'}</span>
@@ -108,7 +108,7 @@ export default function QRCodePage() {
                 
                 <button
                   onClick={shareInvite}
-                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <Share2 size={16} />
                   <span>공유하기</span>

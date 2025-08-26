@@ -17,6 +17,7 @@ import {
   Friend,
   FriendInvite
 } from '@/lib/friends-api';
+import QRCode from 'react-qr-code';
 
 const timeSlots = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
@@ -479,7 +480,7 @@ function FriendsManagementPage() {
   const { user } = useAuth();
   const [friends, setFriends] = useState<Friend[]>([]);
   const [receivedInvites, setReceivedInvites] = useState<FriendInvite[]>([]);
-  const [inviteLink, setInviteLink] = useState<string>('');
+  const [inviteData, setInviteData] = useState<{ invite_code: string; invite_url: string } | null>(null);
   const [isGeneratingInvite, setIsGeneratingInvite] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -515,7 +516,7 @@ function FriendsManagementPage() {
     try {
       const result = await createFriendInvite();
       if (result) {
-        setInviteLink(result.invite_url);
+        setInviteData(result);
       }
     } catch (error) {
       console.error('Invite link generation error:', error);
@@ -525,8 +526,9 @@ function FriendsManagementPage() {
   };
 
   const handleCopyLink = async () => {
+    if (!inviteData) return;
     try {
-      await navigator.clipboard.writeText(inviteLink);
+      await navigator.clipboard.writeText(inviteData.invite_url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
@@ -627,12 +629,12 @@ function FriendsManagementPage() {
           {/* Invite by Link */}
           <div className="space-y-3">
             <h4 className="font-medium text-gray-900 dark:text-white">{t('friends.generateInviteLink')}</h4>
-            {inviteLink ? (
+            {inviteData ? (
               <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
-                    value={inviteLink}
+                    value={inviteData.invite_url}
                     readOnly
                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
                   />
@@ -667,13 +669,31 @@ function FriendsManagementPage() {
           {/* Invite by QR Code */}
           <div className="space-y-3">
             <h4 className="font-medium text-gray-900 dark:text-white">{t('friends.qrCode')}</h4>
-            <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-              <QrCode className="w-16 h-16 text-gray-400" />
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Friends will be automatically added when they scan the QR code
-            </p>
-
+            {inviteData ? (
+              <div className="text-center">
+                <div className="bg-white p-4 rounded-lg border mb-4">
+                  <QRCode value={inviteData.invite_url} size={150} />
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                  이 QR 코드를 스캔하여 친구를 초대하세요
+                </p>
+                <button
+                  onClick={() => window.open(`/friends/qr/${inviteData.invite_code}`, '_blank')}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Add Friends
+                </button>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <QrCode className="w-16 h-16 text-gray-400" />
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  초대 링크를 생성하면 QR 코드가 여기에 표시됩니다
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
