@@ -159,7 +159,7 @@ export async function getFriends(): Promise<Friend[]> {
       friend.user_id === user.id ? friend.friend_id : friend.user_id
     );
     
-    // Get profiles for all friends
+    // Get profiles for all friends with better error handling
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
@@ -167,7 +167,18 @@ export async function getFriends(): Promise<Friend[]> {
     
     if (profileError) {
       console.error('Profile retrieval error:', profileError);
-      return friends; // Return friends without profiles if profile fetch fails
+      // Even if profile fetch fails, return friends with basic info
+      return friends.map(friend => {
+        const isUserInitiator = friend.user_id === user.id;
+        const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
+        
+        return {
+          ...friend,
+          user_id: user.id,
+          friend_id: otherPersonId,
+          friend_profile: null
+        };
+      });
     }
     
     // Create a map of profiles
@@ -187,6 +198,7 @@ export async function getFriends(): Promise<Friend[]> {
       };
     });
     
+    console.log('Transformed friends with profiles:', transformedFriends);
     return transformedFriends;
   } catch (error) {
     console.error('Friends list retrieval error:', error);
@@ -219,17 +231,24 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
       .in('id', inviterIds);
     
     if (profileError) {
-      console.error('Profile retrieval error:', profileError);
-      return invites; // Return invites without profiles if profile fetch fails
+      console.error('Profile retrieval error for invites:', profileError);
+      // Return invites without profiles if profile fetch fails
+      return invites.map(invite => ({
+        ...invite,
+        inviter_profile: null
+      }));
     }
     
-    // Map profiles to invites
+    // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    
+    // Attach profiles to invites
     const invitesWithProfiles = invites.map(invite => ({
       ...invite,
       inviter_profile: profileMap.get(invite.inviter_id)
     }));
     
+    console.log('Invites with profiles:', invitesWithProfiles);
     return invitesWithProfiles;
   } catch (error) {
     console.error('Received invites retrieval error:', error);

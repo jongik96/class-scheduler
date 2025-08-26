@@ -102,6 +102,16 @@ ALTER TABLE assignment_shares ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view their own profile" ON profiles
   FOR SELECT USING (auth.uid() = id);
 
+CREATE POLICY "Users can view friends' profiles" ON profiles
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM friends 
+      WHERE (user_id = auth.uid() AND friend_id = id) 
+         OR (friend_id = auth.uid() AND user_id = id)
+      AND status = 'accepted'
+    )
+  );
+
 CREATE POLICY "Users can update their own profile" ON profiles
   FOR UPDATE USING (auth.uid() = id);
 
