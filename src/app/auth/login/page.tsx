@@ -28,13 +28,20 @@ function LoginContent() {
     
     if (urlError) {
       let errorMessage = '';
+      let errorDetails = '';
+      
+      try {
+        if (details) {
+          const parsedDetails = JSON.parse(decodeURIComponent(details));
+          errorDetails = JSON.stringify(parsedDetails, null, 2);
+        }
+      } catch {
+        errorDetails = details || '';
+      }
       
       switch (urlError) {
         case 'server_error':
           errorMessage = '서버 오류가 발생했습니다. Google Cloud Console 설정을 확인해주세요.';
-          if (details) {
-            errorMessage += `\n상세: ${decodeURIComponent(details)}`;
-          }
           break;
         case 'access_denied':
           errorMessage = '접근이 거부되었습니다. 권한을 확인해주세요.';
@@ -42,11 +49,26 @@ function LoginContent() {
         case 'invalid_request':
           errorMessage = '잘못된 요청입니다. 설정을 확인해주세요.';
           break;
+        case 'code_exchange_failed':
+          errorMessage = 'OAuth 코드 교환에 실패했습니다. Supabase 설정을 확인해주세요.';
+          break;
+        case 'session_failed':
+          errorMessage = '세션 설정에 실패했습니다. 다시 시도해주세요.';
+          break;
+        case 'auth_failed':
+          errorMessage = '인증에 실패했습니다. 다시 시도해주세요.';
+          break;
+        case 'no_session':
+          errorMessage = '세션이 생성되지 않았습니다. 다시 시도해주세요.';
+          break;
+        case 'callback_failed':
+          errorMessage = '콜백 처리에 실패했습니다. 다시 시도해주세요.';
+          break;
         default:
           errorMessage = `인증 오류: ${urlError}`;
       }
       
-      setError(errorMessage);
+      setError(errorMessage + (errorDetails ? `\n\n상세 정보:\n${errorDetails}` : ''));
     }
   }, [searchParams]);
 
@@ -94,15 +116,50 @@ function LoginContent() {
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
                 <div className="flex">
                   <AlertCircle className="h-5 w-5 text-red-400 dark:text-red-300 flex-shrink-0" />
-                  <div className="ml-3">
-                    <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+                  <div className="ml-3 w-full">
+                    <p className="text-sm text-red-800 dark:text-red-200 whitespace-pre-line">{error}</p>
+                    
+                    {/* 서버 에러인 경우 해결 방법 표시 */}
                     {error.includes('server_error') && (
-                      <div className="mt-2 text-xs text-red-600 dark:text-red-400">
-                        <p><strong>해결 방법:</strong></p>
-                        <ol className="list-decimal list-inside mt-1 space-y-1">
-                          <li>Google Cloud Console에서 승인된 리디렉션 URI를 확인하세요</li>
-                          <li>Supabase OAuth 설정을 다시 확인하세요</li>
-                          <li>몇 분 후 다시 시도해보세요</li>
+                      <div className="mt-3 p-3 bg-red-100 dark:bg-red-800/30 rounded-md">
+                        <p className="text-xs font-medium text-red-700 dark:text-red-300 mb-2">
+                          🔧 해결 방법:
+                        </p>
+                        <ol className="list-decimal list-inside text-xs text-red-600 dark:text-red-400 space-y-1">
+                          <li>Google Cloud Console에서 승인된 리디렉션 URI 확인</li>
+                          <li>Supabase OAuth 설정 재확인</li>
+                          <li>환경 변수 설정 확인</li>
+                          <li>몇 분 후 다시 시도</li>
+                        </ol>
+                      </div>
+                    )}
+                    
+                    {/* OAuth 코드 교환 실패인 경우 */}
+                    {error.includes('code_exchange_failed') && (
+                      <div className="mt-3 p-3 bg-red-100 dark:bg-red-800/30 rounded-md">
+                        <p className="text-xs font-medium text-red-700 dark:text-red-300 mb-2">
+                          🔧 해결 방법:
+                        </p>
+                        <ol className="list-decimal list-inside text-xs text-red-600 dark:text-red-400 space-y-1">
+                          <li>Supabase 프로젝트 URL과 API 키 확인</li>
+                          <li>Google OAuth 클라이언트 ID/시크릿 확인</li>
+                          <li>리디렉션 URI가 정확한지 확인</li>
+                          <li>Supabase Auth 설정 재확인</li>
+                        </ol>
+                      </div>
+                    )}
+                    
+                    {/* 일반적인 인증 실패인 경우 */}
+                    {(error.includes('session_failed') || error.includes('auth_failed') || error.includes('no_session')) && (
+                      <div className="mt-3 p-3 bg-red-100 dark:bg-red-800/30 rounded-md">
+                        <p className="text-xs font-medium text-red-700 dark:text-red-300 mb-2">
+                          🔧 해결 방법:
+                        </p>
+                        <ol className="list-decimal list-inside text-xs text-red-600 dark:text-red-400 space-y-1">
+                          <li>브라우저 캐시 및 쿠키 삭제</li>
+                          <li>다른 브라우저에서 시도</li>
+                          <li>인터넷 연결 상태 확인</li>
+                          <li>잠시 후 다시 시도</li>
                         </ol>
                       </div>
                     )}

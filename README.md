@@ -57,6 +57,79 @@ npm run dev
    - LINE Developers Console에서 채널 생성
    - Callback URL에 `https://your-project.supabase.co/auth/v1/callback` 추가
 
+## 프로덕션 배포 시 OAuth 설정
+
+### Google OAuth 설정 (프로덕션)
+
+1. **Google Cloud Console 설정**:
+   ```bash
+   # 승인된 리디렉션 URI에 다음을 추가:
+   https://yourdomain.com/auth/callback
+   https://yourdomain.com/auth/callback/
+   ```
+
+2. **Supabase 프로젝트 설정**:
+   ```bash
+   # Authentication > URL Configuration
+   Site URL: https://yourdomain.com
+   Redirect URLs: https://yourdomain.com/auth/callback
+   ```
+
+3. **환경 변수 확인**:
+   ```bash
+   # 프로덕션 환경에서 다음이 올바르게 설정되어 있는지 확인:
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   ```
+
+### OAuth 문제 해결 가이드
+
+#### 1. "Unable to exchange external code" 에러
+
+**원인**: OAuth 코드를 토큰으로 교환하지 못함
+
+**해결 방법**:
+- [ ] Google Cloud Console에서 리디렉션 URI 확인
+- [ ] Supabase 프로젝트 URL과 API 키 확인
+- [ ] Google OAuth 클라이언트 ID/시크릿 확인
+- [ ] Supabase Auth 설정 재확인
+
+#### 2. "server_error" 에러
+
+**원인**: Supabase 서버 측 OAuth 처리 오류
+
+**해결 방법**:
+- [ ] Supabase 프로젝트 상태 확인
+- [ ] Google OAuth 설정 재검토
+- [ ] 리디렉션 URI 정확성 확인
+- [ ] 몇 분 후 다시 시도
+
+#### 3. 세션 생성 실패
+
+**원인**: 인증 후 세션 설정 실패
+
+**해결 방법**:
+- [ ] 브라우저 캐시 및 쿠키 삭제
+- [ ] 다른 브라우저에서 시도
+- [ ] 인터넷 연결 상태 확인
+- [ ] Supabase 로그 확인
+
+### 디버깅 방법
+
+1. **브라우저 개발자 도구**:
+   - Console 탭에서 에러 메시지 확인
+   - Network 탭에서 OAuth 요청/응답 확인
+
+2. **Supabase 로그**:
+   - Supabase 대시보드 > Logs에서 인증 관련 에러 확인
+
+3. **환경 변수 확인**:
+   ```bash
+   # 브라우저 콘솔에서 확인
+   console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+   console.log('Supabase Key:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+   ```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
