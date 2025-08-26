@@ -19,9 +19,9 @@ import {
 } from '@/lib/friends-api';
 
 const timeSlots = [
-  '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-  '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
-  '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+  '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
+  '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+  '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
 ];
 
 export default function ScheduleViewPage() {
@@ -64,10 +64,39 @@ export default function ScheduleViewPage() {
   };
 
   const getCoursesForTimeSlot = (day: string, time: string) => {
-    return courses.filter(course => 
-      course.day_of_week === day && 
-      course.start_time === time
-    );
+    const matchingCourses = courses.filter(course => {
+      // 요일이 일치하는지 확인
+      if (course.day_of_week !== day) return false;
+      
+      // 시간 매칭: 시작 시간이 현재 시간 슬롯과 일치하거나 포함되는지 확인
+      const courseStartTime = course.start_time;
+      const courseEndTime = course.end_time;
+      const slotTime = time;
+      
+      // 시간 형식 통일 (HH:MM:SS -> HH:MM)
+      const courseStart = courseStartTime.substring(0, 5);
+      const courseEnd = courseEndTime.substring(0, 5);
+      const slot = slotTime.substring(0, 5);
+      
+      // 시작 시간이 현재 슬롯과 일치하거나, 현재 슬롯이 수업 시간 범위 내에 있는지 확인
+      const isMatch = courseStart === slot || (slot >= courseStart && slot < courseEnd);
+      
+      // 디버깅 로그
+      if (day === 'friday' && slot === '03:00') {
+        console.log(`🔍 시간 슬롯 매칭 확인:`, {
+          day,
+          slot,
+          course: course.course_name,
+          courseStart,
+          courseEnd,
+          isMatch
+        });
+      }
+      
+      return isMatch;
+    });
+    
+    return matchingCourses;
   };
 
   const formatTime = (time: string) => {
@@ -241,60 +270,83 @@ export default function ScheduleViewPage() {
             {/* Course List */}
             <div>
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                {t('schedule.view.courseList')}
+                {t('schedule.view.courseList')} ({courses.length}개)
               </h2>
+              
+              {/* Debug Info */}
+              <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded text-xs">
+                <p>🔍 디버그 정보:</p>
+                <p>총 수업 수: {courses.length}</p>
+                <p>현재 선택된 요일: {selectedDay}</p>
+                <p>수업 데이터: {JSON.stringify(courses.map(c => ({ name: c.course_name, day: c.day_of_week, time: c.start_time })))}</p>
+              </div>
+              
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-                <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {courses.map((course) => (
-                    <div key={course.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div
-                            className="w-4 h-4 rounded-full"
-                            style={{ backgroundColor: course.color }}
-                          />
-                          <div>
-                            <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                              {course.course_name}
-                            </h3>
-                            <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                              <span className="flex items-center">
-                                <BookOpen className="w-4 h-4 mr-1" />
-                                {course.course_code}
-                              </span>
-                              <span className="flex items-center">
-                                <User className="w-4 h-4 mr-1" />
-                                {course.professor}
-                              </span>
-                              <span className="flex items-center">
-                                <Clock className="w-4 h-4 mr-1" />
-                                {course.start_time} - {course.end_time}
-                              </span>
-                              <span className="flex items-center">
-                                <MapPin className="w-4 h-4 mr-1" />
-                                {course.room}
-                              </span>
+                {courses.length === 0 ? (
+                  <div className="p-8 text-center">
+                    <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500 dark:text-gray-400 mb-2">등록된 수업이 없습니다</p>
+                    <p className="text-sm text-gray-400 dark:text-gray-500">
+                      수업 추가 버튼을 클릭하여 첫 번째 수업을 등록해보세요
+                    </p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {courses.map((course) => (
+                      <div key={course.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div
+                              className="w-4 h-4 rounded-full"
+                              style={{ backgroundColor: course.color }}
+                            />
+                            <div>
+                              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                                {course.course_name}
+                              </h3>
+                              <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
+                                <span className="flex items-center">
+                                  <BookOpen className="w-4 h-4 mr-1" />
+                                  {course.course_code}
+                                </span>
+                                <span className="flex items-center">
+                                  <User className="w-4 h-4 mr-1" />
+                                  {course.professor}
+                                </span>
+                                <span className="flex items-center">
+                                  <Clock className="w-4 h-4 mr-1" />
+                                  {course.start_time.substring(0, 5)} - {course.end_time.substring(0, 5)}
+                                </span>
+                                <span className="flex items-center">
+                                  <MapPin className="w-4 h-4 mr-1" />
+                                  {course.room}
+                                </span>
+                                <span className="flex items-center">
+                                  <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: course.color }}></span>
+                                  {course.day_of_week}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Link
-                            href={`/course/${course.id}`}
-                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </Link>
-                          <button 
-                            onClick={() => handleDeleteCourse(course.id)}
-                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center space-x-2">
+                            <Link
+                              href={`/course/${course.id}`}
+                              className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </Link>
+                            <button 
+                              onClick={() => handleDeleteCourse(course.id)}
+                              className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>

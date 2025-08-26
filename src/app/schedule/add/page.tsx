@@ -33,8 +33,25 @@ export default function AddCoursePage() {
     { value: 'sunday', label: t('schedule.add.sunday') }
   ];
 
+  // 30분 단위 시간 옵션 (09:00 ~ 20:00)
+  const timeOptions = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
+    '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
+    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // 시간 유효성 검사
+    const startTimeIndex = timeOptions.indexOf(formData.startTime);
+    const endTimeIndex = timeOptions.indexOf(formData.endTime);
+    
+    if (startTimeIndex >= endTimeIndex) {
+      alert('종료 시간은 시작 시간보다 늦어야 합니다.');
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -77,7 +94,34 @@ export default function AddCoursePage() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // 시작 시간이 변경되면 종료 시간 자동 조정
+      if (field === 'startTime') {
+        const startTimeIndex = timeOptions.indexOf(value);
+        const currentEndTimeIndex = timeOptions.indexOf(newData.endTime);
+        
+        // 시작 시간이 종료 시간보다 늦으면 종료 시간을 시작 시간 + 1.5시간으로 설정
+        if (startTimeIndex >= currentEndTimeIndex) {
+          const newEndTimeIndex = Math.min(startTimeIndex + 3, timeOptions.length - 1); // 1.5시간 = 3개 슬롯
+          newData.endTime = timeOptions[newEndTimeIndex];
+        }
+      }
+      
+      // 종료 시간이 시작 시간보다 이르면 시작 시간으로부터 1.5시간 후로 설정
+      if (field === 'endTime') {
+        const startTimeIndex = timeOptions.indexOf(newData.startTime);
+        const endTimeIndex = timeOptions.indexOf(value);
+        
+        if (endTimeIndex <= startTimeIndex) {
+          const newEndTimeIndex = Math.min(startTimeIndex + 3, timeOptions.length - 1);
+          newData.endTime = timeOptions[newEndTimeIndex];
+        }
+      }
+      
+      return newData;
+    });
   };
 
   return (
@@ -173,13 +217,20 @@ export default function AddCoursePage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('schedule.add.startTime')}
                   </label>
-                  <input
-                    type="time"
+                  <select
                     value={formData.startTime}
                     onChange={(e) => handleInputChange('startTime', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                    required
-                  />
+                  >
+                    {timeOptions.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    오전 9시 ~ 오후 8시, 30분 단위
+                  </p>
                 </div>
 
                 {/* End Time */}
@@ -187,13 +238,20 @@ export default function AddCoursePage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('schedule.add.endTime')}
                   </label>
-                  <input
-                    type="time"
+                  <select
                     value={formData.endTime}
                     onChange={(e) => handleInputChange('endTime', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                    required
-                  />
+                  >
+                    {timeOptions.map((time) => (
+                      <option key={time} value={time}>
+                        {time}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    시작 시간 이후로 설정
+                  </p>
                 </div>
 
                 {/* Room */}
