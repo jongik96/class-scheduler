@@ -21,6 +21,10 @@ export default function FriendsPage() {
     }
   }, [user]);
 
+  useEffect(() => {
+    console.log('Invite data changed:', inviteData); // 디버깅 로그
+  }, [inviteData]);
+
   const loadFriends = async () => {
     try {
       const friendsList = await getFriends();
@@ -34,8 +38,10 @@ export default function FriendsPage() {
     setLoading(true);
     try {
       const data = await createFriendInvite();
+      console.log('Generated invite data:', data); // 디버깅 로그
       if (data) {
         setInviteData(data);
+        console.log('Invite data set:', data); // 디버깅 로그
       }
     } catch (error) {
       console.error('Failed to generate invite:', error);
