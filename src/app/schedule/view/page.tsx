@@ -7,6 +7,7 @@ import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
+import { coursesApi, type Course } from '@/lib/api';
 import { 
   getFriends, 
   getReceivedInvites, 
@@ -16,43 +17,6 @@ import {
   Friend,
   FriendInvite
 } from '@/lib/friends-api';
-
-// 임시 데이터
-const sampleCourses = [
-  {
-    id: 1,
-    name: '웹 프로그래밍 기초',
-    code: 'CS101',
-    professor: '김교수',
-    dayOfWeek: 'monday',
-    startTime: '09:00',
-    endTime: '10:30',
-    room: '101호',
-    color: '#3b82f6'
-  },
-  {
-    id: 2,
-    name: '데이터베이스 시스템',
-    code: 'CS201',
-    professor: '이교수',
-    dayOfWeek: 'tuesday',
-    startTime: '13:00',
-    endTime: '14:30',
-    room: '202호',
-    color: '#10b981'
-  },
-  {
-    id: 3,
-    name: '알고리즘과 자료구조',
-    code: 'CS301',
-    professor: '박교수',
-    dayOfWeek: 'wednesday',
-    startTime: '15:00',
-    endTime: '16:30',
-    room: '303호',
-    color: '#f59e0b'
-  }
-];
 
 const timeSlots = [
   '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -65,6 +29,9 @@ export default function ScheduleViewPage() {
   const [selectedDay, setSelectedDay] = useState('monday');
   const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('schedule');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const daysOfWeek = [
     { value: 'monday', label: t('schedule.view.monday') },
@@ -76,10 +43,30 @@ export default function ScheduleViewPage() {
     { value: 'sunday', label: t('schedule.view.sunday') }
   ];
 
+  // 수업 데이터 로드
+  useEffect(() => {
+    loadCourses();
+  }, []);
+
+  const loadCourses = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const coursesData = await coursesApi.getCourses();
+      setCourses(coursesData);
+      console.log('✅ 수업 데이터 로드 성공:', coursesData);
+    } catch (err) {
+      console.error('❌ 수업 데이터 로드 실패:', err);
+      setError(err instanceof Error ? err.message : '수업 데이터를 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const getCoursesForTimeSlot = (day: string, time: string) => {
-    return sampleCourses.filter(course => 
-      course.dayOfWeek === day && 
-      course.startTime === time
+    return courses.filter(course => 
+      course.day_of_week === day && 
+      course.start_time === time
     );
   };
 
@@ -97,6 +84,20 @@ export default function ScheduleViewPage() {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
+  // 수업 삭제 핸들러
+  const handleDeleteCourse = async (courseId: string) => {
+    if (confirm('정말로 이 수업을 삭제하시겠습니까?')) {
+      try {
+        await coursesApi.deleteCourse(courseId);
+        console.log('✅ 수업 삭제 성공');
+        await loadCourses(); // 목록 새로고침
+      } catch (err) {
+        console.error('❌ 수업 삭제 실패:', err);
+        alert('수업 삭제에 실패했습니다.');
+      }
+    }
+  };
+
   // 현재 선택된 메뉴에 따른 콘텐츠 렌더링
   const renderContent = () => {
     switch (selectedMenu) {
@@ -104,7 +105,7 @@ export default function ScheduleViewPage() {
         return (
           <div className="space-y-6">
             {/* Actions */}
-            <div>
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/schedule/add"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
@@ -112,7 +113,41 @@ export default function ScheduleViewPage() {
                 <Plus className="w-4 h-4 mr-2" />
                 {t('schedule.view.addCourse')}
               </Link>
+              
+              <button
+                onClick={loadCourses}
+                disabled={isLoading}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                    새로고침 중...
+                  </>
+                ) : (
+                  '새로고침'
+                )}
+              </button>
             </div>
+
+            {/* Error Display */}
+            {error && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+                <p className="text-red-800 dark:text-red-200 text-sm">
+                  ❌ {error}
+                </p>
+              </div>
+            )}
+
+            {/* Loading State */}
+            {isLoading && (
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                <p className="text-blue-800 dark:text-blue-200 text-sm">
+                  수업 데이터를 불러오는 중...
+                </p>
+              </div>
+            )}
 
             {/* Day Selector */}
             <div>
@@ -192,7 +227,7 @@ export default function ScheduleViewPage() {
                             className="p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 transition-opacity"
                             style={{ backgroundColor: course.color }}
                           >
-                            <div className="font-medium truncate">{course.name}</div>
+                            <div className="font-medium truncate">{course.course_name}</div>
                             <div className="opacity-90 truncate">{course.room}</div>
                           </div>
                         ))}
@@ -210,7 +245,7 @@ export default function ScheduleViewPage() {
               </h2>
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {sampleCourses.map((course) => (
+                  {courses.map((course) => (
                     <div key={course.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -220,12 +255,12 @@ export default function ScheduleViewPage() {
                           />
                           <div>
                             <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                              {course.name}
+                              {course.course_name}
                             </h3>
                             <div className="flex items-center space-x-4 text-sm text-gray-600 dark:text-gray-400">
                               <span className="flex items-center">
                                 <BookOpen className="w-4 h-4 mr-1" />
-                                {course.code}
+                                {course.course_code}
                               </span>
                               <span className="flex items-center">
                                 <User className="w-4 h-4 mr-1" />
@@ -233,7 +268,7 @@ export default function ScheduleViewPage() {
                               </span>
                               <span className="flex items-center">
                                 <Clock className="w-4 h-4 mr-1" />
-                                {course.startTime} - {course.endTime}
+                                {course.start_time} - {course.end_time}
                               </span>
                               <span className="flex items-center">
                                 <MapPin className="w-4 h-4 mr-1" />
@@ -249,10 +284,10 @@ export default function ScheduleViewPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
-                          <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
+                          <button 
+                            onClick={() => handleDeleteCourse(course.id)}
+                            className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                          >
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
