@@ -55,6 +55,7 @@ function ScheduleViewContent() {
       setIsLoading(true);
       setError(null);
       const coursesData = await coursesApi.getCourses();
+      console.log('✅ 로드된 수업 데이터:', coursesData);
       setCourses(coursesData);
     } catch (err) {
       console.error('수업 데이터 로드 실패:', err);
@@ -65,27 +66,26 @@ function ScheduleViewContent() {
   };
 
   const getCoursesForTimeSlot = (day: string, time: string) => {
-    const matchingCourses = courses.filter(course => {
+    const filteredCourses = courses.filter(course => {
       // 요일이 일치하는지 확인
       if (course.day_of_week !== day) return false;
       
-      // 시간 매칭: 시작 시간이 현재 시간 슬롯과 일치하거나 포함되는지 확인
-      const courseStartTime = course.start_time;
-      const courseEndTime = course.end_time;
-      const slotTime = time;
-      
       // 시간 형식 통일 (HH:MM:SS -> HH:MM)
-      const courseStart = courseStartTime.substring(0, 5);
-      const courseEnd = courseEndTime.substring(0, 5);
-      const slot = slotTime.substring(0, 5);
+      const courseStart = course.start_time.substring(0, 5);
+      const courseEnd = course.end_time.substring(0, 5);
+      const slot = time.substring(0, 5);
       
-      // 시작 시간이 현재 슬롯과 일치하거나, 현재 슬롯이 수업 시간 범위 내에 있는지 확인
-      const isMatch = courseStart === slot || (slot >= courseStart && slot < courseEnd);
+      // 현재 슬롯이 수업 시간 범위 내에 있는지 확인
+      const isMatch = slot >= courseStart && slot < courseEnd;
+      
+      if (isMatch) {
+        console.log(`✅ ${day} ${time}에 매칭된 수업:`, course.course_name, `${courseStart}-${courseEnd}`);
+      }
       
       return isMatch;
     });
     
-    return matchingCourses;
+    return filteredCourses;
   };
 
   // 연속된 시간의 수업을 병합하여 표시할 셀 정보를 계산
@@ -299,13 +299,13 @@ function ScheduleViewContent() {
                            const courses = getCoursesForTimeSlot(day.value, time);
                            
                            // 현재 시간에 시작하는 수업이 있는지 확인
-                           const isStartTime = courses.some(course => 
+                           const startTimeCourses = courses.filter(course => 
                              course.start_time.substring(0, 5) === time
                            );
                            
-                           // 현재 시간에 시작하는 수업이 있다면 병합 셀 표시
-                           if (isStartTime && courses.length > 0) {
-                             const course = courses[0];
+                           // 현재 시간에 시작하는 수업이 있다면 표시
+                           if (startTimeCourses.length > 0) {
+                             const course = startTimeCourses[0];
                              const startMinutes = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
                              const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
                              const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
@@ -641,14 +641,14 @@ function ScheduleViewContent() {
               <div className="mb-6 sm:mb-8">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
                   {selectedMenu === 'schedule' ? t('schedule.view.title') : 
-                   selectedMenu === 'assignments' ? t('assignments.list.title') :
                    selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
+                   selectedMenu === 'assignments' ? t('assignments.list.title') :
                    selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
                   {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
-                   selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
                    selectedMenu === 'courses' ? t('sidebarContent.courses.description') :
+                   selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
                    selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
                 </p>
                 

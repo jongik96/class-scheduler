@@ -38,16 +38,16 @@ export default function Sidebar({
       description: t('sidebar.scheduleDescription')
     },
     {
-      id: 'assignments' as SidebarMenu,
-      label: t('sidebar.assignments'),
-      icon: CheckSquare,
-      description: t('sidebar.assignmentsDescription')
-    },
-    {
       id: 'courses' as SidebarMenu,
       label: t('sidebar.courses'),
       icon: BookOpen,
       description: t('sidebar.coursesDescription')
+    },
+    {
+      id: 'assignments' as SidebarMenu,
+      label: t('sidebar.assignments'),
+      icon: CheckSquare,
+      description: t('sidebar.assignmentsDescription')
     },
     {
       id: 'friends' as SidebarMenu,
