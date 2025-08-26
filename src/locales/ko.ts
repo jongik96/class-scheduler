@@ -541,5 +541,215 @@ export const ko = {
   friendInvite: {
     sentInvite: '님이 친구 초대',
     grade: '학년'
+  },
+
+  // Privacy Policy
+  privacy: {
+    title: '개인정보 처리방침',
+    lastUpdated: '최종 업데이트',
+    lastUpdatedDate: '2024년 12월 19일',
+    introduction: {
+      title: '소개',
+      description: 'Smart Scheduler는 사용자의 개인정보 보호를 최우선으로 생각합니다. 이 개인정보 처리방침은 당사가 수집, 사용, 보호하는 정보에 대해 설명합니다.',
+      contact: '개인정보 처리방침에 대한 문의사항이 있으시면 언제든지 연락주세요.'
+    },
+    informationCollection: {
+      title: '수집하는 정보',
+      personalData: {
+        title: '개인정보',
+        email: '이메일 주소 (Google OAuth를 통한 로그인)',
+        name: '이름 및 닉네임',
+        studentInfo: '학번, 전공, 학년 등 학생 정보',
+        profile: '프로필 사진 및 기타 프로필 정보'
+      },
+      usageData: {
+        title: '사용 데이터',
+        courses: '수업 정보 (과목명, 교수명, 시간, 강의실 등)',
+        assignments: '과제 정보 (제목, 설명, 마감일, 우선순위 등)',
+        schedule: '스케줄 및 시간표 데이터',
+        friends: '친구 목록 및 친구 요청 정보'
+      },
+      technicalData: {
+        title: '기술적 데이터',
+        ip: 'IP 주소 및 위치 정보',
+        browser: '브라우저 유형 및 버전',
+        device: '기기 정보 (운영체제, 화면 해상도 등)',
+        cookies: '쿠키 및 세션 데이터'
+      }
+    },
+    usage: {
+      title: '정보 사용 목적',
+      provide: '서비스 제공 및 계정 관리',
+      communicate: '사용자와의 커뮤니케이션',
+      improve: '서비스 개선 및 개발',
+      security: '보안 및 사기 방지',
+      legal: '법적 의무 이행'
+    },
+    sharing: {
+      title: '정보 공유',
+      description: '당사는 사용자의 명시적 동의 없이는 개인정보를 제3자와 공유하지 않습니다.',
+      consent: '사용자의 명시적 동의가 있는 경우',
+      service: '서비스 제공을 위한 필요시 (Supabase 등)',
+      legal: '법적 요구사항에 따른 경우',
+      business: '사업 전환 또는 합병 시'
+    },
+    security: {
+      title: '데이터 보안',
+      description: '당사는 사용자의 개인정보를 보호하기 위해 다양한 보안 조치를 취하고 있습니다.',
+      encryption: '데이터 전송 및 저장 시 암호화',
+      access: '접근 권한 제한 및 관리',
+      monitoring: '보안 모니터링 및 감사',
+      training: '직원 보안 교육'
+    },
+    rights: {
+      title: '사용자의 권리',
+      access: '개인정보에 대한 접근 권한',
+      correction: '잘못된 정보 수정 권한',
+      deletion: '개인정보 삭제 권한',
+      portability: '데이터 이전 권한',
+      restriction: '처리 제한 권한',
+      objection: '처리 중단 요청 권한'
+    },
+    retention: {
+      title: '데이터 보관',
+      description: '당사는 서비스 제공에 필요한 기간 동안만 개인정보를 보관합니다.',
+      account: '계정이 활성 상태인 동안',
+      inactive: '비활성 계정은 2년 후 자동 삭제',
+      legal: '법적 요구사항이 있는 경우 더 오래 보관'
+    },
+    international: {
+      title: '국제 데이터 이전',
+      description: '당사는 Supabase를 통해 데이터를 처리하며, 이는 EU 및 기타 국가의 데이터 보호 규정을 준수합니다.'
+    },
+    children: {
+      title: '아동 개인정보 보호',
+      description: '당사는 13세 미만 아동의 개인정보를 고의로 수집하지 않습니다. 13세 미만 아동의 개인정보가 수집된 것으로 확인되면 즉시 삭제합니다.'
+    },
+    changes: {
+      title: '정책 변경',
+      description: '이 개인정보 처리방침은 서비스 변경에 따라 업데이트될 수 있습니다. 중요한 변경사항이 있을 경우 사용자에게 알려드립니다.'
+    },
+    contact: {
+      title: '연락처',
+      description: '개인정보 처리방침에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
+      email: '이메일',
+      address: '주소',
+      addressValue: '서울특별시 강남구 테헤란로 123, 456호'
+    },
+    footer: '이 개인정보 처리방침은 2024년 12월 19일부터 효력이 발생합니다.'
+  },
+
+  // Terms of Service
+  terms: {
+    title: '이용약관',
+    lastUpdated: '최종 업데이트',
+    lastUpdatedDate: '2024년 12월 19일',
+    introduction: {
+      title: '소개',
+      description: 'Smart Scheduler는 학생들을 위한 스마트한 스케줄 관리 서비스입니다. 이 이용약관은 서비스 이용과 관련된 조건과 규칙을 정의합니다.',
+      agreement: '서비스를 이용함으로써 귀하는 이 약관에 동의하게 됩니다.'
+    },
+    service: {
+      title: '서비스 설명',
+      description: 'Smart Scheduler는 다음과 같은 기능을 제공합니다:',
+      features: {
+        courseManagement: '수업 관리 및 스케줄링',
+        assignmentTracking: '과제 추적 및 관리',
+        schedulePlanning: '시간표 계획 및 최적화',
+        friendConnections: '친구 연결 및 공유',
+        multilingual: '다국어 지원 (한국어, 영어, 일본어)'
+      }
+    },
+    accounts: {
+      title: '사용자 계정',
+      registration: {
+        title: '계정 등록',
+        requirements: '유효한 Google 계정이 필요합니다',
+        accuracy: '정확하고 최신 정보를 제공해야 합니다',
+        security: '계정 보안을 유지해야 합니다',
+        oneAccount: '사용자당 하나의 계정만 허용됩니다'
+      },
+      responsibilities: {
+        title: '사용자 책임',
+        password: '비밀번호 및 로그인 정보 보안',
+        activities: '계정을 통한 모든 활동에 대한 책임',
+        notification: '보안 침해 의심 시 즉시 알림',
+        compliance: '이용약관 및 관련 법규 준수'
+      }
+    },
+    acceptableUse: {
+      title: '허용되는 사용',
+      allowed: {
+        title: '허용되는 활동',
+        personal: '개인적인 학업 및 스케줄 관리',
+        educational: '교육 목적의 사용',
+        legal: '법적이고 적절한 목적의 사용',
+        respectful: '다른 사용자에 대한 존중'
+      },
+      prohibited: {
+        title: '금지되는 활동',
+        illegal: '불법적인 활동',
+        harmful: '유해하거나 위험한 콘텐츠',
+        spam: '스팸 또는 원치 않는 메시지',
+        unauthorized: '무단 접근 또는 해킹 시도',
+        privacy: '타인의 개인정보 침해',
+        security: '시스템 보안 위협'
+      }
+    },
+    intellectualProperty: {
+      title: '지적재산권',
+      description: 'Smart Scheduler의 모든 콘텐츠는 당사의 지적재산권입니다.',
+      ownership: '서비스 및 콘텐츠에 대한 소유권',
+      license: '제한된 사용 라이선스 제공',
+      userContent: '사용자가 생성한 콘텐츠에 대한 권리',
+      feedback: '피드백 및 제안에 대한 권리'
+    },
+    privacy: {
+      title: '개인정보 및 데이터',
+      description: '개인정보 처리에 대한 자세한 내용은 개인정보 처리방침을 참조하세요.',
+      link: '개인정보 처리방침 보기'
+    },
+    availability: {
+      title: '서비스 가용성',
+      description: '당사는 서비스의 지속적인 가용성을 위해 노력하지만, 완벽한 가용성을 보장하지는 않습니다.',
+      maintenance: '정기적인 유지보수',
+      updates: '서비스 업데이트 및 개선',
+      technical: '기술적 문제 또는 장애',
+      force: '천재지변 등 불가항력적 사유'
+    },
+    liability: {
+      title: '책임 제한',
+      description: '법적 허용 범위 내에서 당사의 책임은 제한됩니다.',
+      exclusions: '간접적 손해에 대한 책임 제외',
+      maximum: '최대 책임 한도 설정',
+      essential: '필수적인 법적 권리 보존'
+    },
+    termination: {
+      title: '서비스 종료',
+      description: '서비스 이용은 언제든지 종료할 수 있습니다.',
+      user: '사용자가 계정을 삭제하는 경우',
+      service: '서비스가 종료되는 경우',
+      effects: '종료 시 데이터 처리 방법',
+      survival: '종료 후에도 유효한 조항'
+    },
+    governingLaw: {
+      title: '준거법',
+      description: '이 이용약관은 대한민국 법률에 따라 해석되고 적용됩니다.'
+    },
+    changes: {
+      title: '약관 변경',
+      description: '이용약관은 사전 통지 후 변경될 수 있습니다.',
+      notification: '변경사항 사전 통지',
+      continued: '계속 사용 시 변경된 약관 동의',
+      material: '중요한 변경사항에 대한 별도 동의'
+    },
+    contact: {
+      title: '연락처',
+      description: '이용약관에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
+      email: '이메일',
+      address: '주소',
+      addressValue: '서울특별시 강남구 테헤란로 123, 456호'
+    },
+    footer: '이 이용약관은 2024년 12월 19일부터 효력이 발생합니다.'
   }
 };

@@ -234,9 +234,13 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm text-gray-400">
               <span>{t('home.footer.copyright')}</span>
               <span className="hidden sm:inline">•</span>
-              <span>{t('home.footer.privacy')}</span>
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                {t('home.footer.privacy')}
+              </Link>
               <span className="hidden sm:inline">•</span>
-              <span>{t('home.footer.terms')}</span>
+              <Link href="/terms" className="hover:text-white transition-colors">
+                {t('home.footer.terms')}
+              </Link>
             </div>
           </div>
         </footer>

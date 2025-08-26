@@ -540,5 +540,215 @@ export const en = {
   friendInvite: {
     sentInvite: ' sent a friend invite',
     grade: 'Year'
+  },
+
+  // Privacy Policy
+  privacy: {
+    title: 'Privacy Policy',
+    lastUpdated: 'Last Updated',
+    lastUpdatedDate: 'December 19, 2024',
+    introduction: {
+      title: 'Introduction',
+      description: 'Smart Scheduler prioritizes the protection of your personal information. This Privacy Policy explains what information we collect, use, and protect.',
+      contact: 'If you have any questions about this Privacy Policy, please contact us anytime.'
+    },
+    informationCollection: {
+      title: 'Information We Collect',
+      personalData: {
+        title: 'Personal Data',
+        email: 'Email address (through Google OAuth login)',
+        name: 'Name and nickname',
+        studentInfo: 'Student ID, major, grade, and other student information',
+        profile: 'Profile picture and other profile information'
+      },
+      usageData: {
+        title: 'Usage Data',
+        courses: 'Course information (subject name, professor, time, classroom, etc.)',
+        assignments: 'Assignment information (title, description, due date, priority, etc.)',
+        schedule: 'Schedule and timetable data',
+        friends: 'Friends list and friend request information'
+      },
+      technicalData: {
+        title: 'Technical Data',
+        ip: 'IP address and location information',
+        browser: 'Browser type and version',
+        device: 'Device information (operating system, screen resolution, etc.)',
+        cookies: 'Cookies and session data'
+      }
+    },
+    usage: {
+      title: 'How We Use Information',
+      provide: 'To provide services and manage accounts',
+      communicate: 'To communicate with users',
+      improve: 'To improve and develop services',
+      security: 'For security and fraud prevention',
+      legal: 'To fulfill legal obligations'
+    },
+    sharing: {
+      title: 'Information Sharing',
+      description: 'We do not share personal information with third parties without your explicit consent.',
+      consent: 'When you give explicit consent',
+      service: 'When necessary for service provision (Supabase, etc.)',
+      legal: 'When required by law',
+      business: 'During business transitions or mergers'
+    },
+    security: {
+      title: 'Data Security',
+      description: 'We implement various security measures to protect your personal information.',
+      encryption: 'Data encryption during transmission and storage',
+      access: 'Access control and management',
+      monitoring: 'Security monitoring and auditing',
+      training: 'Employee security training'
+    },
+    rights: {
+      title: 'Your Rights',
+      access: 'Right to access personal information',
+      correction: 'Right to correct inaccurate information',
+      deletion: 'Right to delete personal information',
+      portability: 'Right to data portability',
+      restriction: 'Right to restrict processing',
+      objection: 'Right to object to processing'
+    },
+    retention: {
+      title: 'Data Retention',
+      description: 'We retain personal information only for as long as necessary to provide services.',
+      account: 'While the account is active',
+      inactive: 'Inactive accounts are automatically deleted after 2 years',
+      legal: 'Longer retention when required by law'
+    },
+    international: {
+      title: 'International Data Transfers',
+      description: 'We process data through Supabase, which complies with EU and other countries\' data protection regulations.'
+    },
+    children: {
+      title: 'Children\'s Privacy',
+      description: 'We do not knowingly collect personal information from children under 13. If we discover that personal information from a child under 13 has been collected, we will delete it immediately.'
+    },
+    changes: {
+      title: 'Changes to Policy',
+      description: 'This Privacy Policy may be updated due to service changes. We will notify users of any significant changes.'
+    },
+    contact: {
+      title: 'Contact Information',
+      description: 'If you have questions about this Privacy Policy, please contact us at:',
+      email: 'Email',
+      address: 'Address',
+      addressValue: '123 Teheran-ro, Gangnam-gu, Seoul, Republic of Korea, Room 456'
+    },
+    footer: 'This Privacy Policy is effective from December 19, 2024.'
+  },
+
+  // Terms of Service
+  terms: {
+    title: 'Terms of Service',
+    lastUpdated: 'Last Updated',
+    lastUpdatedDate: 'December 19, 2024',
+    introduction: {
+      title: 'Introduction',
+      description: 'Smart Scheduler is a smart schedule management service for students. These Terms of Service define the conditions and rules related to service usage.',
+      agreement: 'By using the service, you agree to these terms.'
+    },
+    service: {
+      title: 'Service Description',
+      description: 'Smart Scheduler provides the following features:',
+      features: {
+        courseManagement: 'Course management and scheduling',
+        assignmentTracking: 'Assignment tracking and management',
+        schedulePlanning: 'Timetable planning and optimization',
+        friendConnections: 'Friend connections and sharing',
+        multilingual: 'Multilingual support (Korean, English, Japanese)'
+      }
+    },
+    accounts: {
+      title: 'User Accounts',
+      registration: {
+        title: 'Account Registration',
+        requirements: 'Valid Google account required',
+        accuracy: 'Must provide accurate and up-to-date information',
+        security: 'Must maintain account security',
+        oneAccount: 'Only one account per user allowed'
+      },
+      responsibilities: {
+        title: 'User Responsibilities',
+        password: 'Password and login information security',
+        activities: 'Responsibility for all activities through the account',
+        notification: 'Immediate notification of suspected security breaches',
+        compliance: 'Compliance with terms and applicable laws'
+      }
+    },
+    acceptableUse: {
+      title: 'Acceptable Use',
+      allowed: {
+        title: 'Allowed Activities',
+        personal: 'Personal academic and schedule management',
+        educational: 'Educational purposes',
+        legal: 'Legal and appropriate purposes',
+        respectful: 'Respect for other users'
+      },
+      prohibited: {
+        title: 'Prohibited Activities',
+        illegal: 'Illegal activities',
+        harmful: 'Harmful or dangerous content',
+        spam: 'Spam or unwanted messages',
+        unauthorized: 'Unauthorized access or hacking attempts',
+        privacy: 'Violation of others\' privacy',
+        security: 'System security threats'
+      }
+    },
+    intellectualProperty: {
+      title: 'Intellectual Property',
+      description: 'All content of Smart Scheduler is our intellectual property.',
+      ownership: 'Ownership of services and content',
+      license: 'Limited use license provided',
+      userContent: 'Rights to user-generated content',
+      feedback: 'Rights to feedback and suggestions'
+    },
+    privacy: {
+      title: 'Privacy and Data',
+      description: 'For detailed information about personal data processing, please refer to the Privacy Policy.',
+      link: 'View Privacy Policy'
+    },
+    availability: {
+      title: 'Service Availability',
+      description: 'We strive for continuous service availability but do not guarantee perfect availability.',
+      maintenance: 'Regular maintenance',
+      updates: 'Service updates and improvements',
+      technical: 'Technical issues or failures',
+      force: 'Force majeure such as natural disasters'
+    },
+    liability: {
+      title: 'Limitation of Liability',
+      description: 'Our liability is limited within legally permitted scope.',
+      exclusions: 'Exclusion of indirect damages',
+      maximum: 'Maximum liability limits',
+      essential: 'Preservation of essential legal rights'
+    },
+    termination: {
+      title: 'Service Termination',
+      description: 'Service usage can be terminated at any time.',
+      user: 'When user deletes account',
+      service: 'When service is terminated',
+      effects: 'Data processing methods upon termination',
+      survival: 'Provisions valid after termination'
+    },
+    governingLaw: {
+      title: 'Governing Law',
+      description: 'These Terms of Service are interpreted and applied according to the laws of the Republic of Korea.'
+    },
+    changes: {
+      title: 'Changes to Terms',
+      description: 'Terms of Service may be changed with prior notice.',
+      notification: 'Prior notice of changes',
+      continued: 'Agreement to changed terms with continued use',
+      material: 'Separate consent for material changes'
+    },
+    contact: {
+      title: 'Contact Information',
+      description: 'If you have questions about these Terms of Service, please contact us at:',
+      email: 'Email',
+      address: 'Address',
+      addressValue: '123 Teheran-ro, Gangnam-gu, Seoul, Republic of Korea, Room 456'
+    },
+    footer: 'These Terms of Service are effective from December 19, 2024.'
   }
 };

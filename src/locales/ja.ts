@@ -540,5 +540,215 @@ export const ja = {
   friendInvite: {
     sentInvite: 'が友達招待',
     grade: '年生'
+  },
+
+  // プライバシーポリシー
+  privacy: {
+    title: 'プライバシーポリシー',
+    lastUpdated: '最終更新',
+    lastUpdatedDate: '2024年12月19日',
+    introduction: {
+      title: 'はじめに',
+      description: 'Smart Schedulerは、ユーザーの個人情報保護を最優先に考えています。このプライバシーポリシーは、当社が収集、使用、保護する情報について説明します。',
+      contact: 'プライバシーポリシーについてご質問がございましたら、いつでもお問い合わせください。'
+    },
+    informationCollection: {
+      title: '収集する情報',
+      personalData: {
+        title: '個人情報',
+        email: 'メールアドレス（Google OAuthログインによる）',
+        name: '氏名およびニックネーム',
+        studentInfo: '学籍番号、専攻、学年などの学生情報',
+        profile: 'プロフィール写真およびその他のプロフィール情報'
+      },
+      usageData: {
+        title: '利用データ',
+        courses: '授業情報（科目名、教授名、時間、教室など）',
+        assignments: '課題情報（タイトル、説明、期限、優先度など）',
+        schedule: 'スケジュールおよび時間割データ',
+        friends: '友達一覧および友達リクエスト情報'
+      },
+      technicalData: {
+        title: '技術的データ',
+        ip: 'IPアドレスおよび位置情報',
+        browser: 'ブラウザの種類およびバージョン',
+        device: 'デバイス情報（OS、画面解像度など）',
+        cookies: 'クッキーおよびセッションデータ'
+      }
+    },
+    usage: {
+      title: '情報の使用目的',
+      provide: 'サービスの提供およびアカウント管理',
+      communicate: 'ユーザーとのコミュニケーション',
+      improve: 'サービスの改善および開発',
+      security: 'セキュリティおよび不正防止',
+      legal: '法的義務の履行'
+    },
+    sharing: {
+      title: '情報の共有',
+      description: '当社は、ユーザーの明示的な同意なしに個人情報を第三者と共有しません。',
+      consent: 'ユーザーの明示的な同意がある場合',
+      service: 'サービス提供に必要な場合（Supabaseなど）',
+      legal: '法的要件による場合',
+      business: '事業移転または合併時'
+    },
+    security: {
+      title: 'データセキュリティ',
+      description: '当社は、ユーザーの個人情報を保護するために様々なセキュリティ対策を実施しています。',
+      encryption: 'データ送信および保存時の暗号化',
+      access: 'アクセス権限の制限および管理',
+      monitoring: 'セキュリティ監視および監査',
+      training: '従業員セキュリティ教育'
+    },
+    rights: {
+      title: 'ユーザーの権利',
+      access: '個人情報へのアクセス権',
+      correction: '誤った情報の修正権',
+      deletion: '個人情報の削除権',
+      portability: 'データの移転権',
+      restriction: '処理制限権',
+      objection: '処理停止要求権'
+    },
+    retention: {
+      title: 'データの保持',
+      description: '当社は、サービス提供に必要な期間のみ個人情報を保持します。',
+      account: 'アカウントがアクティブな間',
+      inactive: '非アクティブアカウントは2年後に自動削除',
+      legal: '法的要件がある場合はより長く保持'
+    },
+    international: {
+      title: '国際データ移転',
+      description: '当社はSupabaseを通じてデータを処理し、これはEUおよびその他の国のデータ保護規制に準拠しています。'
+    },
+    children: {
+      title: '児童の個人情報保護',
+      description: '当社は、13歳未満の児童の個人情報を故意に収集しません。13歳未満の児童の個人情報が収集されたことが確認された場合は、即座に削除します。'
+    },
+    changes: {
+      title: 'ポリシーの変更',
+      description: 'このプライバシーポリシーは、サービスの変更に伴い更新される場合があります。重要な変更がある場合は、ユーザーに通知いたします。'
+    },
+    contact: {
+      title: 'お問い合わせ',
+      description: 'プライバシーポリシーについてご質問がございましたら、以下の連絡先までお問い合わせください：',
+      email: 'メール',
+      address: '住所',
+      addressValue: 'ソウル特別市江南区テヘラン路123、456号室'
+    },
+    footer: 'このプライバシーポリシーは2024年12月19日から効力を発します。'
+  },
+
+  // 利用規約
+  terms: {
+    title: '利用規約',
+    lastUpdated: '最終更新',
+    lastUpdatedDate: '2024年12月19日',
+    introduction: {
+      title: 'はじめに',
+      description: 'Smart Schedulerは、学生のためのスマートなスケジュール管理サービスです。この利用規約は、サービス利用に関連する条件とルールを定義します。',
+      agreement: 'サービスを利用することで、あなたはこの規約に同意することになります。'
+    },
+    service: {
+      title: 'サービスの説明',
+      description: 'Smart Schedulerは以下の機能を提供します：',
+      features: {
+        courseManagement: '授業管理およびスケジューリング',
+        assignmentTracking: '課題追跡および管理',
+        schedulePlanning: '時間割計画および最適化',
+        friendConnections: '友達接続および共有',
+        multilingual: '多言語サポート（韓国語、英語、日本語）'
+      }
+    },
+    accounts: {
+      title: 'ユーザーアカウント',
+      registration: {
+        title: 'アカウント登録',
+        requirements: '有効なGoogleアカウントが必要です',
+        accuracy: '正確で最新の情報を提供する必要があります',
+        security: 'アカウントセキュリティを維持する必要があります',
+        oneAccount: 'ユーザーあたり1つのアカウントのみ許可'
+      },
+      responsibilities: {
+        title: 'ユーザーの責任',
+        password: 'パスワードおよびログイン情報のセキュリティ',
+        activities: 'アカウントを通じたすべての活動に対する責任',
+        notification: 'セキュリティ侵害の疑いがある場合の即座の通知',
+        compliance: '利用規約および関連法規の遵守'
+      }
+    },
+    acceptableUse: {
+      title: '許容される使用',
+      allowed: {
+        title: '許容される活動',
+        personal: '個人的な学業およびスケジュール管理',
+        educational: '教育目的の使用',
+        legal: '法的で適切な目的の使用',
+        respectful: '他のユーザーへの敬意'
+      },
+      prohibited: {
+        title: '禁止される活動',
+        illegal: '違法な活動',
+        harmful: '有害または危険なコンテンツ',
+        spam: 'スパムまたは不要なメッセージ',
+        unauthorized: '無断アクセスまたはハッキング試行',
+        privacy: '他人の個人情報侵害',
+        security: 'システムセキュリティ脅威'
+      }
+    },
+    intellectualProperty: {
+      title: '知的財産権',
+      description: 'Smart Schedulerのすべてのコンテンツは当社の知的財産権です。',
+      ownership: 'サービスおよびコンテンツの所有権',
+      license: '制限された使用ライセンスの提供',
+      userContent: 'ユーザー生成コンテンツに対する権利',
+      feedback: 'フィードバックおよび提案に対する権利'
+    },
+    privacy: {
+      title: '個人情報およびデータ',
+      description: '個人データ処理の詳細については、プライバシーポリシーを参照してください。',
+      link: 'プライバシーポリシーを見る'
+    },
+    availability: {
+      title: 'サービスの可用性',
+      description: '当社はサービスの継続的な可用性のために努力しますが、完璧な可用性を保証しません。',
+      maintenance: '定期的なメンテナンス',
+      updates: 'サービスの更新および改善',
+      technical: '技術的問題または障害',
+      force: '自然災害などの不可抗力'
+    },
+    liability: {
+      title: '責任の制限',
+      description: '法的に許容される範囲内で当社の責任は制限されます。',
+      exclusions: '間接的損害に対する責任の除外',
+      maximum: '最大責任限度の設定',
+      essential: '必須的な法的権利の保持'
+    },
+    termination: {
+      title: 'サービスの終了',
+      description: 'サービスの利用はいつでも終了できます。',
+      user: 'ユーザーがアカウントを削除する場合',
+      service: 'サービスが終了する場合',
+      effects: '終了時のデータ処理方法',
+      survival: '終了後も有効な条項'
+    },
+    governingLaw: {
+      title: '準拠法',
+      description: 'この利用規約は大韓民国の法律に従って解釈され、適用されます。'
+    },
+    changes: {
+      title: '規約の変更',
+      description: '利用規約は事前通知後に変更される場合があります。',
+      notification: '変更事項の事前通知',
+      continued: '継続使用による変更された規約への同意',
+      material: '重要な変更に対する別途同意'
+    },
+    contact: {
+      title: 'お問い合わせ',
+      description: '利用規約についてご質問がございましたら、以下の連絡先までお問い合わせください：',
+      email: 'メール',
+      address: '住所',
+      addressValue: 'ソウル特別市江南区テヘラン路123、456号室'
+    },
+    footer: 'この利用規約は2024年12月19日から効力を発します。'
   }
 };
