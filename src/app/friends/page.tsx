@@ -207,9 +207,15 @@ export default function FriendsPage() {
                 <div className="bg-white p-6 rounded-lg border mb-4">
                   <QRCode value={inviteData.invite_url} size={250} />
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   이 QR 코드를 스캔하여 친구를 초대하세요
                 </p>
+                <button
+                  onClick={() => window.open(`/friends/qr/${inviteData.invite_code}`, '_blank')}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Add Friends
+                </button>
               </div>
             ) : (
               <div className="text-center py-16">
