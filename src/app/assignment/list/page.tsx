@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Search, Filter, Calendar, CheckCircle, Clock, AlertCircle, Eye, BookOpen, RefreshCw } from 'lucide-react';
+import { Plus, Search, Filter, Calendar, CheckCircle, Clock, AlertCircle, Eye, BookOpen, RefreshCw, Edit } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { assignmentsApi, type Assignment } from '@/lib/api';
 
@@ -353,6 +353,12 @@ export default function AssignmentListPage() {
                         className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       >
                         <Eye className="w-4 h-4" />
+                      </Link>
+                      <Link
+                        href={`/assignment/${assignment.id}/edit`}
+                        className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                      >
+                        <Edit className="w-4 h-4" />
                       </Link>
                       <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                         <CheckCircle className="w-4 h-4" />

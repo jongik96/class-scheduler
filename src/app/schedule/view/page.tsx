@@ -335,6 +335,12 @@ export default function ScheduleViewPage() {
                             >
                               <Eye className="w-4 h-4" />
                             </Link>
+                            <Link
+                              href={`/course/${course.id}/edit`}
+                              className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Link>
                             <button 
                               onClick={() => handleDeleteCourse(course.id)}
                               className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
