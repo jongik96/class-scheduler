@@ -263,81 +263,109 @@ function ScheduleViewContent() {
                     ))}
                   </div>
 
-                  {/* Time slots */}
-                  <div className="grid grid-cols-7" style={{ gridTemplateRows: getGridRows() }}>
-                    {timeSlots.map((time) => (
-                      <React.Fragment key={time}>
-                        {/* Time label */}
-                        <div className="p-1 sm:p-2 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-xs text-gray-600 dark:text-gray-400">
-                            {formatTime(time)}
-                          </span>
-                        </div>
-                        
-                        {/* Day cells */}
-                        {daysOfWeek.map((day) => {
-                          const mergedCell = getMergedCourseCells(day.value, time);
-                          if (mergedCell) {
-                            return (
-                              <div
-                                key={day.value}
-                                className={`p-1 border-r border-gray-200 dark:border-gray-600 border-b border-gray-200 dark:border-gray-700 ${
-                                  selectedDay === day.value
-                                    ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
-                                    : ''
-                                }`}
-                                style={{ 
-                                  minHeight: `${mergedCell.durationSlots * 50}px`,
-                                  gridRow: `span ${mergedCell.durationSlots}`
-                                }}
-                              >
-                                <Link
-                                  href={`/course/${mergedCell.course.id}`}
-                                  className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group h-full flex flex-col justify-center"
-                                  style={{ backgroundColor: migrateToPastelColor(mergedCell.course.color) }}
-                                  title={`${mergedCell.course.course_name} - ${mergedCell.course.room} (클릭하여 상세보기)`}
-                                >
-                                  <div className="font-semibold truncate text-xs sm:text-sm">{mergedCell.course.course_name}</div>
-                                  <div className="font-medium opacity-90 truncate text-xs">{mergedCell.course.room}</div>
-                                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
-                                    👆 클릭
-                                  </div>
-                                </Link>
-                              </div>
-                            );
-                          } else {
-                            const courses = getCoursesForTimeSlot(day.value, time);
-                            return (
-                              <div
-                                key={day.value}
-                                className={`p-1 border-r border-gray-200 dark:border-gray-600 border-b border-gray-200 dark:border-gray-700 min-h-[50px] ${
-                                  selectedDay === day.value
-                                    ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
-                                    : ''
-                                }`}
-                              >
-                                {courses.map((course) => (
-                                  <Link
-                                    key={course.id}
-                                    href={`/course/${course.id}`}
-                                    className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group"
-                                    style={{ backgroundColor: migrateToPastelColor(course.color) }}
-                                    title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
-                                  >
-                                    <div className="font-semibold truncate text-xs sm:text-sm">{course.course_name}</div>
-                                    <div className="font-medium opacity-90 truncate text-xs">{course.room}</div>
-                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
-                                      👆 클릭
-                                    </div>
-                                  </Link>
-                                ))}
-                              </div>
-                            );
-                          }
-                        })}
-                      </React.Fragment>
-                    ))}
-                  </div>
+                   {/* Time slots */}
+                   {timeSlots.map((time, timeIndex) => {
+                     // 현재 시간에 시작하는 수업이 있는지 확인하고 병합할 행 수 계산
+                     let maxDurationSlots = 1;
+                     daysOfWeek.forEach(day => {
+                       const courses = getCoursesForTimeSlot(day.value, time);
+                       const isStartTime = courses.some(course => 
+                         course.start_time.substring(0, 5) === time
+                       );
+                       if (isStartTime && courses.length > 0) {
+                         const course = courses[0];
+                         const startMinutes = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+                         const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
+                         const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
+                         maxDurationSlots = Math.max(maxDurationSlots, durationSlots);
+                       }
+                     });
+
+                     return (
+                       <div 
+                         key={time} 
+                         className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700"
+                         style={{ minHeight: `${maxDurationSlots * 50}px` }}
+                       >
+                         {/* Time label */}
+                         <div className="p-1 sm:p-2 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600 flex items-center">
+                           <span className="text-xs text-gray-600 dark:text-gray-400">
+                             {formatTime(time)}
+                           </span>
+                         </div>
+                         
+                         {/* Day cells */}
+                         {daysOfWeek.map((day) => {
+                           const courses = getCoursesForTimeSlot(day.value, time);
+                           
+                           // 현재 시간에 시작하는 수업이 있는지 확인
+                           const isStartTime = courses.some(course => 
+                             course.start_time.substring(0, 5) === time
+                           );
+                           
+                           // 현재 시간에 시작하는 수업이 있다면 병합 셀 표시
+                           if (isStartTime && courses.length > 0) {
+                             const course = courses[0];
+                             const startMinutes = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+                             const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
+                             const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
+                             
+                             return (
+                               <div
+                                 key={day.value}
+                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                   selectedDay === day.value
+                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                     : ''
+                                 }`}
+                               >
+                                 <Link
+                                   href={`/course/${course.id}`}
+                                   className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group h-full flex flex-col justify-center"
+                                   style={{ backgroundColor: migrateToPastelColor(course.color) }}
+                                   title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
+                                 >
+                                   <div className="font-semibold truncate text-xs sm:text-sm">{course.course_name}</div>
+                                   <div className="font-medium opacity-90 truncate text-xs">{course.room}</div>
+                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
+                                     👆 클릭
+                                   </div>
+                                 </Link>
+                               </div>
+                             );
+                           } else if (courses.length > 0) {
+                             // 수업이 있지만 시작 시간이 아닌 경우 (병합된 셀의 일부)
+                             return (
+                               <div
+                                 key={day.value}
+                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                   selectedDay === day.value
+                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                     : ''
+                                 }`}
+                               >
+                                 {/* 이 셀은 병합된 수업의 일부이므로 내용을 표시하지 않음 */}
+                               </div>
+                             );
+                           } else {
+                             // 수업이 없는 경우 빈 셀
+                             return (
+                               <div
+                                 key={day.value}
+                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                   selectedDay === day.value
+                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                     : ''
+                                 }`}
+                               >
+                                 {/* 빈 셀 */}
+                               </div>
+                             );
+                           }
+                         })}
+                       </div>
+                     );
+                   })}
                 </div>
               </div>
             </div>
