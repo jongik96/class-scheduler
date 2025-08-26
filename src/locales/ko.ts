@@ -629,13 +629,11 @@ export const ko = {
       title: '정책 변경',
       description: '이 개인정보 처리방침은 서비스 변경에 따라 업데이트될 수 있습니다. 중요한 변경사항이 있을 경우 사용자에게 알려드립니다.'
     },
-    contact: {
-      title: '연락처',
-      description: '개인정보 처리방침에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
-      email: '이메일',
-      address: '주소',
-      addressValue: '서울특별시 강남구 테헤란로 123, 456호'
-    },
+           contact: {
+         title: '연락처',
+         description: '개인정보 처리방침에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
+         email: '이메일'
+       },
     footer: '이 개인정보 처리방침은 2024년 12월 19일부터 효력이 발생합니다.'
   },
 
@@ -743,13 +741,11 @@ export const ko = {
       continued: '계속 사용 시 변경된 약관 동의',
       material: '중요한 변경사항에 대한 별도 동의'
     },
-    contact: {
-      title: '연락처',
-      description: '이용약관에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
-      email: '이메일',
-      address: '주소',
-      addressValue: '서울특별시 강남구 테헤란로 123, 456호'
-    },
+           contact: {
+         title: '연락처',
+         description: '이용약관에 대한 문의사항이 있으시면 다음 연락처로 연락주세요:',
+         email: '이메일'
+       },
     footer: '이 이용약관은 2024년 12월 19일부터 효력이 발생합니다.'
   }
 };

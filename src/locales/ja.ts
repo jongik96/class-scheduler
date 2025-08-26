@@ -631,9 +631,7 @@ export const ja = {
     contact: {
       title: 'お問い合わせ',
       description: 'プライバシーポリシーについてご質問がございましたら、以下の連絡先までお問い合わせください：',
-      email: 'メール',
-      address: '住所',
-      addressValue: 'ソウル特別市江南区テヘラン路123、456号室'
+      email: 'メール'
     },
     footer: 'このプライバシーポリシーは2024年12月19日から効力を発します。'
   },
@@ -745,9 +743,7 @@ export const ja = {
     contact: {
       title: 'お問い合わせ',
       description: '利用規約についてご質問がございましたら、以下の連絡先までお問い合わせください：',
-      email: 'メール',
-      address: '住所',
-      addressValue: 'ソウル特別市江南区テヘラン路123、456号室'
+      email: 'メール'
     },
     footer: 'この利用規約は2024年12月19日から効力を発します。'
   }

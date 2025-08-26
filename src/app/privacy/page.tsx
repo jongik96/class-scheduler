@@ -207,10 +207,7 @@ export default function PrivacyPolicyPage() {
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>{t('privacy.contact.email')}:</strong> privacy@schedule-app.com
-                </p>
-                <p className="text-gray-700 dark:text-gray-300">
-                  <strong>{t('privacy.contact.address')}:</strong> {t('privacy.contact.addressValue')}
+                  <strong>{t('privacy.contact.email')}:</strong> pji3503@gmail.com
                 </p>
               </div>
             </section>

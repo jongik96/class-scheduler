@@ -240,10 +240,7 @@ export default function TermsOfServicePage() {
               </p>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>{t('terms.contact.email')}:</strong> legal@schedule-app.com
-                </p>
-                <p className="text-gray-700 dark:text-gray-300">
-                  <strong>{t('terms.contact.address')}:</strong> {t('terms.contact.addressValue')}
+                  <strong>{t('terms.contact.email')}:</strong> pji3503@gmail.com
                 </p>
               </div>
             </section>

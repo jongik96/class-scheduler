@@ -631,9 +631,7 @@ export const en = {
     contact: {
       title: 'Contact Information',
       description: 'If you have questions about this Privacy Policy, please contact us at:',
-      email: 'Email',
-      address: 'Address',
-      addressValue: '123 Teheran-ro, Gangnam-gu, Seoul, Republic of Korea, Room 456'
+      email: 'Email'
     },
     footer: 'This Privacy Policy is effective from December 19, 2024.'
   },
@@ -745,9 +743,7 @@ export const en = {
     contact: {
       title: 'Contact Information',
       description: 'If you have questions about these Terms of Service, please contact us at:',
-      email: 'Email',
-      address: 'Address',
-      addressValue: '123 Teheran-ro, Gangnam-gu, Seoul, Republic of Korea, Room 456'
+      email: 'Email'
     },
     footer: 'These Terms of Service are effective from December 19, 2024.'
   }
