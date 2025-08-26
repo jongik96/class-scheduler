@@ -675,13 +675,13 @@ function FriendsManagementPage() {
                   <QRCode value={inviteData.invite_url} size={150} />
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  이 QR 코드를 스캔하여 친구를 초대하세요
+                  {t('friends.qrCodeDescription')}
                 </p>
                 <button
                   onClick={() => window.open(`/friends/qr/${inviteData.invite_code}`, '_blank')}
                   className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Add Friends
+                  {t('friends.addFriends')}
                 </button>
               </div>
             ) : (
@@ -690,7 +690,7 @@ function FriendsManagementPage() {
                   <QrCode className="w-16 h-16 text-gray-400" />
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  초대 링크를 생성하면 QR 코드가 여기에 표시됩니다
+                  {t('friends.qrCodePlaceholder')}
                 </p>
               </div>
             )}
