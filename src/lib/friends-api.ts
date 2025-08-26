@@ -143,10 +143,20 @@ export async function getFriends(): Promise<Friend[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
-    // Query friends bidirectionally: where user is either user_id or friend_id
+    // Query friends bidirectionally with profile information
     const { data: friends, error } = await supabase
       .from('friends')
-      .select('*')
+      .select(`
+        *,
+        friend_profile:profiles!friends_friend_id_fkey(
+          id,
+          full_name,
+          nickname,
+          avatar_url,
+          major,
+          grade
+        )
+      `)
       .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
       .eq('status', 'accepted');
 
@@ -159,13 +169,37 @@ export async function getFriends(): Promise<Friend[]> {
         return friend;
       } else {
         // User is friend_id, so user_id is the other person
+        // Need to get profile for the user_id (which is now the friend)
         return {
           ...friend,
           user_id: friend.friend_id,
-          friend_id: friend.user_id
+          friend_id: friend.user_id,
+          friend_profile: friend.friend_profile // This will be null, need to fetch separately
         };
       }
     });
+    
+    // For friends where user is friend_id, we need to fetch the profile separately
+    const friendsNeedingProfile = transformedFriends.filter(friend => 
+      friend.user_id === user.id && !friend.friend_profile
+    );
+    
+    if (friendsNeedingProfile.length > 0) {
+      const profileIds = friendsNeedingProfile.map(friend => friend.friend_id);
+      const { data: profiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, full_name, nickname, avatar_url, major, grade')
+        .in('id', profileIds);
+      
+      if (!profileError && profiles) {
+        const profileMap = new Map(profiles.map(p => [p.id, p]));
+        transformedFriends.forEach(friend => {
+          if (friend.user_id === user.id && !friend.friend_profile) {
+            friend.friend_profile = profileMap.get(friend.friend_id);
+          }
+        });
+      }
+    }
     
     return transformedFriends;
   } catch (error) {
@@ -182,7 +216,15 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
 
     const { data: invites, error } = await supabase
       .from('friend_invites')
-      .select('*')
+      .select(`
+        *,
+        inviter_profile:profiles!friend_invites_inviter_id_fkey(
+          id,
+          full_name,
+          nickname,
+          avatar_url
+        )
+      `)
       .eq('invitee_email', user.email)
       .eq('status', 'pending');
 
