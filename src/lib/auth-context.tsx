@@ -62,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           // 프로필 완성 상태 확인
           await checkProfileStatus(session.user.id)
         } else {
-          console.log('❌ 로그아웃 상태 감지')
+          console.log('❌ Logout state detected')
           setUser(null)
           setProfileComplete(false)
         }
@@ -83,23 +83,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       setProfileComplete(profile?.is_profile_complete || false)
     } catch (error) {
-      console.error('프로필 상태 확인 오류:', error)
+      console.error('Profile status check error:', error)
       setProfileComplete(false)
     }
   }
 
   const signInWithGoogle = async () => {
     try {
-      console.log('🚀 Google 로그인 시작...')
+      console.log('🚀 Google login started...')
       
-      // 현재 환경에 따른 리다이렉트 URL 설정
+      // Set redirect URL based on current environment
       const isProduction = window.location.hostname !== 'localhost'
       const redirectTo = isProduction 
         ? 'https://class-scheduler-nine.vercel.app/auth/callback'
         : `${window.location.origin}/auth/callback`
       
-      console.log('🌐 환경:', isProduction ? 'Production' : 'Development')
-      console.log('🔄 콜백 URL:', redirectTo)
+      console.log('🌐 Environment:', isProduction ? 'Production' : 'Development')
+      console.log('🔄 Callback URL:', redirectTo)
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -113,14 +113,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       
       if (error) {
-        console.error('❌ Google 로그인 오류:', error)
+        console.error('❌ Google login error:', error)
         throw error
       }
       
-      console.log('✅ Google 로그인 리다이렉트 성공:', data)
-      console.log('🔄 리다이렉트 URL:', data.url)
+      console.log('✅ Google login redirect successful:', data)
+      console.log('🔄 Redirect URL:', data.url)
     } catch (error) {
-      console.error('❌ Google 로그인 예외:', error)
+      console.error('❌ Google login exception:', error)
       throw error
     }
   }
@@ -132,7 +132,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(null)
       setProfileComplete(false)
     } catch (error) {
-      console.error('로그아웃 오류:', error)
+      console.error('Logout error:', error)
       throw error
     }
   }

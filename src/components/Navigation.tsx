@@ -34,19 +34,19 @@ export default function Navigation() {
   const authItems: AuthItem[] = user ? [
     { 
       href: '#', 
-      label: user.user_metadata?.name || user.email || '사용자', 
+      label: user.user_metadata?.name || user.email || t('common.user'), 
       icon: UserPlus,
       onClick: () => {} // 사용자 프로필 드롭다운을 위한 플레이스홀더
     },
     { 
       href: '#', 
-      label: '로그아웃', 
+      label: t('common.logout'), 
       icon: LogIn,
       onClick: async () => {
         try {
           await signOut();
         } catch (error) {
-          console.error('로그아웃 오류:', error);
+          console.error(t('common.logoutError'), error);
         }
       }
     }
@@ -152,7 +152,7 @@ export default function Navigation() {
             <button
               onClick={toggleMobileMenu}
               className={`p-2 rounded-md transition-all duration-200 hover:scale-105 mobile-touch-target ${getTextClasses()}`}
-              aria-label="메뉴 열기"
+              aria-label={t('common.openMenu')}
             >
               {isMobileMenuOpen ? (
                 <X className="w-6 h-6" />

@@ -1,20 +1,20 @@
 import { supabase } from './supabase';
 
 // =====================================================
-// 유틸리티 함수
+// Utility functions
 // =====================================================
 
-// 현재 로그인한 사용자 확인
+// Check current logged in user
 async function getCurrentUser() {
   const { data: { user }, error } = await supabase.auth.getUser();
   if (error || !user) {
-    throw new Error('로그인이 필요합니다.');
+    throw new Error('Login required.');
   }
   return user;
 }
 
 // =====================================================
-// 타입 정의
+// Type definitions
 // =====================================================
 
 export interface Course {
@@ -82,11 +82,11 @@ export interface FriendInvite {
 }
 
 // =====================================================
-// 수업 관리 API (Courses)
+// Course Management API (Courses)
 // =====================================================
 
 export const coursesApi = {
-  // 수업 목록 조회
+  // Get courses list
   async getCourses(): Promise<Course[]> {
     const user = await getCurrentUser();
     
@@ -117,10 +117,10 @@ export const coursesApi = {
     return data;
   },
 
-  // 수업 생성
+  // Create course
   async createCourse(courseData: Omit<Course, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Course> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data, error } = await supabase
       .from('courses')
@@ -135,7 +135,7 @@ export const coursesApi = {
     return data;
   },
 
-  // 수업 수정
+  // Update course
   async updateCourse(id: string, updates: Partial<Course>): Promise<Course> {
     const user = await getCurrentUser();
     
@@ -151,7 +151,7 @@ export const coursesApi = {
     return data;
   },
 
-  // 수업 삭제 (소프트 삭제)
+  // Delete course (soft delete)
   async deleteCourse(id: string): Promise<void> {
     const user = await getCurrentUser();
     
@@ -164,7 +164,7 @@ export const coursesApi = {
     if (error) throw error;
   },
 
-  // 특정 요일 수업 조회
+  // Get courses by specific day
   async getCoursesByDay(dayOfWeek: Course['day_of_week']): Promise<Course[]> {
     const user = await getCurrentUser();
     
@@ -182,11 +182,11 @@ export const coursesApi = {
 };
 
 // =====================================================
-// 과제 관리 API (Assignments)
+// Assignment Management API (Assignments)
 // =====================================================
 
 export const assignmentsApi = {
-  // 과제 목록 조회
+  // Get assignments list
   async getAssignments(): Promise<Assignment[]> {
     const user = await getCurrentUser();
     
@@ -200,7 +200,7 @@ export const assignmentsApi = {
     return data || [];
   },
 
-  // 특정 과제 조회
+  // Get specific assignment
   async getAssignment(id: string): Promise<Assignment | null> {
     const user = await getCurrentUser();
     
@@ -215,10 +215,10 @@ export const assignmentsApi = {
     return data;
   },
 
-  // 과제 생성
+  // Create assignment
   async createAssignment(assignmentData: Omit<Assignment, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Assignment> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data, error } = await supabase
       .from('assignments')
@@ -233,7 +233,7 @@ export const assignmentsApi = {
     return data;
   },
 
-  // 과제 수정
+  // Update assignment
   async updateAssignment(id: string, updates: Partial<Assignment>): Promise<Assignment> {
     const user = await getCurrentUser();
     
@@ -249,7 +249,7 @@ export const assignmentsApi = {
     return data;
   },
 
-  // 과제 삭제
+  // Delete assignment
   async deleteAssignment(id: string): Promise<void> {
     const user = await getCurrentUser();
     
@@ -262,7 +262,7 @@ export const assignmentsApi = {
     if (error) throw error;
   },
 
-  // 과제 상태별 조회
+  // Get assignments by status
   async getAssignmentsByStatus(status: Assignment['status']): Promise<Assignment[]> {
     const user = await getCurrentUser();
     
@@ -277,7 +277,7 @@ export const assignmentsApi = {
     return data || [];
   },
 
-  // 마감일이 임박한 과제 조회
+  // Get upcoming assignments
   async getUpcomingAssignments(days: number = 7): Promise<Assignment[]> {
     const user = await getCurrentUser();
     const futureDate = new Date();
@@ -297,11 +297,11 @@ export const assignmentsApi = {
 };
 
 // =====================================================
-// 프로필 관리 API (Profiles)
+// Profile Management API (Profiles)
 // =====================================================
 
 export const profilesApi = {
-  // 프로필 조회
+  // Get profile
   async getProfile(): Promise<Profile | null> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return null;
@@ -316,10 +316,10 @@ export const profilesApi = {
     return data;
   },
 
-  // 프로필 생성/수정
+  // Create/update profile
   async upsertProfile(profileData: Partial<Profile>): Promise<Profile> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data, error } = await supabase
       .from('profiles')
@@ -335,10 +335,10 @@ export const profilesApi = {
     return data;
   },
 
-  // 프로필 완성 상태 업데이트
+  // Update profile completion status
   async updateProfileComplete(): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { error } = await supabase
       .from('profiles')
@@ -350,11 +350,11 @@ export const profilesApi = {
 };
 
 // =====================================================
-// 친구 관리 API (Friends)
+// Friend Management API (Friends)
 // =====================================================
 
 export const friendsApi = {
-  // 친구 목록 조회
+  // Get friends list
   async getFriends(): Promise<Friend[]> {
     const { data, error } = await supabase
       .from('friends')
@@ -366,7 +366,7 @@ export const friendsApi = {
     return data || [];
   },
 
-  // 친구 요청 목록 조회
+  // Get friend requests
   async getFriendRequests(): Promise<Friend[]> {
     const { data, error } = await supabase
       .from('friends')
@@ -378,10 +378,10 @@ export const friendsApi = {
     return data || [];
   },
 
-  // 친구 요청 보내기
+  // Send friend request
   async sendFriendRequest(friendId: string): Promise<Friend> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data, error } = await supabase
       .from('friends')
@@ -397,7 +397,7 @@ export const friendsApi = {
     return data;
   },
 
-  // 친구 요청 수락/거절
+  // Accept/reject friend request
   async respondToFriendRequest(friendId: string, status: 'accepted' | 'blocked'): Promise<void> {
     const { error } = await supabase
       .from('friends')
@@ -408,7 +408,7 @@ export const friendsApi = {
     if (error) throw error;
   },
 
-  // 친구 삭제
+  // Remove friend
   async removeFriend(friendId: string): Promise<void> {
     const { error } = await supabase
       .from('friends')
@@ -420,14 +420,14 @@ export const friendsApi = {
 };
 
 // =====================================================
-// 친구 초대 API (Friend Invites)
+// Friend Invite API (Friend Invites)
 // =====================================================
 
 export const friendInvitesApi = {
-  // 초대 코드 생성
+  // Create invite code
   async createInvite(): Promise<FriendInvite> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data, error } = await supabase
       .from('friend_invites')
@@ -442,12 +442,12 @@ export const friendInvitesApi = {
     return data;
   },
 
-  // 초대 코드로 친구 추가
+  // Accept invite and add friend
   async acceptInvite(inviteCode: string): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
-    // 초대 코드 조회
+    // Check invite code
     const { data: invite, error: inviteError } = await supabase
       .from('friend_invites')
       .select('*')
@@ -455,10 +455,10 @@ export const friendInvitesApi = {
       .eq('status', 'pending')
       .single();
 
-    if (inviteError) throw new Error('유효하지 않은 초대 코드입니다.');
-    if (invite.expires_at < new Date().toISOString()) throw new Error('만료된 초대 코드입니다.');
+    if (inviteError) throw new Error('Invalid invite code.');
+    if (invite.expires_at < new Date().toISOString()) throw new Error('Expired invite code.');
 
-    // 친구 관계 생성
+    // Create friend relationship
     const { error: friendError } = await supabase
       .from('friends')
       .insert([
@@ -468,7 +468,7 @@ export const friendInvitesApi = {
 
     if (friendError) throw friendError;
 
-    // 초대 상태 업데이트
+    // Update invite status
     const { error: updateError } = await supabase
       .from('friend_invites')
       .update({ status: 'accepted' })
@@ -479,11 +479,11 @@ export const friendInvitesApi = {
 };
 
 // =====================================================
-// 유틸리티 함수
+// Utility functions
 // =====================================================
 
 export const apiUtils = {
-  // 에러 메시지 포맷팅
+  // Format error message
   formatError(error: unknown): string {
     if (typeof error === 'string') return error;
     if (error && typeof error === 'object' && 'message' in error) {
@@ -492,24 +492,24 @@ export const apiUtils = {
     if (error && typeof error === 'object' && 'error_description' in error) {
       return String(error.error_description);
     }
-    return '알 수 없는 오류가 발생했습니다.';
+    return 'An unknown error occurred.';
   },
 
-  // 성공 응답 포맷팅
+  // Format success response
   formatSuccess<T>(data: T, message?: string) {
     return {
       success: true,
       data,
-      message: message || '성공적으로 처리되었습니다.'
+      message: message || 'Successfully processed.'
     };
   },
 
-  // 에러 응답 포맷팅
+  // Format error response
   formatErrorResponse(error: unknown, message?: string) {
     return {
       success: false,
       error: this.formatError(error),
-      message: message || '처리 중 오류가 발생했습니다.'
+      message: message || 'An error occurred during processing.'
     };
   }
 };

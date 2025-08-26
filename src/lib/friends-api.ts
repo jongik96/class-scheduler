@@ -50,9 +50,9 @@ export interface AssignmentShare {
 export async function createFriendInvite(): Promise<{ invite_code: string; invite_url: string } | null> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
-    // 기존 초대가 있는지 확인
+    // Check if existing invite exists
     const { data: existingInvite } = await supabase
       .from('friend_invites')
       .select('*')
@@ -65,7 +65,7 @@ export async function createFriendInvite(): Promise<{ invite_code: string; invit
     if (existingInvite) {
       inviteCode = existingInvite.invite_code;
     } else {
-      // 새로운 초대 코드 생성
+      // Generate new invite code
       const { data: newInvite, error } = await supabase
         .from('friend_invites')
         .insert({
@@ -83,7 +83,7 @@ export async function createFriendInvite(): Promise<{ invite_code: string; invit
     const inviteUrl = `${window.location.origin}/invite/${inviteCode}`;
     return { invite_code: inviteCode, invite_url: inviteUrl };
   } catch (error) {
-    console.error('친구 초대 생성 오류:', error);
+    console.error('Friend invite creation error:', error);
     return null;
   }
 }
@@ -92,9 +92,9 @@ export async function createFriendInvite(): Promise<{ invite_code: string; invit
 export async function acceptFriendInvite(inviteCode: string): Promise<boolean> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
-    // 초대 코드 확인
+    // Check invite code
     const { data: invite, error: inviteError } = await supabase
       .from('friend_invites')
       .select('*')
@@ -102,18 +102,18 @@ export async function acceptFriendInvite(inviteCode: string): Promise<boolean> {
       .eq('status', 'pending')
       .single();
 
-    if (inviteError || !invite) throw new Error('유효하지 않은 초대 코드입니다.');
+    if (inviteError || !invite) throw new Error('Invalid invite code.');
 
-    // 이미 친구인지 확인
+    // Check if already friends
     const { data: existingFriend } = await supabase
       .from('friends')
       .select('*')
       .or(`and(user_id.eq.${user.id},friend_id.eq.${invite.inviter_id}),and(user_id.eq.${invite.inviter_id},friend_id.eq.${user.id})`)
       .single();
 
-    if (existingFriend) throw new Error('이미 친구입니다.');
+    if (existingFriend) throw new Error('Already friends.');
 
-    // 친구 관계 생성
+    // Create friend relationship
     const { error: friendError } = await supabase
       .from('friends')
       .insert([
@@ -123,7 +123,7 @@ export async function acceptFriendInvite(inviteCode: string): Promise<boolean> {
 
     if (friendError) throw friendError;
 
-    // 초대 상태 업데이트
+    // Update invite status
     await supabase
       .from('friend_invites')
       .update({ status: 'accepted' })
@@ -131,16 +131,16 @@ export async function acceptFriendInvite(inviteCode: string): Promise<boolean> {
 
     return true;
   } catch (error) {
-    console.error('친구 초대 수락 오류:', error);
+    console.error('Friend invite acceptance error:', error);
     return false;
   }
 }
 
-// 친구 목록 조회
+// Get friends list
 export async function getFriends(): Promise<Friend[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data: friends, error } = await supabase
       .from('friends')
@@ -247,9 +247,9 @@ export async function getFriends(): Promise<Friend[]> {
     // 실제 데이터가 있으면 실제 데이터 반환, 없으면 샘플 데이터 반환
     return friends && friends.length > 0 ? friends : sampleFriends;
   } catch (error) {
-    console.error('친구 목록 조회 오류:', error);
+    console.error('Friends list retrieval error:', error);
     
-         // 오류 발생 시에도 샘플 데이터 반환
+         // Return sample data even on error
      const { data: { user } } = await supabase.auth.getUser();
      if (user) {
        return [
@@ -339,11 +339,11 @@ export async function getFriends(): Promise<Friend[]> {
   }
 }
 
-// 받은 친구 초대 조회
+// Get received friend invites
 export async function getReceivedInvites(): Promise<FriendInvite[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data: invites, error } = await supabase
       .from('friend_invites')
@@ -361,12 +361,12 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
     if (error) throw error;
     return invites || [];
   } catch (error) {
-    console.error('받은 초대 조회 오류:', error);
+    console.error('Received invites retrieval error:', error);
     return [];
   }
 }
 
-// 사용자 프로필 타입 정의
+// User profile type definition
 interface UserProfile {
   id: string;
   full_name: string;
@@ -375,11 +375,11 @@ interface UserProfile {
   grade?: string;
 }
 
-// 친구 검색
+// Search users
 export async function searchUsers(query: string): Promise<UserProfile[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data: users, error } = await supabase
       .from('profiles')
@@ -391,16 +391,16 @@ export async function searchUsers(query: string): Promise<UserProfile[]> {
     if (error) throw error;
     return users || [];
   } catch (error) {
-    console.error('사용자 검색 오류:', error);
+    console.error('User search error:', error);
     return [];
   }
 }
 
-// 친구 삭제
+// Remove friend
 export async function removeFriend(friendId: string): Promise<boolean> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { error } = await supabase
       .from('friends')
@@ -410,16 +410,16 @@ export async function removeFriend(friendId: string): Promise<boolean> {
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('친구 삭제 오류:', error);
+    console.error('Friend removal error:', error);
     return false;
   }
 }
 
-// 과제 공유
+// Share assignment
 export async function shareAssignment(assignmentId: string, friendIds: string[], permission: 'view' | 'edit' = 'view'): Promise<boolean> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const shares = friendIds.map(friendId => ({
       assignment_id: assignmentId,
@@ -435,16 +435,16 @@ export async function shareAssignment(assignmentId: string, friendIds: string[],
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('과제 공유 오류:', error);
+    console.error('Assignment sharing error:', error);
     return false;
   }
 }
 
-// 과제 공유 정보 조회
+// Get assignment shares
 export async function getAssignmentShares(assignmentId: string): Promise<AssignmentShare[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data: shares, error } = await supabase
       .from('assignment_shares')
@@ -462,12 +462,12 @@ export async function getAssignmentShares(assignmentId: string): Promise<Assignm
     if (error) throw error;
     return shares || [];
   } catch (error) {
-    console.error('과제 공유 정보 조회 오류:', error);
+    console.error('Assignment shares retrieval error:', error);
     return [];
   }
 }
 
-// 공유된 과제 타입 정의
+// Shared assignment type definition
 interface SharedAssignment {
   id: string;
   assignment_id: string;
@@ -489,11 +489,11 @@ interface SharedAssignment {
   };
 }
 
-// 공유된 과제 목록 조회
+// Get shared assignments
 export async function getSharedAssignments(): Promise<SharedAssignment[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('사용자가 로그인되지 않았습니다.');
+    if (!user) throw new Error('User is not logged in.');
 
     const { data: shares, error } = await supabase
       .from('assignment_shares')
@@ -511,7 +511,7 @@ export async function getSharedAssignments(): Promise<SharedAssignment[]> {
     if (error) throw error;
     return shares || [];
   } catch (error) {
-    console.error('공유된 과제 조회 오류:', error);
+    console.error('Shared assignments retrieval error:', error);
     return [];
   }
 }
