@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
+import { coursesApi } from '@/lib/api';
 
 export default function AddCoursePage() {
   const { t } = useLanguage();
@@ -37,8 +38,24 @@ export default function AddCoursePage() {
     setIsSubmitting(true);
     
     try {
-      // TODO: Supabase에 수업 추가 로직 구현
-      console.log('수업 추가:', formData);
+      // Supabase에 수업 추가
+      const courseData = {
+        course_name: formData.courseName,
+        course_code: formData.courseCode,
+        professor: formData.professor,
+        day_of_week: formData.dayOfWeek as 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday',
+        start_time: formData.startTime,
+        end_time: formData.endTime,
+        room: formData.room,
+        color: formData.color,
+        description: '',
+        is_active: true
+      };
+
+      // API 호출
+      await coursesApi.createCourse(courseData);
+      
+      console.log('✅ 수업 추가 성공:', courseData);
       
       // 성공 상태 표시
       setIsSuccess(true);
@@ -49,8 +66,11 @@ export default function AddCoursePage() {
       }, 2000);
       
     } catch (error) {
-      console.error('수업 추가 실패:', error);
-      // 에러 처리 로직 추가 가능
+      console.error('❌ 수업 추가 실패:', error);
+      
+      // 에러 처리 - 사용자에게 알림
+      alert(`수업 추가에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      
     } finally {
       setIsSubmitting(false);
     }
