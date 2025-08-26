@@ -143,7 +143,7 @@ export async function getFriends(): Promise<Friend[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
-    // Query friends bidirectionally without profile joins
+    // Get all friends where user is either user_id or friend_id
     const { data: friends, error } = await supabase
       .from('friends')
       .select('*')
@@ -152,19 +152,39 @@ export async function getFriends(): Promise<Friend[]> {
 
     if (error) throw error;
     
-    // Transform the data to always show friend_id as the other person
-    const transformedFriends = (friends || []).map(friend => {
-      if (friend.user_id === user.id) {
-        // User is user_id, so friend_id is the other person
-        return friend;
-      } else {
-        // User is friend_id, so user_id is the other person
-        return {
-          ...friend,
-          user_id: friend.friend_id,
-          friend_id: friend.user_id
-        };
-      }
+    if (!friends || friends.length === 0) return [];
+    
+    // Get all unique friend IDs (excluding the current user)
+    const friendIds = friends.map(friend => 
+      friend.user_id === user.id ? friend.friend_id : friend.user_id
+    );
+    
+    // Get profiles for all friends
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, full_name, nickname, avatar_url, major, grade')
+      .in('id', friendIds);
+    
+    if (profileError) {
+      console.error('Profile retrieval error:', profileError);
+      return friends; // Return friends without profiles if profile fetch fails
+    }
+    
+    // Create a map of profiles
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    
+    // Transform friends to always show the other person as friend_id
+    const transformedFriends = friends.map(friend => {
+      const isUserInitiator = friend.user_id === user.id;
+      const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
+      const otherPersonProfile = profileMap.get(otherPersonId);
+      
+      return {
+        ...friend,
+        user_id: user.id,
+        friend_id: otherPersonId,
+        friend_profile: otherPersonProfile
+      };
     });
     
     return transformedFriends;
@@ -180,6 +200,7 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
+    // First get the invites
     const { data: invites, error } = await supabase
       .from('friend_invites')
       .select('*')
@@ -187,7 +208,29 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
       .eq('status', 'pending');
 
     if (error) throw error;
-    return invites || [];
+    
+    if (!invites || invites.length === 0) return [];
+    
+    // Get profiles for all inviters
+    const inviterIds = invites.map(invite => invite.inviter_id);
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, full_name, nickname, avatar_url')
+      .in('id', inviterIds);
+    
+    if (profileError) {
+      console.error('Profile retrieval error:', profileError);
+      return invites; // Return invites without profiles if profile fetch fails
+    }
+    
+    // Map profiles to invites
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const invitesWithProfiles = invites.map(invite => ({
+      ...invite,
+      inviter_profile: profileMap.get(invite.inviter_id)
+    }));
+    
+    return invitesWithProfiles;
   } catch (error) {
     console.error('Received invites retrieval error:', error);
     return [];
@@ -280,21 +323,37 @@ export async function getAssignmentShares(assignmentId: string): Promise<Assignm
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
+    // First, get the shares without profile information
     const { data: shares, error } = await supabase
       .from('assignment_shares')
-      .select(`
-        *,
-        shared_with_profile:profiles!assignment_shares_shared_with_fkey(
-          full_name,
-          nickname,
-          avatar_url
-        )
-      `)
+      .select('*')
       .eq('assignment_id', assignmentId)
       .eq('shared_by', user.id);
 
     if (error) throw error;
-    return shares || [];
+    
+    if (!shares || shares.length === 0) return [];
+    
+    // Then, get the profiles for the shared_with users
+    const sharedWithIds = shares.map(share => share.shared_with);
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, full_name, nickname, avatar_url')
+      .in('id', sharedWithIds);
+    
+    if (profileError) {
+      console.error('Profile retrieval error:', profileError);
+      return shares; // Return shares without profiles if profile fetch fails
+    }
+    
+    // Map profiles to shares
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const sharesWithProfiles = shares.map(share => ({
+      ...share,
+      shared_with_profile: profileMap.get(share.shared_with)
+    }));
+    
+    return sharesWithProfiles;
   } catch (error) {
     console.error('Assignment shares retrieval error:', error);
     return [];

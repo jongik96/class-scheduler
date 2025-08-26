@@ -500,7 +500,9 @@ function FriendsManagementPage() {
   }, [user]);
 
   const loadFriends = async () => {
+    console.log('Loading friends...');
     const friendsList = await getFriends();
+    console.log('Loaded friends:', friendsList);
     setFriends(friendsList);
   };
 

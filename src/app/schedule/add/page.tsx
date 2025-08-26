@@ -319,7 +319,7 @@ function AddCourseContent() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:cursor-not-allowed"
+                    className="w-full bg-[#BAE1FF] hover:bg-[#87CEEB] disabled:bg-[#E0F2FE] text-gray-800 font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>

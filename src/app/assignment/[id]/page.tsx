@@ -32,7 +32,9 @@ export default function AssignmentDetailPage() {
   const loadAssignmentShares = async (assignmentId: string) => {
     setIsLoadingShares(true);
     try {
+      console.log('Loading assignment shares for:', assignmentId);
       const shares = await getAssignmentShares(assignmentId);
+      console.log('Loaded shares:', shares);
       setSharedFriends(shares);
     } catch (error) {
       console.error('Error loading share information:', error);
