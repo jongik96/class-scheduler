@@ -106,10 +106,10 @@ export default function Sidebar({
     <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
       isCollapsed ? 'w-16' : 'w-64'
     } ${isCollapsed ? 'hidden sm:block' : ''} relative z-40`}>
-      {/* Toggle Button */}
+      {/* Toggle Button - 모바일에서 숨김 */}
       <button
         onClick={onToggleCollapse}
-        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 mobile-touch-target ${
+        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 mobile-touch-target hidden sm:block ${
           isCollapsed ? 'rotate-180' : ''
         } mobile-sidebar-toggle`}
         aria-label={isCollapsed ? '사이드바 확장' : '사이드바 축소'}
@@ -164,7 +164,7 @@ export default function Sidebar({
       {/* Mobile Overlay - 더 투명하게 하고 z-index 조정 */}
       {!isCollapsed && (
         <div 
-          className="sm:hidden fixed inset-0 bg-black/10 z-30 transition-opacity duration-300" 
+          className="sm:hidden fixed inset-0 bg-black/20 z-30 transition-opacity duration-300" 
           onClick={onToggleCollapse} 
         />
       )}

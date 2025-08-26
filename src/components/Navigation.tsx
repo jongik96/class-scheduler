@@ -148,8 +148,8 @@ export default function Navigation() {
               </div>
             </div>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden">
+            {/* Mobile Menu Button - 제거됨 */}
+            {/* <div className="md:hidden">
               <button
                 onClick={toggleMobileMenu}
                 className={`p-2 rounded-md transition-all duration-200 hover:scale-105 mobile-touch-target ${getTextClasses()}`}
@@ -161,7 +161,7 @@ export default function Navigation() {
                   <Menu className="w-6 h-6" />
                 )}
               </button>
-            </div>
+            </div> */}
 
             <div className="flex items-center space-x-4">
               <LanguageSwitcher />
@@ -196,8 +196,8 @@ export default function Navigation() {
             </div>
           </div>
 
-          {/* Mobile Navigation Menu */}
-          {isMobileMenuOpen && (
+          {/* Mobile Navigation Menu - 제거됨 */}
+          {/* {isMobileMenuOpen && (
             <div className="md:hidden absolute top-full left-0 right-0 z-50 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-600 shadow-lg">
               <div className="px-4 py-2 space-y-1">
                 {navItems.map((item) => {
@@ -219,7 +219,6 @@ export default function Navigation() {
                   );
                 })}
                 
-                {/* Mobile Auth Items */}
                 <div className="pt-2 border-t border-gray-200 dark:border-gray-600">
                   {authItems.map((item) => {
                     const Icon = item.icon;
@@ -253,7 +252,7 @@ export default function Navigation() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </nav>
       
