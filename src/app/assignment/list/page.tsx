@@ -1,46 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Search, Filter, Calendar, CheckCircle, Clock, AlertCircle, Eye, BookOpen } from 'lucide-react';
+import { Plus, Search, Filter, Calendar, CheckCircle, Clock, AlertCircle, Eye, BookOpen, RefreshCw } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
-
-// 임시 데이터
-const sampleAssignments = [
-  {
-    id: 1,
-    title: '웹 프로그래밍 과제 1',
-    description: 'HTML과 CSS를 사용한 반응형 웹페이지 제작',
-    course: '웹 프로그래밍 기초',
-    dueDate: '2024-01-15',
-    priority: 'high',
-    status: 'pending'
-  },
-  {
-    id: 2,
-    title: '데이터베이스 설계 보고서',
-    description: 'ERD 설계 및 정규화 과정 정리',
-    course: '데이터베이스 시스템',
-    dueDate: '2024-01-20',
-    priority: 'medium',
-    status: 'completed'
-  },
-  {
-    id: 3,
-    title: '알고리즘 구현 과제',
-    description: '정렬 알고리즘 3가지 구현 및 성능 비교',
-    course: '알고리즘과 자료구조',
-    dueDate: '2024-01-10',
-    priority: 'high',
-    status: 'overdue'
-  }
-];
+import { assignmentsApi, type Assignment } from '@/lib/api';
 
 export default function AssignmentListPage() {
   const { t } = useLanguage();
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
+
+  const loadAssignments = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await assignmentsApi.getAssignments();
+      setAssignments(data);
+      console.log('✅ 과제 데이터 로드 성공:', data);
+    } catch (err) {
+      console.error('❌ 과제 데이터 로드 실패:', err);
+      setError(err instanceof Error ? err.message : '과제 데이터를 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadAssignments();
+  }, []);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -53,17 +45,16 @@ export default function AssignmentListPage() {
     }
   };
 
-  // getStatusText 함수는 현재 사용되지 않지만 향후 사용을 위해 주석 처리
-  // const getStatusText = (status: string) => {
-  //   switch (status) {
-  //     case 'completed':
-  //       return t('assignments.list.completed');
-  //     case 'overdue':
-  //       return t('assignments.list.overdue');
-  //     default:
-  //       return t('assignments.list.pending');
-  //   }
-  // };
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return t('assignments.list.completed');
+      case 'overdue':
+        return t('assignments.list.overdue');
+      default:
+        return t('assignments.list.pending');
+    }
+  };
 
   const getPriorityText = (priority: string) => {
     switch (priority) {
@@ -98,20 +89,18 @@ export default function AssignmentListPage() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
     if (diffDays < 0) {
-      return t('dueDate.overdue', { days: Math.abs(diffDays) });
+      return { days: Math.abs(diffDays), isOverdue: true };
     } else if (diffDays === 0) {
-      return t('dueDate.today');
-    } else if (diffDays === 1) {
-      return t('dueDate.tomorrow');
+      return { days: 0, isOverdue: false };
     } else {
-      return t('dueDate.daysLeft', { days: diffDays });
+      return { days: diffDays, isOverdue: false };
     }
   };
 
-  const filteredAssignments = sampleAssignments.filter(assignment => {
+  const filteredAssignments = assignments.filter(assignment => {
     const matchesSearch = assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         assignment.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         assignment.course.toLowerCase().includes(searchTerm.toLowerCase());
+                         (assignment.description?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                         (assignment.course_id || '').toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || assignment.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || assignment.priority === priorityFilter;
@@ -120,10 +109,13 @@ export default function AssignmentListPage() {
   });
 
   const stats = {
-    total: sampleAssignments.length,
-    inProgress: sampleAssignments.filter(a => a.status === 'pending').length,
-    completed: sampleAssignments.filter(a => a.status === 'completed').length,
-    overdue: sampleAssignments.filter(a => a.status === 'overdue').length
+    total: assignments.length,
+    inProgress: assignments.filter(a => a.status === 'pending').length,
+    completed: assignments.filter(a => a.status === 'completed').length,
+    overdue: assignments.filter(a => {
+      const dueInfo = getDaysUntilDue(a.due_date);
+      return dueInfo.isOverdue;
+    }).length
   };
 
   return (
@@ -131,12 +123,42 @@ export default function AssignmentListPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {t('assignments.list.title')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            {t('assignments.list.subtitle')}
-          </p>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                {t('assignments.list.title')}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">
+                {t('assignments.list.subtitle')}
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                onClick={loadAssignments}
+                disabled={isLoading}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                    새로고침 중...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    새로고침
+                  </>
+                )}
+              </button>
+              <Link
+                href="/assignment/add"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {t('assignments.list.addAssignment')}
+              </Link>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
@@ -250,20 +272,31 @@ export default function AssignmentListPage() {
                 </select>
               </div>
               
-              <Link
-                href="/assignment/add"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                {t('assignments.list.addAssignment')}
-              </Link>
+              
             </div>
           </div>
         </div>
 
         {/* Assignment List */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-          {filteredAssignments.length === 0 ? (
+          {isLoading ? (
+            <div className="text-center py-12">
+              <RefreshCw className="w-12 h-12 text-gray-400 mx-auto mb-4 animate-spin" />
+              <p className="text-gray-600 dark:text-gray-400">{t('assignments.list.loadingAssignments')}</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12 text-red-600 dark:text-red-400">
+              <AlertCircle className="w-12 h-12 mx-auto mb-4" />
+              <p>{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                {t('assignments.list.refreshAssignments')}
+              </button>
+            </div>
+          ) : filteredAssignments.length === 0 ? (
             <div className="text-center py-12">
               <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
@@ -305,11 +338,11 @@ export default function AssignmentListPage() {
                       <div className="flex items-center space-x-6 text-sm text-gray-500 dark:text-gray-400">
                         <span className="flex items-center">
                           <BookOpen className="w-4 h-4 mr-2" />
-                          {assignment.course}
+                          {assignment.course_id}
                         </span>
                         <span className="flex items-center">
                           <Calendar className="w-4 h-4 mr-2" />
-                          {getDaysUntilDue(assignment.dueDate)}
+                          {getDaysUntilDue(assignment.due_date).days === 0 ? t('dueDate.today') : getDaysUntilDue(assignment.due_date).days === 1 ? t('dueDate.tomorrow') : t('dueDate.daysLeft', { days: getDaysUntilDue(assignment.due_date).days })}
                         </span>
                       </div>
                     </div>

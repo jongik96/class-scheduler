@@ -2,14 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Users, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Plus, Users, UserPlus, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/lib/language-context';
 import { getFriends, shareAssignment, Friend } from '@/lib/friends-api';
+import { assignmentsApi } from '@/lib/api';
 
 export default function AddAssignmentPage() {
   const { t } = useLanguage();
   const { user } = useAuth();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -22,6 +25,7 @@ export default function AddAssignmentPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingFriends, setIsLoadingFriends] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -46,28 +50,43 @@ export default function AddAssignmentPage() {
     setIsLoading(true);
     
     try {
-      // TODO: Implement assignment addition logic in Supabase
-      console.log('Assignment addition:', formData);
-      console.log('Friends to share with:', selectedFriends);
+      // Supabase에 과제 추가
+      const assignmentData = {
+        title: formData.title,
+        description: formData.description,
+        course_id: formData.course, // course를 course_id로 변경
+        due_date: formData.dueDate,
+        priority: formData.priority as 'low' | 'medium' | 'high',
+        status: formData.status as 'pending' | 'in_progress' | 'completed',
+        is_active: true,
+        is_shared: selectedFriends.length > 0
+      };
+
+      const newAssignment = await assignmentsApi.createAssignment(assignmentData);
+      console.log('✅ 과제 추가 성공:', newAssignment);
       
-      // Share with friends after assignment is successfully created
-      if (selectedFriends.length > 0) {
-        // Temporary assignment ID (should use actual generated assignment ID)
-        const tempAssignmentId = 'temp_' + Date.now();
-        const success = await shareAssignment(tempAssignmentId, selectedFriends, 'view');
+      // 친구들과 공유
+      if (selectedFriends.length > 0 && newAssignment) {
+        const success = await shareAssignment(newAssignment.id, selectedFriends, 'view');
         
         if (success) {
-          console.log('Assignment shared with friends successfully');
+          console.log('과제를 친구들과 공유했습니다');
         } else {
-          console.error('Failed to share assignment with friends');
+          console.error('친구들과 과제 공유 실패');
         }
       }
       
-      // Redirect to assignment list page after success
-      // router.push('/assignment/list');
+      // 성공 상태 표시
+      setIsSuccess(true);
+      
+      // 2초 후 과제 목록 화면으로 리디렉션
+      setTimeout(() => {
+        router.push('/assignment/list');
+      }, 2000);
       
     } catch (error) {
-      console.error('Assignment creation error:', error);
+      console.error('❌ 과제 추가 실패:', error);
+      alert(`과제 추가에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
     } finally {
       setIsLoading(false);
     }
@@ -187,20 +206,37 @@ export default function AddAssignmentPage() {
 
                 {/* Submit Button */}
                 <div>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isLoading ? (
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    ) : (
-                      <>
-                        <Plus className="w-5 h-5 mr-2" />
-                        {isLoading ? t('assignments.add.creating') : t('assignments.add.create')}
-                      </>
-                    )}
-                  </button>
+                  {isSuccess ? (
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4 text-center">
+                      <div className="flex items-center justify-center mb-2">
+                        <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
+                        <span className="text-green-800 dark:text-green-200 font-medium">
+                          과제가 성공적으로 추가되었습니다!
+                        </span>
+                      </div>
+                      <p className="text-sm text-green-600 dark:text-green-400">
+                        과제 목록으로 이동 중...
+                      </p>
+                    </div>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          {t('assignments.add.creating')}
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="w-5 h-5 mr-2" />
+                          {t('assignments.add.create')}
+                        </>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
             </form>
