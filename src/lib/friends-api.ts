@@ -144,17 +144,7 @@ export async function getFriends(): Promise<Friend[]> {
 
     const { data: friends, error } = await supabase
       .from('friends')
-      .select(`
-        *,
-        friend_profile:profiles!friends_friend_id_fkey(
-          id,
-          full_name,
-          nickname,
-          avatar_url,
-          major,
-          grade
-        )
-      `)
+      .select('*')
       .eq('user_id', user.id)
       .eq('status', 'accepted');
 
@@ -347,14 +337,7 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
 
     const { data: invites, error } = await supabase
       .from('friend_invites')
-      .select(`
-        *,
-        inviter_profile:profiles!friend_invites_inviter_id_fkey(
-          full_name,
-          nickname,
-          avatar_url
-        )
-      `)
+      .select('*')
       .eq('invitee_email', user.email)
       .eq('status', 'pending');
 
@@ -378,6 +361,11 @@ interface UserProfile {
 // Search users
 export async function searchUsers(query: string): Promise<UserProfile[]> {
   try {
+    // 임시로 비활성화 - profiles 테이블 문제 해결 후 활성화
+    console.log('User search temporarily disabled - profiles table not properly configured');
+    return [];
+    
+    /*
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
@@ -390,6 +378,7 @@ export async function searchUsers(query: string): Promise<UserProfile[]> {
 
     if (error) throw error;
     return users || [];
+    */
   } catch (error) {
     console.error('User search error:', error);
     return [];
