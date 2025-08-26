@@ -116,7 +116,7 @@ export default function EditAssignmentPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">과제 데이터를 불러오는 중...</p>
+            <p className="text-gray-600 dark:text-gray-400">{t('common.loadingData')}</p>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function EditAssignmentPage() {
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              과제 목록으로 돌아가기
+              {t('common.backToAssignmentList')}
             </Link>
           </div>
         </div>
@@ -155,10 +155,10 @@ export default function EditAssignmentPage() {
             과제 목록으로 돌아가기
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            과제 수정
+            {t('common.editAssignmentTitle')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            기존 과제 정보를 수정하세요
+            {t('common.editAssignmentSubtitle')}
           </p>
         </div>
 
@@ -206,11 +206,11 @@ export default function EditAssignmentPage() {
                     onChange={(e) => handleInputChange('course_id', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   >
-                    <option value="">수업을 선택하세요</option>
+                    <option value="">{t('common.selectCoursePlaceholder')}</option>
                     {isLoadingCourses ? (
-                      <option value="">수업 목록 로딩 중...</option>
+                      <option value="">{t('common.loadingCourses')}</option>
                     ) : courses.length === 0 ? (
-                      <option value="">등록된 수업이 없습니다</option>
+                      <option value="">{t('common.noCoursesAvailable')}</option>
                     ) : (
                       courses.map((course) => (
                         <option key={course.id} value={course.id}>
@@ -261,9 +261,9 @@ export default function EditAssignmentPage() {
                     onChange={(e) => handleInputChange('status', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   >
-                    <option value="pending">진행 예정</option>
-                    <option value="in_progress">진행 중</option>
-                    <option value="completed">완료</option>
+                    <option value="pending">{t('common.pending')}</option>
+                    <option value="in_progress">{t('common.inProgress')}</option>
+                    <option value="completed">{t('common.completed')}</option>
                   </select>
                 </div>
 
@@ -274,11 +274,11 @@ export default function EditAssignmentPage() {
                       <div className="flex items-center justify-center mb-2">
                         <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
                         <span className="text-green-800 dark:text-green-200 font-medium">
-                          과제가 성공적으로 수정되었습니다!
+                          {t('common.assignmentUpdatedSuccess')}
                         </span>
                       </div>
                       <p className="text-sm text-green-600 dark:text-green-400">
-                        과제 목록으로 이동 중...
+                        {t('common.redirectingToAssignmentList')}
                       </p>
                     </div>
                   ) : (

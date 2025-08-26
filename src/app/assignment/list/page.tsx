@@ -141,12 +141,12 @@ export default function AssignmentListPage() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                    새로고침 중...
+                    {t('common.refreshing')}
                   </>
                 ) : (
                   <>
                     <RefreshCw className="w-4 h-4 mr-2" />
-                    새로고침
+                    {t('common.refresh')}
                   </>
                 )}
               </button>
@@ -279,41 +279,33 @@ export default function AssignmentListPage() {
 
         {/* Assignment List */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-          {isLoading ? (
+          {isLoading ? ( // Loading state
             <div className="text-center py-12">
               <RefreshCw className="w-12 h-12 text-gray-400 mx-auto mb-4 animate-spin" />
-              <p className="text-gray-600 dark:text-gray-400">{t('assignments.list.loadingAssignments')}</p>
+              <p className="text-gray-600 dark:text-gray-400">{t('common.loadingAssignments')}</p>
             </div>
-          ) : error ? (
+          ) : error ? ( // Error state
             <div className="text-center py-12 text-red-600 dark:text-red-400">
               <AlertCircle className="w-12 h-12 mx-auto mb-4" />
               <p>{error}</p>
               <button
-                onClick={() => window.location.reload()}
+                onClick={loadAssignments} // Refresh button for error state
                 className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
-                {t('assignments.list.refreshAssignments')}
+                {t('common.refresh')}
               </button>
             </div>
           ) : filteredAssignments.length === 0 ? (
             <div className="text-center py-12">
               <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                {searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' 
-                  ? t('assignments.list.noResults')
-                  : t('assignments.list.noAssignments')
-                }
-              </h3>
-              {!searchTerm && statusFilter === 'all' && priorityFilter === 'all' && (
-                <Link
-                  href="/assignment/add"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t('assignments.list.addFirstAssignment')}
-                </Link>
-              )}
+              <p className="text-gray-600 dark:text-gray-400 mb-2">{t('common.noAssignments')}</p>
+              <Link
+                href="/assignment/add"
+                className="text-blue-600 hover:text-blue-500 text-sm"
+              >
+                {t('common.addFirstAssignment')}
+              </Link>
             </div>
           ) : (
             <div className="divide-y divide-gray-200 dark:divide-gray-700">

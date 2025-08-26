@@ -18,7 +18,8 @@ export default function AddCoursePage() {
     startTime: '09:00',
     endTime: '10:30',
     room: '',
-    color: '#3b82f6'
+    color: '#3b82f6',
+    description: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -65,7 +66,7 @@ export default function AddCoursePage() {
         end_time: formData.endTime,
         room: formData.room,
         color: formData.color,
-        description: '',
+        description: formData.description,
         is_active: true
       };
 
@@ -229,8 +230,8 @@ export default function AddCoursePage() {
                     ))}
                   </select>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    오전 9시 ~ 오후 8시, 30분 단위
-                  </p>
+                     {t('common.timeRangeDescription')}
+                   </p>
                 </div>
 
                 {/* End Time */}
@@ -250,8 +251,8 @@ export default function AddCoursePage() {
                     ))}
                   </select>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    시작 시간 이후로 설정
-                  </p>
+                     {t('common.endTimeDescription')}
+                   </p>
                 </div>
 
                 {/* Room */}
@@ -286,6 +287,20 @@ export default function AddCoursePage() {
                     </span>
                   </div>
                 </div>
+
+                {/* Description */}
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('common.description')}
+                  </label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    placeholder={t('common.descriptionPlaceholder')}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                  />
+                </div>
               </div>
 
               <div className="mt-8">
@@ -294,11 +309,11 @@ export default function AddCoursePage() {
                     <div className="flex items-center justify-center mb-2">
                       <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
                       <span className="text-green-800 dark:text-green-200 font-medium">
-                        {t('schedule.add.courseAddedSuccess')}
+                        {t('common.courseAddedSuccess')}
                       </span>
                     </div>
                     <p className="text-sm text-green-600 dark:text-green-400">
-                      {t('schedule.add.redirectingToSchedule')}
+                      {t('common.redirectingToSchedule')}
                     </p>
                   </div>
                 ) : (
@@ -310,12 +325,12 @@ export default function AddCoursePage() {
                     {isSubmitting ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        {t('schedule.add.addingCourse')}
+                        {t('common.creating')}
                       </>
                     ) : (
                       <>
                         <Plus className="w-5 h-5 mr-2" />
-                        {t('schedule.add.addCourse')}
+                        {t('common.addCourse')}
                       </>
                     )}
                   </button>
@@ -328,7 +343,7 @@ export default function AddCoursePage() {
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                {t('schedule.add.preview')}
+                {t('common.preview')}
               </h3>
               <div className="space-y-3">
                 <div className="p-3 rounded border" style={{ borderColor: formData.color }}>

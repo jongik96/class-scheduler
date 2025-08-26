@@ -161,7 +161,7 @@ export default function EditCoursePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">수업 데이터를 불러오는 중...</p>
+            <p className="text-gray-600 dark:text-gray-400">{t('common.loadingData')}</p>
           </div>
         </div>
       </div>
@@ -179,7 +179,7 @@ export default function EditCoursePage() {
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              스케줄로 돌아가기
+              {t('common.backToSchedule')}
             </Link>
           </div>
         </div>
@@ -200,10 +200,10 @@ export default function EditCoursePage() {
             스케줄로 돌아가기
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            수업 수정
+            {t('common.editCourseTitle')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            기존 수업 정보를 수정하세요
+            {t('common.editCourseSubtitle')}
           </p>
         </div>
 
@@ -290,8 +290,8 @@ export default function EditCoursePage() {
                     ))}
                   </select>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    오전 9시 ~ 오후 8시, 30분 단위
-                  </p>
+                     {t('common.timeRangeDescription')}
+                   </p>
                 </div>
 
                 {/* End Time */}
@@ -311,8 +311,8 @@ export default function EditCoursePage() {
                     ))}
                   </select>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    시작 시간 이후로 설정
-                  </p>
+                     {t('common.endTimeDescription')}
+                   </p>
                 </div>
 
                 {/* Room */}
@@ -350,12 +350,12 @@ export default function EditCoursePage() {
                 {/* Description */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    설명
+                    {t('common.description')}
                   </label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="수업에 대한 추가 설명을 입력하세요"
+                    placeholder={t('common.descriptionPlaceholder')}
                     rows={3}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   />
@@ -368,11 +368,11 @@ export default function EditCoursePage() {
                     <div className="flex items-center justify-center mb-2">
                       <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
                       <span className="text-green-800 dark:text-green-200 font-medium">
-                        수업이 성공적으로 수정되었습니다!
+                        {t('common.courseUpdatedSuccess')}
                       </span>
                     </div>
                     <p className="text-sm text-green-600 dark:text-green-400">
-                      스케줄로 이동 중...
+                      {t('common.redirectingToSchedule')}
                     </p>
                   </div>
                 ) : (
@@ -402,7 +402,7 @@ export default function EditCoursePage() {
           <div className="lg:col-span-1">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                미리보기
+                {t('common.preview')}
               </h3>
               <div className="space-y-3">
                 <div className="p-3 rounded border" style={{ borderColor: formData.color }}>

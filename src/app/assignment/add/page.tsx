@@ -184,11 +184,11 @@ export default function AddAssignmentPage() {
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
                   >
-                    <option value="">{t('assignments.add.selectCourse')}</option>
+                    <option value="">{t('common.selectCourse')}</option>
                     {isLoadingCourses ? (
-                      <option value="">{t('assignments.add.loadingCourses')}</option>
+                      <option value="">{t('common.loadingCourses')}</option>
                     ) : courses.length === 0 ? (
-                      <option value="">{t('assignments.add.noCourses')}</option>
+                      <option value="">{t('common.noCoursesAvailable')}</option>
                     ) : (
                       courses.map((course) => (
                         <option key={course.id} value={course.id}>
@@ -236,11 +236,11 @@ export default function AddAssignmentPage() {
                       <div className="flex items-center justify-center mb-2">
                         <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
                         <span className="text-green-800 dark:text-green-200 font-medium">
-                          과제가 성공적으로 추가되었습니다!
+                          {t('common.assignmentAddedSuccess')}
                         </span>
                       </div>
                       <p className="text-sm text-green-600 dark:text-green-400">
-                        과제 목록으로 이동 중...
+                        {t('common.redirectingToAssignmentList')}
                       </p>
                     </div>
                   ) : (
