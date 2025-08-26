@@ -161,12 +161,21 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Mobile Overlay - 더 투명하게 하고 z-index 조정 */}
+      {/* Mobile Overlay - 사이드바 영역을 제외하고만 클릭 시 닫기 */}
       {!isCollapsed && (
         <div 
           className="sm:hidden fixed inset-0 bg-black/20 z-30 transition-opacity duration-300" 
-          onClick={onToggleCollapse} 
-        />
+          style={{ pointerEvents: 'none' }}
+        >
+          <div 
+            className="absolute inset-0" 
+            style={{ 
+              pointerEvents: 'auto',
+              left: '256px' // w-64 = 256px
+            }}
+            onClick={onToggleCollapse} 
+          />
+        </div>
       )}
     </div>
   );
