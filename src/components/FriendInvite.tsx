@@ -15,7 +15,7 @@ export default function FriendInvite({ isOpen, onClose }: FriendInviteProps) {
   const { t } = useLanguage();
   const [inviteData, setInviteData] = useState<{ invite_code: string; invite_url: string } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showQR, setShowQR] = useState(false);
+  const [showQR, setShowQR] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ export default function FriendInvite({ isOpen, onClose }: FriendInviteProps) {
               
               {showQR ? (
                 <div className="bg-white p-4 rounded-lg border">
-                  <QRCode value={inviteData.invite_url} size={200} />
+                  <QRCode value={inviteData.invite_url} size={300} />
                 </div>
               ) : (
                 <div className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg border">

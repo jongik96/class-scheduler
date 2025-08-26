@@ -673,9 +673,7 @@ function FriendsManagementPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400">
               Friends will be automatically added when they scan the QR code
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500">
-              (Coming soon)
-            </p>
+
           </div>
         </div>
       </div>
