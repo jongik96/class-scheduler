@@ -106,10 +106,10 @@ export default function Sidebar({
     <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
       isCollapsed ? 'w-16' : 'w-64'
     } ${isCollapsed ? 'hidden sm:block' : ''} relative z-40`}>
-      {/* Toggle Button - 모바일에서 숨김 */}
+      {/* Toggle Button - 모바일에서도 표시 */}
       <button
         onClick={onToggleCollapse}
-        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 mobile-touch-target hidden sm:block ${
+        className={`absolute -right-3 top-6 z-10 p-1 rounded-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 mobile-touch-target ${
           isCollapsed ? 'rotate-180' : ''
         } mobile-sidebar-toggle`}
         aria-label={isCollapsed ? '사이드바 확장' : '사이드바 축소'}

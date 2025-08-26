@@ -1,9 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Edit, Trash2, Calendar, MapPin, User, BookOpen, Clock } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Clock, MapPin, User, BookOpen, Calendar, CheckSquare, Plus } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
+import { useAuth } from '@/lib/auth-context';
+import { AuthGuard } from '@/components/AuthGuard';
+import { coursesApi, assignmentsApi, type Course, type Assignment } from '@/lib/api';
+import { migrateToPastelColor } from '@/lib/constants';
 
 // 임시 데이터
 const sampleCourse = {
@@ -167,17 +172,15 @@ export default function CourseDetailPage() {
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 rounded-full" style={{ backgroundColor: sampleCourse.color }} />
-                  <div>
-                    <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                      {t('course.detail.courseColor')}
-                    </p>
-                    <p className="text-gray-900 dark:text-white">
-                      {t('course.detail.colorDescription')}
-                    </p>
-                  </div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <div className="w-5 h-5 rounded-full" style={{ backgroundColor: migrateToPastelColor(sampleCourse.color) }} />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {t('course.detail.courseColor')}
+                  </span>
                 </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+                  {t('course.detail.colorDescription')}
+                </p>
               </div>
             </div>
 

@@ -3,9 +3,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Plus, CheckCircle, Save } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { coursesApi } from '@/lib/api';
+import { COURSE_COLORS, DEFAULT_COURSE_COLOR, type CourseColor, migrateToPastelColor } from '@/lib/constants';
 
 export default function EditCoursePage() {
   const { t } = useLanguage();
@@ -21,11 +22,11 @@ export default function EditCoursePage() {
     startTime: '09:00',
     endTime: '10:30',
     room: '',
-    color: '#3b82f6',
+    color: DEFAULT_COURSE_COLOR,
     description: ''
   });
   
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingCourse, setIsLoadingCourse] = useState(true);
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,7 +35,7 @@ export default function EditCoursePage() {
   const timeOptions = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
     '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
+    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
   const daysOfWeek = [
@@ -61,7 +62,7 @@ export default function EditCoursePage() {
           startTime: course.start_time.substring(0, 5),
           endTime: course.end_time.substring(0, 5),
           room: course.room || '',
-          color: course.color,
+          color: COURSE_COLORS.includes(course.color as CourseColor) ? course.color as CourseColor : DEFAULT_COURSE_COLOR,
           description: course.description || ''
         });
       }
@@ -82,20 +83,20 @@ export default function EditCoursePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Time validation
+    if (!courseId) return;
+
+    // 시간 유효성 검사
     const startTimeIndex = timeOptions.indexOf(formData.startTime);
     const endTimeIndex = timeOptions.indexOf(formData.endTime);
     
     if (startTimeIndex >= endTimeIndex) {
-      alert('End time must be later than start time.');
+      alert('종료 시간은 시작 시간보다 늦어야 합니다.');
       return;
     }
-    
-    setIsLoading(true);
-    
+
+    setIsSubmitting(true);
     try {
-      const courseData = {
+      await coursesApi.updateCourse(courseId, {
         course_name: formData.courseName,
         course_code: formData.courseCode,
         professor: formData.professor,
@@ -105,23 +106,16 @@ export default function EditCoursePage() {
         room: formData.room,
         color: formData.color,
         description: formData.description
-      };
-
-      await coursesApi.updateCourse(courseId, courseData);
-      console.log('✅ Course updated successfully');
-      
+      });
       setIsSuccess(true);
-      
-      // Redirect to schedule view after 2 seconds
       setTimeout(() => {
         router.push('/schedule/view');
       }, 2000);
-      
     } catch (error) {
-      console.error('❌ Failed to update course:', error);
-      alert(`Failed to update course: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Course update error:', error);
+      alert('수업 수정에 실패했습니다.');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -334,16 +328,26 @@ export default function EditCoursePage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('schedule.add.color')}
                   </label>
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="color"
-                      value={formData.color}
-                      onChange={(e) => handleInputChange('color', e.target.value)}
-                      className="w-12 h-12 border border-gray-300 dark:border-gray-600 rounded cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-5 gap-2">
+                      {COURSE_COLORS.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => handleInputChange('color', color)}
+                          className={`w-12 h-12 rounded-lg border-2 transition-all hover:scale-105 ${
+                            formData.color === color
+                              ? 'border-gray-900 dark:border-white shadow-lg'
+                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={`색상 선택: ${color}`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {t('schedule.add.colorDescription')}
-                    </span>
+                    </p>
                   </div>
                 </div>
 
@@ -378,10 +382,10 @@ export default function EditCoursePage() {
                 ) : (
                   <button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isSubmitting}
                     className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:cursor-not-allowed"
                   >
-                    {isLoading ? (
+                    {isSubmitting ? (
                       <>
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                         수정 중...
@@ -405,8 +409,8 @@ export default function EditCoursePage() {
                 {t('common.preview')}
               </h3>
               <div className="space-y-3">
-                <div className="p-3 rounded border" style={{ borderColor: formData.color }}>
-                  <div className="font-medium text-sm" style={{ color: formData.color }}>
+                <div className="p-3 rounded border" style={{ borderColor: migrateToPastelColor(formData.color) }}>
+                  <div className="font-medium text-sm" style={{ color: migrateToPastelColor(formData.color) }}>
                     {formData.courseName || '수업명'}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">

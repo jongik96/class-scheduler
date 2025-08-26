@@ -6,7 +6,6 @@ import { supabase } from '@/lib/supabase'
 
 export default function AuthCallback() {
   const router = useRouter()
-  const [debugInfo, setDebugInfo] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState(true)
 
   useEffect(() => {
@@ -23,29 +22,6 @@ export default function AuthCallback() {
         const errorDescription = urlParams.get('error_description')
         const code = urlParams.get('code')
         
-        // 디버깅 정보 수집
-        const debugData = {
-          currentUrl: window.location.href,
-          accessToken: !!accessToken,
-          refreshToken: !!refreshToken,
-          error,
-          errorDescription,
-          hasCode: !!code,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent,
-          referrer: document.referrer,
-          // 추가 디버깅 정보
-          supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-          hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-          urlHash: window.location.hash,
-          urlPathname: window.location.pathname,
-          // 모든 URL 파라미터
-          allParams: Object.fromEntries(urlParams.entries())
-        }
-        
-        setDebugInfo(JSON.stringify(debugData, null, 2))
-        console.log('🔍 URL parameters:', debugData)
-        
         // 에러가 있는 경우
         if (error) {
           console.error('❌ OAuth error:', error, errorDescription)
@@ -58,7 +34,6 @@ export default function AuthCallback() {
             const errorDetails = {
               error,
               errorDescription,
-              debugInfo: debugData,
               possibleSolutions: [
                 'Check Google OAuth client ID/secret',
                 'Verify Supabase project settings',
@@ -73,7 +48,6 @@ export default function AuthCallback() {
             const errorDetails = {
               error,
               errorDescription,
-              debugInfo: debugData,
               possibleSolutions: [
                 'User cancelled OAuth authentication',
                 'Check Google account permissions',
@@ -85,7 +59,6 @@ export default function AuthCallback() {
             const errorDetails = {
               error,
               errorDescription,
-              debugInfo: debugData,
               possibleSolutions: [
                 'Unknown OAuth error',
                 'Clear browser cache and retry',
@@ -107,7 +80,6 @@ export default function AuthCallback() {
             
             if (signInError) {
               console.error('❌ Code exchange error:', signInError)
-              setDebugInfo(prev => prev + '\n\nCode exchange error: ' + JSON.stringify(signInError, null, 2))
               
               // 에러 상세 정보와 함께 로그인 페이지로
               router.push('/auth/login?error=code_exchange_failed&details=' + encodeURIComponent(signInError.message))
@@ -117,7 +89,6 @@ export default function AuthCallback() {
             console.log('✅ Code exchange successful:', data)
           } catch (exchangeError) {
             console.error('❌ Code exchange exception:', exchangeError)
-            setDebugInfo(prev => prev + '\n\nCode exchange exception: ' + JSON.stringify(exchangeError, null, 2))
           }
         }
         
@@ -132,7 +103,6 @@ export default function AuthCallback() {
           
           if (sessionError) {
             console.error('❌ Session setting error:', sessionError)
-            setDebugInfo(prev => prev + '\n\nSession setting error: ' + JSON.stringify(sessionError, null, 2))
             router.push('/auth/login?error=session_failed')
             return
           }
@@ -149,7 +119,6 @@ export default function AuthCallback() {
         
         if (sessionCheckError) {
           console.error('❌ Session check error:', sessionCheckError)
-          setDebugInfo(prev => prev + '\n\nSession check error: ' + JSON.stringify(sessionCheckError, null, 2))
           router.push('/auth/login?error=auth_failed')
           return
         }
@@ -182,13 +151,11 @@ export default function AuthCallback() {
           }
         } else {
           console.log('❌ No session, navigating to login page')
-          setDebugInfo(prev => prev + '\n\nNo session - authentication failed')
           setIsProcessing(false)
           router.push('/auth/login?error=no_session')
         }
       } catch (error) {
         console.error('❌ Callback processing error:', error)
-        setDebugInfo(prev => prev + '\n\nCallback processing exception: ' + JSON.stringify(error, null, 2))
         setIsProcessing(false)
         router.push('/auth/login?error=callback_failed')
       }
@@ -199,8 +166,8 @@ export default function AuthCallback() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-4xl">
-        <div className="text-center mb-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400 mb-2">
             {isProcessing ? '인증 처리 중...' : '인증 처리 완료'}
@@ -209,18 +176,6 @@ export default function AuthCallback() {
             {isProcessing ? '잠시만 기다려주세요' : '리디렉션 중...'}
           </p>
         </div>
-        
-        {/* 디버깅 정보 표시 */}
-        {debugInfo && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 text-left">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              🔍 디버깅 정보 (PKCE 플로우 제거됨)
-            </h3>
-            <pre className="text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 p-4 rounded overflow-auto max-h-96">
-              {debugInfo}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   )

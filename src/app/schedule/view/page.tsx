@@ -17,6 +17,7 @@ import {
   Friend,
   FriendInvite
 } from '@/lib/friends-api';
+import { migrateToPastelColor } from '@/lib/constants';
 import QRCode from 'react-qr-code';
 
 const timeSlots = [
@@ -55,9 +56,8 @@ function ScheduleViewContent() {
       setError(null);
       const coursesData = await coursesApi.getCourses();
       setCourses(coursesData);
-      console.log('✅ 수업 데이터 로드 성공:', coursesData);
     } catch (err) {
-      console.error('❌ 수업 데이터 로드 실패:', err);
+      console.error('수업 데이터 로드 실패:', err);
       setError(err instanceof Error ? err.message : '수업 데이터를 불러오는데 실패했습니다.');
     } finally {
       setIsLoading(false);
@@ -81,18 +81,6 @@ function ScheduleViewContent() {
       
       // 시작 시간이 현재 슬롯과 일치하거나, 현재 슬롯이 수업 시간 범위 내에 있는지 확인
       const isMatch = courseStart === slot || (slot >= courseStart && slot < courseEnd);
-      
-      // 디버깅 로그
-      if (day === 'friday' && slot === '03:00') {
-        console.log(`🔍 시간 슬롯 매칭 확인:`, {
-          day,
-          slot,
-          course: course.course_name,
-          courseStart,
-          courseEnd,
-          isMatch
-        });
-      }
       
       return isMatch;
     });
@@ -119,10 +107,9 @@ function ScheduleViewContent() {
     if (confirm('정말로 이 수업을 삭제하시겠습니까?')) {
       try {
         await coursesApi.deleteCourse(courseId);
-        console.log('✅ 수업 삭제 성공');
         await loadCourses(); // 목록 새로고침
       } catch (err) {
-        console.error('❌ 수업 삭제 실패:', err);
+        console.error('수업 삭제 실패:', err);
         alert('수업 삭제에 실패했습니다.');
       }
     }
@@ -260,12 +247,12 @@ function ScheduleViewContent() {
                                 key={course.id}
                                 href={`/course/${course.id}`}
                                 className="block p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group"
-                                style={{ backgroundColor: course.color }}
+                                style={{ backgroundColor: migrateToPastelColor(course.color) }}
                                 title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
                               >
-                                <div className="font-medium truncate">{course.course_name}</div>
-                                <div className="opacity-90 truncate">{course.room}</div>
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs">
+                                <div className="font-semibold truncate">{course.course_name}</div>
+                                <div className="font-medium opacity-90 truncate">{course.room}</div>
+                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
                                   👆 클릭
                                 </div>
                               </Link>
@@ -284,14 +271,6 @@ function ScheduleViewContent() {
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                 {t('schedule.view.courseList')} ({courses.length}개)
               </h2>
-              
-              {/* Debug Info */}
-              <div className="mb-4 p-3 bg-gray-100 dark:bg-gray-700 rounded text-xs">
-                <p>🔍 디버그 정보:</p>
-                <p>총 수업 수: {courses.length}</p>
-                <p>현재 선택된 요일: {selectedDay}</p>
-                <p>수업 데이터: {JSON.stringify(courses.map(c => ({ name: c.course_name, day: c.day_of_week, time: c.start_time })))}</p>
-              </div>
               
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 {isLoading ? (
@@ -332,31 +311,31 @@ function ScheduleViewContent() {
                           <div className="flex items-center space-x-4">
                             <div
                               className="w-4 h-4 rounded-full"
-                              style={{ backgroundColor: course.color }}
+                              style={{ backgroundColor: migrateToPastelColor(course.color) }}
                             />
                             <div>
-                              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                                 {course.course_name}
                               </h3>
                               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-gray-600 dark:text-gray-400">
-                                <span className="flex items-center">
+                                <span className="flex items-center font-medium">
                                   <BookOpen className="w-4 h-4 mr-1" />
                                   {course.course_code}
                                 </span>
-                                <span className="flex items-center">
+                                <span className="flex items-center font-medium">
                                   <User className="w-4 h-4 mr-1" />
                                   {course.professor}
                                 </span>
-                                <span className="flex items-center">
+                                <span className="flex items-center font-medium">
                                   <Clock className="w-4 h-4 mr-1" />
                                   {course.start_time.substring(0, 5)} - {course.end_time.substring(0, 5)}
                                 </span>
-                                <span className="flex items-center">
+                                <span className="flex items-center font-medium">
                                   <MapPin className="w-4 h-4 mr-1" />
                                   {course.room}
                                 </span>
-                                <span className="flex items-center">
-                                  <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: course.color }}></span>
+                                <span className="flex items-center font-medium">
+                                  <span className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: migrateToPastelColor(course.color) }}></span>
                                   {course.day_of_week}
                                 </span>
                               </div>
@@ -443,8 +422,8 @@ function ScheduleViewContent() {
     <AuthGuard requireAuth={true}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="flex h-screen">
-          {/* Sidebar - 모바일에서 숨김 */}
-          <div className="hidden sm:block">
+          {/* Sidebar - 모바일에서 슬라이드형 */}
+          <div className={`${isSidebarCollapsed ? 'hidden sm:block' : ''} sm:block`}>
             <Sidebar
               selectedMenu={selectedMenu}
               onMenuChange={handleMenuChange}
@@ -471,33 +450,15 @@ function ScheduleViewContent() {
                    selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
                 </p>
                 
-                {/* Mobile Tab Navigation */}
+                {/* Mobile Menu Toggle Button */}
                 <div className="sm:hidden mt-4">
-                  <div className="flex space-x-1 bg-white dark:bg-gray-800 rounded-lg p-1 shadow">
-                    {[
-                      { id: 'schedule' as SidebarMenu, label: t('sidebar.schedule'), icon: Calendar },
-                      { id: 'assignments' as SidebarMenu, label: t('sidebar.assignments'), icon: CheckSquare },
-                      { id: 'courses' as SidebarMenu, label: t('sidebar.courses'), icon: BookOpen },
-                      { id: 'friends' as SidebarMenu, label: t('sidebar.friends'), icon: Users },
-                      { id: 'settings' as SidebarMenu, label: t('sidebar.settings'), icon: Settings }
-                    ].map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <button
-                          key={item.id}
-                          onClick={() => handleMenuChange(item.id)}
-                          className={`flex-1 py-2 px-2 text-xs font-medium rounded-md transition-colors flex flex-col items-center space-y-1 ${
-                            selectedMenu === item.id
-                              ? 'bg-blue-600 text-white'
-                              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                          }`}
-                        >
-                          <Icon className="w-4 h-4" />
-                          <span className="truncate">{item.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                  <button
+                    onClick={handleSidebarToggle}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {isSidebarCollapsed ? '메뉴 열기' : '메뉴 닫기'}
+                  </button>
                 </div>
               </div>
 

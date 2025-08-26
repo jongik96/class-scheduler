@@ -5,25 +5,28 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
-import { coursesApi } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
+import { coursesApi } from '@/lib/api';
+import { COURSE_COLORS, DEFAULT_COURSE_COLOR, type CourseColor, migrateToPastelColor } from '@/lib/constants';
 
 function AddCourseContent() {
   const { t } = useLanguage();
   const router = useRouter();
+  const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     courseName: '',
     courseCode: '',
     professor: '',
+    room: '',
     dayOfWeek: 'monday',
     startTime: '09:00',
     endTime: '10:30',
-    room: '',
-    color: '#3b82f6',
+    color: DEFAULT_COURSE_COLOR,
     description: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   const daysOfWeek = [
     { value: 'monday', label: t('schedule.add.monday') },
@@ -35,16 +38,16 @@ function AddCourseContent() {
     { value: 'sunday', label: t('schedule.add.sunday') }
   ];
 
-  // 30분 단위 시간 옵션 (09:00 ~ 20:00)
   const timeOptions = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
     '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30',
-    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
+    '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30'
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    if (!user) return;
+
     // 시간 유효성 검사
     const startTimeIndex = timeOptions.indexOf(formData.startTime);
     const endTimeIndex = timeOptions.indexOf(formData.endTime);
@@ -53,12 +56,10 @@ function AddCourseContent() {
       alert('종료 시간은 시작 시간보다 늦어야 합니다.');
       return;
     }
-    
+
     setIsSubmitting(true);
-    
     try {
-      // Supabase에 수업 추가
-      const courseData = {
+      await coursesApi.createCourse({
         course_name: formData.courseName,
         course_code: formData.courseCode,
         professor: formData.professor,
@@ -69,27 +70,14 @@ function AddCourseContent() {
         color: formData.color,
         description: formData.description,
         is_active: true
-      };
-
-      // API 호출
-      await coursesApi.createCourse(courseData);
-      
-      console.log('✅ 수업 추가 성공:', courseData);
-      
-      // 성공 상태 표시
+      });
       setIsSuccess(true);
-      
-      // 2초 후 스케줄 뷰 화면으로 리디렉션
       setTimeout(() => {
         router.push('/schedule/view');
       }, 2000);
-      
     } catch (error) {
-      console.error('❌ 수업 추가 실패:', error);
-      
-      // 에러 처리 - 사용자에게 알림
-      alert(`수업 추가에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
-      
+      console.error('Course creation error:', error);
+      alert('수업 생성에 실패했습니다.');
     } finally {
       setIsSubmitting(false);
     }
@@ -276,16 +264,26 @@ function AddCourseContent() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('schedule.add.color')}
                   </label>
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="color"
-                      value={formData.color}
-                      onChange={(e) => handleInputChange('color', e.target.value)}
-                      className="w-12 h-12 border border-gray-300 dark:border-gray-600 rounded cursor-pointer"
-                    />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-5 gap-2">
+                      {COURSE_COLORS.map((color) => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => handleInputChange('color', color)}
+                          className={`w-12 h-12 rounded-lg border-2 transition-all hover:scale-105 ${
+                            formData.color === color
+                              ? 'border-gray-900 dark:border-white shadow-lg'
+                              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={`색상 선택: ${color}`}
+                        />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {t('schedule.add.colorDescription')}
-                    </span>
+                    </p>
                   </div>
                 </div>
 
@@ -347,8 +345,8 @@ function AddCourseContent() {
                 {t('common.preview')}
               </h3>
               <div className="space-y-3">
-                <div className="p-3 rounded border" style={{ borderColor: formData.color }}>
-                  <div className="font-medium text-sm" style={{ color: formData.color }}>
+                <div className="p-3 rounded border" style={{ borderColor: migrateToPastelColor(formData.color) }}>
+                  <div className="font-medium text-sm" style={{ color: migrateToPastelColor(formData.color) }}>
                     {formData.courseName || t('schedule.add.courseNamePlaceholder')}
                   </div>
                   <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
