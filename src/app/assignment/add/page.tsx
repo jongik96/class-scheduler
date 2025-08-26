@@ -7,7 +7,7 @@ import { ArrowLeft, Plus, Users, UserPlus, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/lib/language-context';
 import { getFriends, shareAssignment, Friend } from '@/lib/friends-api';
-import { assignmentsApi } from '@/lib/api';
+import { assignmentsApi, coursesApi, type Course } from '@/lib/api';
 
 export default function AddAssignmentPage() {
   const { t } = useLanguage();
@@ -16,22 +16,37 @@ export default function AddAssignmentPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    course: '',
+    course_id: '',
     dueDate: '',
     priority: 'medium',
     status: 'pending'
   });
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingFriends, setIsLoadingFriends] = useState(false);
+  const [isLoadingCourses, setIsLoadingCourses] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadFriends();
+      loadCourses();
     }
   }, [user]);
+
+  const loadCourses = async () => {
+    setIsLoadingCourses(true);
+    try {
+      const coursesList = await coursesApi.getCourses();
+      setCourses(coursesList);
+    } catch (error) {
+      console.error('Courses list load error:', error);
+    } finally {
+      setIsLoadingCourses(false);
+    }
+  };
 
   const loadFriends = async () => {
     setIsLoadingFriends(true);
@@ -54,11 +69,10 @@ export default function AddAssignmentPage() {
       const assignmentData = {
         title: formData.title,
         description: formData.description,
-        course_id: formData.course, // course를 course_id로 변경
+        course_id: formData.course_id, // course를 course_id로 변경
         due_date: formData.dueDate,
         priority: formData.priority as 'low' | 'medium' | 'high',
         status: formData.status as 'pending' | 'in_progress' | 'completed',
-        is_active: true,
         is_shared: selectedFriends.length > 0
       };
 
@@ -164,14 +178,25 @@ export default function AddAssignmentPage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     {t('assignments.add.course')}
                   </label>
-                  <input
-                    type="text"
-                    value={formData.course}
-                    onChange={(e) => handleInputChange('course', e.target.value)}
-                    placeholder={t('assignments.add.coursePlaceholder')}
+                  <select
+                    value={formData.course_id}
+                    onChange={(e) => handleInputChange('course_id', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                     required
-                  />
+                  >
+                    <option value="">{t('assignments.add.selectCourse')}</option>
+                    {isLoadingCourses ? (
+                      <option value="">{t('assignments.add.loadingCourses')}</option>
+                    ) : courses.length === 0 ? (
+                      <option value="">{t('assignments.add.noCourses')}</option>
+                    ) : (
+                      courses.map((course) => (
+                        <option key={course.id} value={course.id}>
+                          {course.course_name}
+                        </option>
+                      ))
+                    )}
+                  </select>
                 </div>
 
                 {/* Due Date */}
