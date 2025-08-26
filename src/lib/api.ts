@@ -415,10 +415,14 @@ export const friendInvitesApi = {
 
 export const apiUtils = {
   // 에러 메시지 포맷팅
-  formatError(error: any): string {
+  formatError(error: unknown): string {
     if (typeof error === 'string') return error;
-    if (error?.message) return error.message;
-    if (error?.error_description) return error.error_description;
+    if (error && typeof error === 'object' && 'message' in error) {
+      return String(error.message);
+    }
+    if (error && typeof error === 'object' && 'error_description' in error) {
+      return String(error.error_description);
+    }
     return '알 수 없는 오류가 발생했습니다.';
   },
 
@@ -432,7 +436,7 @@ export const apiUtils = {
   },
 
   // 에러 응답 포맷팅
-  formatErrorResponse(error: any, message?: string) {
+  formatErrorResponse(error: unknown, message?: string) {
     return {
       success: false,
       error: this.formatError(error),
