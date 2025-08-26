@@ -234,6 +234,10 @@ export const ja = {
       sharing: {
         title: '友達と共有',
         description: '課題を友達と共有して一緒に学習しましょう'
+      },
+      international: {
+        title: '留学生サポート',
+        description: '英語・韓国語の多言語サポートで全ての学生が便利に利用'
       }
     },
     quickActions: {

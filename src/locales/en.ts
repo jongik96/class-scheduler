@@ -234,6 +234,10 @@ export const en = {
       sharing: {
         title: 'Share with Friends',
         description: 'Share assignments with friends to learn together'
+      },
+      international: {
+        title: 'International Student Support',
+        description: 'English and Korean multilingual support for all students to use conveniently'
       }
     },
     quickActions: {

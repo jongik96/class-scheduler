@@ -234,6 +234,10 @@ export const ko = {
       sharing: {
         title: '친구와 공유',
         description: '과제를 친구와 공유하여 함께 학습하세요'
+      },
+      international: {
+        title: '외국인 유학생 지원',
+        description: '영어, 한국어 다국어 지원으로 모든 학생이 편리하게 이용'
       }
     },
     quickActions: {

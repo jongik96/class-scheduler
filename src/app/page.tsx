@@ -156,10 +156,10 @@ export default function HomePage() {
                   <span className="text-2xl font-bold">🌍</span>
                 </div>
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  외국인 유학생 지원
+                  {t('home.features.international.title')}
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
-                  영어, 한국어 다국어 지원으로<br />모든 학생이 편리하게 이용
+                  {t('home.features.international.description')}
                 </p>
               </div>
             </div>
