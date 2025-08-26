@@ -169,7 +169,11 @@ export const ko = {
       friday: '금요일',
       saturday: '토요일',
       sunday: '일요일',
-      colorDescription: '시간표에서 사용되는 색상'
+      colorDescription: '시간표에서 사용되는 색상',
+      addCourse: '수업 추가',
+      addingCourse: '수업 추가 중...',
+      courseAddedSuccess: '수업이 성공적으로 추가되었습니다!',
+      redirectingToSchedule: '2초 후 시간표 화면으로 이동합니다...'
     }
   },
 

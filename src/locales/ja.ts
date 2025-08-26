@@ -168,7 +168,11 @@ export const ja = {
       friday: '金曜日',
       saturday: '土曜日',
       sunday: '日曜日',
-      colorDescription: 'スケジュールで使用される色'
+      colorDescription: 'スケジュールで使用される色',
+      addCourse: '授業を追加',
+      addingCourse: '授業を追加中...',
+      courseAddedSuccess: '授業が正常に追加されました！',
+      redirectingToSchedule: '2秒後にスケジュール画面に移動します...'
     }
   },
 
@@ -236,7 +240,7 @@ export const ja = {
       sharedFriendsCount: '{count}人',
       noSharedFriends: '共有されている友達がいません',
       shareWithFriends: 'この課題を友達と共有しましょう',
-      quickActions: 'クイックアク션',
+      quickActions: 'クイックアクション',
       shareAssignment: '友達と共有',
       updateProgress: '進捗更新',
       assignmentInfoSidebar: '課題情報',

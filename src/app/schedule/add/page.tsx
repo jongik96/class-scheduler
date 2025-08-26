@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Plus, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 
 export default function AddCoursePage() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [formData, setFormData] = useState({
     courseName: '',
     courseCode: '',
@@ -17,6 +19,8 @@ export default function AddCoursePage() {
     room: '',
     color: '#3b82f6'
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const daysOfWeek = [
     { value: 'monday', label: t('schedule.add.monday') },
@@ -28,10 +32,28 @@ export default function AddCoursePage() {
     { value: 'sunday', label: t('schedule.add.sunday') }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Supabase에 수업 추가 로직 구현
-    console.log('수업 추가:', formData);
+    setIsSubmitting(true);
+    
+    try {
+      // TODO: Supabase에 수업 추가 로직 구현
+      console.log('수업 추가:', formData);
+      
+      // 성공 상태 표시
+      setIsSuccess(true);
+      
+      // 2초 후 스케줄 뷰 화면으로 리디렉션
+      setTimeout(() => {
+        router.push('/schedule/view');
+      }, 2000);
+      
+    } catch (error) {
+      console.error('수업 추가 실패:', error);
+      // 에러 처리 로직 추가 가능
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -189,13 +211,37 @@ export default function AddCoursePage() {
               </div>
 
               <div className="mt-8">
-                <button
-                  type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  {t('schedule.add.addCourse')}
-                </button>
+                {isSuccess ? (
+                  <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4 text-center">
+                    <div className="flex items-center justify-center mb-2">
+                      <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400 mr-2" />
+                      <span className="text-green-800 dark:text-green-200 font-medium">
+                        {t('schedule.add.courseAddedSuccess')}
+                      </span>
+                    </div>
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      {t('schedule.add.redirectingToSchedule')}
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        {t('schedule.add.addingCourse')}
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-5 h-5 mr-2" />
+                        {t('schedule.add.addCourse')}
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </form>
           </div>

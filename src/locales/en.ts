@@ -168,7 +168,11 @@ export const en = {
       friday: 'Friday',
       saturday: 'Saturday',
       sunday: 'Sunday',
-      colorDescription: 'Color used in the schedule'
+      colorDescription: 'Color used in the schedule',
+      addCourse: 'Add Course',
+      addingCourse: 'Adding Course...',
+      courseAddedSuccess: 'Course added successfully!',
+      redirectingToSchedule: 'Redirecting to schedule in 2 seconds...'
     }
   },
 
