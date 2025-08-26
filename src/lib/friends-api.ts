@@ -113,13 +113,14 @@ export async function acceptFriendInvite(inviteCode: string): Promise<boolean> {
 
     if (existingFriend) throw new Error('Already friends.');
 
-    // Create friend relationship
+    // Create friend relationship (only one direction, will be queried bidirectionally)
     const { error: friendError } = await supabase
       .from('friends')
-      .insert([
-        { user_id: user.id, friend_id: invite.inviter_id, status: 'accepted' },
-        { user_id: invite.inviter_id, friend_id: user.id, status: 'accepted' }
-      ]);
+      .insert({
+        user_id: user.id, 
+        friend_id: invite.inviter_id, 
+        status: 'accepted'
+      });
 
     if (friendError) throw friendError;
 
@@ -142,15 +143,31 @@ export async function getFriends(): Promise<Friend[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
+    // Query friends bidirectionally: where user is either user_id or friend_id
     const { data: friends, error } = await supabase
       .from('friends')
       .select('*')
-      .eq('user_id', user.id)
+      .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
       .eq('status', 'accepted');
 
     if (error) throw error;
     
-    return friends || [];
+    // Transform the data to always show friend_id as the other person
+    const transformedFriends = (friends || []).map(friend => {
+      if (friend.user_id === user.id) {
+        // User is user_id, so friend_id is the other person
+        return friend;
+      } else {
+        // User is friend_id, so user_id is the other person
+        return {
+          ...friend,
+          user_id: friend.friend_id,
+          friend_id: friend.user_id
+        };
+      }
+    });
+    
+    return transformedFriends;
   } catch (error) {
     console.error('Friends list retrieval error:', error);
     return [];
