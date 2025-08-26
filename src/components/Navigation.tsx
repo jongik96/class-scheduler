@@ -289,12 +289,12 @@ export default function Navigation() {
           </div>
         )}
       </div>
-      
-      {/* Friend Invite Modal */}
-      <FriendInvite 
-        isOpen={isFriendInviteOpen} 
-        onClose={() => setIsFriendInviteOpen(false)} 
-      />
     </nav>
+    
+    {/* Friend Invite Modal */}
+    <FriendInvite 
+      isOpen={isFriendInviteOpen} 
+      onClose={() => setIsFriendInviteOpen(false)} 
+    />
   );
 }
