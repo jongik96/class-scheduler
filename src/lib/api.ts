@@ -86,6 +86,18 @@ export const coursesApi = {
     return data || [];
   },
 
+  // 특정 수업 조회
+  async getCourse(id: string): Promise<Course | null> {
+    const { data, error } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116는 데이터가 없음을 의미
+    return data;
+  },
+
   // 수업 생성
   async createCourse(courseData: Omit<Course, 'id' | 'user_id' | 'created_at' | 'updated_at'>): Promise<Course> {
     const { data: { user } } = await supabase.auth.getUser();
@@ -155,6 +167,18 @@ export const assignmentsApi = {
 
     if (error) throw error;
     return data || [];
+  },
+
+  // 특정 과제 조회
+  async getAssignment(id: string): Promise<Assignment | null> {
+    const { data, error } = await supabase
+      .from('assignments')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error; // PGRST116는 데이터가 없음을 의미
+    return data;
   },
 
   // 과제 생성
