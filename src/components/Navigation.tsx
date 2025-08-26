@@ -2,14 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X, Users } from 'lucide-react';
+import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import { useAuth } from '@/lib/auth-context';
-import FriendInvite from './FriendInvite';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -17,19 +16,12 @@ export default function Navigation() {
   const { theme } = useTheme();
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isFriendInviteOpen, setIsFriendInviteOpen] = useState(false);
 
   const navItems = [
     { href: '/', label: t('navigation.home'), icon: Home },
     { href: '/schedule/view', label: t('navigation.scheduleView'), icon: Eye },
     { href: '/schedule/add', label: t('navigation.addCourse'), icon: Plus },
     { href: '/assignment/list', label: t('navigation.assignmentList'), icon: CheckSquare },
-    ...(user ? [{ 
-      href: '#', 
-      label: t('navigation.friends'), 
-      icon: Users,
-      onClick: () => setIsFriendInviteOpen(true)
-    }] : []),
   ];
 
   type AuthItem = {
@@ -292,11 +284,6 @@ export default function Navigation() {
         </div>
       </nav>
       
-      {/* Friend Invite Modal */}
-      <FriendInvite 
-        isOpen={isFriendInviteOpen} 
-        onClose={() => setIsFriendInviteOpen(false)} 
-      />
     </>
   );
 }
