@@ -142,6 +142,8 @@ export async function getFriends(): Promise<Friend[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
+    
+    console.log('Current user ID:', user.id);
 
     // Get all friends where user is either user_id or friend_id
     const { data: friends, error } = await supabase
@@ -150,20 +152,33 @@ export async function getFriends(): Promise<Friend[]> {
       .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
       .eq('status', 'accepted');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching friends:', error);
+      throw error;
+    }
     
-    if (!friends || friends.length === 0) return [];
+    console.log('Raw friends data:', friends);
+    
+    if (!friends || friends.length === 0) {
+      console.log('No friends found');
+      return [];
+    }
     
     // Get all unique friend IDs (excluding the current user)
     const friendIds = friends.map(friend => 
       friend.user_id === user.id ? friend.friend_id : friend.user_id
     );
     
+    console.log('Friend IDs to fetch profiles for:', friendIds);
+    
     // Get profiles for all friends with better error handling
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
       .in('id', friendIds);
+    
+    console.log('Profiles fetched:', profiles);
+    console.log('Profile error if any:', profileError);
     
     if (profileError) {
       console.error('Profile retrieval error:', profileError);
@@ -183,12 +198,15 @@ export async function getFriends(): Promise<Friend[]> {
     
     // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    console.log('Profile map created:', profileMap);
     
     // Transform friends to always show the other person as friend_id
     const transformedFriends = friends.map(friend => {
       const isUserInitiator = friend.user_id === user.id;
       const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
       const otherPersonProfile = profileMap.get(otherPersonId);
+      
+      console.log(`Friend ${friend.id}: otherPersonId=${otherPersonId}, profile=`, otherPersonProfile);
       
       return {
         ...friend,
@@ -198,7 +216,7 @@ export async function getFriends(): Promise<Friend[]> {
       };
     });
     
-    console.log('Transformed friends with profiles:', transformedFriends);
+    console.log('Final transformed friends:', transformedFriends);
     return transformedFriends;
   } catch (error) {
     console.error('Friends list retrieval error:', error);
@@ -211,6 +229,8 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
+    
+    console.log('Getting invites for user:', user.email);
 
     // First get the invites
     const { data: invites, error } = await supabase
@@ -219,16 +239,29 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
       .eq('invitee_email', user.email)
       .eq('status', 'pending');
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching invites:', error);
+      throw error;
+    }
     
-    if (!invites || invites.length === 0) return [];
+    console.log('Raw invites data:', invites);
+    
+    if (!invites || invites.length === 0) {
+      console.log('No invites found');
+      return [];
+    }
     
     // Get profiles for all inviters
     const inviterIds = invites.map(invite => invite.inviter_id);
+    console.log('Inviter IDs to fetch profiles for:', inviterIds);
+    
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url')
       .in('id', inviterIds);
+    
+    console.log('Inviter profiles fetched:', profiles);
+    console.log('Profile error if any:', profileError);
     
     if (profileError) {
       console.error('Profile retrieval error for invites:', profileError);
@@ -241,14 +274,20 @@ export async function getReceivedInvites(): Promise<FriendInvite[]> {
     
     // Create a map of profiles
     const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    console.log('Inviter profile map created:', profileMap);
     
     // Attach profiles to invites
-    const invitesWithProfiles = invites.map(invite => ({
-      ...invite,
-      inviter_profile: profileMap.get(invite.inviter_id)
-    }));
+    const invitesWithProfiles = invites.map(invite => {
+      const profile = profileMap.get(invite.inviter_id);
+      console.log(`Invite ${invite.id}: inviter_id=${invite.inviter_id}, profile=`, profile);
+      
+      return {
+        ...invite,
+        inviter_profile: profile
+      };
+    });
     
-    console.log('Invites with profiles:', invitesWithProfiles);
+    console.log('Final invites with profiles:', invitesWithProfiles);
     return invitesWithProfiles;
   } catch (error) {
     console.error('Received invites retrieval error:', error);

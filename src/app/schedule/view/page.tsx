@@ -125,7 +125,7 @@ function ScheduleViewContent() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/schedule/add"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {t('common.addCourse')}
@@ -176,7 +176,7 @@ function ScheduleViewContent() {
                       onClick={() => setSelectedDay(day.value)}
                       className={`flex-shrink-0 py-2 px-3 text-sm font-medium rounded-md transition-colors ${
                         selectedDay === day.value
-                          ? 'bg-blue-600 text-white'
+                          ? 'bg-[#BAE1FF] text-gray-800'
                           : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
@@ -205,13 +205,13 @@ function ScheduleViewContent() {
                         key={day.value}
                         className={`p-3 text-center border-r border-gray-200 dark:border-gray-600 ${
                           selectedDay === day.value
-                            ? 'bg-blue-50 dark:bg-blue-900/20'
+                            ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/20'
                             : 'bg-gray-50 dark:bg-gray-700'
                         }`}
                       >
                         <span className={`text-sm font-medium ${
                           selectedDay === day.value
-                            ? 'text-blue-700 dark:text-blue-300'
+                            ? 'text-[#1E40AF] dark:text-[#BAE1FF]'
                             : 'text-gray-700 dark:text-gray-300'
                         }`}>
                           {day.label}
@@ -238,7 +238,7 @@ function ScheduleViewContent() {
                             key={day.value}
                             className={`p-1 border-r border-gray-200 dark:border-gray-600 min-h-[60px] ${
                               selectedDay === day.value
-                                ? 'bg-blue-50 dark:bg-blue-900/10'
+                                ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
                                 : ''
                             }`}
                           >
@@ -274,9 +274,9 @@ function ScheduleViewContent() {
               
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
                 {isLoading ? (
-                  <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4 text-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                    <p className="text-blue-800 dark:text-blue-200 text-sm">
+                  <div className="bg-[#E0F2FE] dark:bg-[#BAE1FF]/20 border border-[#BAE1FF] dark:border-[#BAE1FF]/30 rounded-md p-4 text-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E40AF] mx-auto mb-2"></div>
+                    <p className="text-[#1E40AF] dark:text-[#BAE1FF] text-sm">
                       {t('common.loadingData')}
                     </p>
                   </div>
@@ -286,7 +286,7 @@ function ScheduleViewContent() {
                     <p>{error}</p>
                     <button
                       onClick={loadCourses}
-                      className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                      className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       {t('common.refresh')}
@@ -298,7 +298,7 @@ function ScheduleViewContent() {
                     <p className="text-gray-600 dark:text-gray-400 mb-2">{t('common.noCourses')}</p>
                     <Link
                       href="/schedule/add"
-                      className="text-blue-600 hover:text-blue-500 text-sm"
+                      className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm"
                     >
                       {t('common.addFirstCourse')}
                     </Link>
@@ -383,7 +383,7 @@ function ScheduleViewContent() {
             <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.courses.description')}</p>
             <Link
               href="/schedule/add"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
             >
               {t('schedule.add.title')}
             </Link>
@@ -574,7 +574,7 @@ function FriendsManagementPage() {
           <button
             onClick={handleGenerateInvite}
             disabled={isGeneratingInvite}
-            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors disabled:opacity-50"
           >
             <Users className="w-4 h-4 mr-2" />
             {isGeneratingInvite ? t('friends.generating') : t('friends.inviteFriends')}
@@ -592,12 +592,12 @@ function FriendsManagementPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('friends.searchPlaceholder')}
-              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+              className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white"
             />
             <button
               onClick={handleSearch}
               disabled={isSearching}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-[#BAE1FF] hover:bg-[#87CEEB] text-gray-800 rounded-md text-sm transition-colors disabled:opacity-50"
             >
               {isSearching ? t('friends.searching') : t('friends.search')}
             </button>
@@ -612,7 +612,7 @@ function FriendsManagementPage() {
                     <p className="font-medium text-gray-900 dark:text-white">{user.nickname}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{user.full_name} • {user.major}</p>
                   </div>
-                  <button className="text-blue-600 hover:text-blue-500 text-sm font-medium">
+                  <button className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm font-medium">
                     {t('friends.invite')}
                   </button>
                 </div>
@@ -658,7 +658,7 @@ function FriendsManagementPage() {
                 <p className="text-gray-500 dark:text-gray-400 mb-2">No invite link generated yet</p>
                 <button
                   onClick={handleGenerateInvite}
-                  className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+                  className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm font-medium"
                 >
                   {t('friends.generateInviteLink')}
                 </button>
@@ -717,8 +717,8 @@ function FriendsManagementPage() {
               {friends.map((friend) => (
                 <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                      <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                    <div className="w-10 h-10 bg-[#E0F2FE] dark:bg-[#BAE1FF]/20 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-[#1E40AF] dark:text-[#BAE1FF]" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
@@ -921,7 +921,7 @@ function AssignmentListContent() {
           </button>
           <Link
             href="/assignment/add"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
           >
             <Plus className="w-4 h-4 mr-2" />
             {t('assignments.list.addAssignment')}
@@ -933,8 +933,8 @@ function AssignmentListContent() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <div className="flex items-center">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-              <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 bg-[#E0F2FE] dark:bg-[#BAE1FF]/20 rounded-lg">
+              <Calendar className="w-6 h-6 text-[#1E40AF] dark:text-[#BAE1FF]" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
@@ -1007,7 +1007,7 @@ function AssignmentListContent() {
                 placeholder={t('assignments.list.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
@@ -1018,7 +1018,7 @@ function AssignmentListContent() {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white text-sm"
               >
                 <option value="all">{t('assignments.list.allStatus')}</option>
                 <option value="pending">{t('assignments.list.pending')}</option>
@@ -1031,7 +1031,7 @@ function AssignmentListContent() {
               <select
                 value={priorityFilter}
                 onChange={(e) => setPriorityFilter(e.target.value)}
-                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white text-sm"
+                className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white text-sm"
               >
                 <option value="all">{t('assignments.list.allPriority')}</option>
                 <option value="high">{t('priority.high')}</option>
@@ -1056,7 +1056,7 @@ function AssignmentListContent() {
             <p>{error}</p>
             <button
               onClick={loadAssignments}
-              className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              className="mt-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
             >
               <RefreshCw className="w-4 h-4 mr-2" />
               {t('common.refresh')}
@@ -1068,7 +1068,7 @@ function AssignmentListContent() {
             <p className="text-gray-600 dark:text-gray-400 mb-2">{t('common.noAssignments')}</p>
             <Link
               href="/assignment/add"
-              className="text-blue-600 hover:text-blue-500 text-sm"
+              className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm"
             >
               {t('common.addFirstAssignment')}
             </Link>
@@ -1108,7 +1108,7 @@ function AssignmentListContent() {
                   <div className="flex items-center space-x-2 ml-4">
                     <Link
                       href={`/assignment/${assignment.id}`}
-                      className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#1E40AF] dark:hover:text-[#BAE1FF] transition-colors"
                     >
                       <Eye className="w-4 h-4" />
                     </Link>
