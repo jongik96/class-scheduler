@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { Plus, Search, Filter, Calendar, CheckCircle, Clock, AlertCircle, Eye, BookOpen, RefreshCw, Edit } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { assignmentsApi, type Assignment } from '@/lib/api';
+import { AuthGuard } from '@/components/AuthGuard';
 
-export default function AssignmentListPage() {
+function AssignmentListContent() {
   const { t } = useLanguage();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -355,5 +356,13 @@ export default function AssignmentListPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AssignmentListPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <AssignmentListContent />
+    </AuthGuard>
   );
 }

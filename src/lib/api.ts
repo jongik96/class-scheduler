@@ -1,6 +1,19 @@
 import { supabase } from './supabase';
 
 // =====================================================
+// 유틸리티 함수
+// =====================================================
+
+// 현재 로그인한 사용자 확인
+async function getCurrentUser() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) {
+    throw new Error('로그인이 필요합니다.');
+  }
+  return user;
+}
+
+// =====================================================
 // 타입 정의
 // =====================================================
 
@@ -75,9 +88,12 @@ export interface FriendInvite {
 export const coursesApi = {
   // 수업 목록 조회
   async getCourses(): Promise<Course[]> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('courses')
       .select('*')
+      .eq('user_id', user.id)
       .eq('is_active', true)
       .order('day_of_week', { ascending: true })
       .order('start_time', { ascending: true });
@@ -88,10 +104,13 @@ export const coursesApi = {
 
   // 특정 수업 조회
   async getCourse(id: string): Promise<Course | null> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('courses')
       .select('*')
       .eq('id', id)
+      .eq('user_id', user.id)
       .single();
 
     if (error && error.code !== 'PGRST116') throw error; // PGRST116는 데이터가 없음을 의미
@@ -118,10 +137,13 @@ export const coursesApi = {
 
   // 수업 수정
   async updateCourse(id: string, updates: Partial<Course>): Promise<Course> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('courses')
       .update(updates)
       .eq('id', id)
+      .eq('user_id', user.id)
       .select()
       .single();
 
@@ -131,19 +153,25 @@ export const coursesApi = {
 
   // 수업 삭제 (소프트 삭제)
   async deleteCourse(id: string): Promise<void> {
+    const user = await getCurrentUser();
+    
     const { error } = await supabase
       .from('courses')
       .update({ is_active: false })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (error) throw error;
   },
 
   // 특정 요일 수업 조회
   async getCoursesByDay(dayOfWeek: Course['day_of_week']): Promise<Course[]> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('courses')
       .select('*')
+      .eq('user_id', user.id)
       .eq('day_of_week', dayOfWeek)
       .eq('is_active', true)
       .order('start_time', { ascending: true });
@@ -160,9 +188,12 @@ export const coursesApi = {
 export const assignmentsApi = {
   // 과제 목록 조회
   async getAssignments(): Promise<Assignment[]> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('assignments')
       .select('*')
+      .eq('user_id', user.id)
       .order('due_date', { ascending: true });
 
     if (error) throw error;
@@ -171,10 +202,13 @@ export const assignmentsApi = {
 
   // 특정 과제 조회
   async getAssignment(id: string): Promise<Assignment | null> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('assignments')
       .select('*')
       .eq('id', id)
+      .eq('user_id', user.id)
       .single();
 
     if (error && error.code !== 'PGRST116') throw error; // PGRST116는 데이터가 없음을 의미
@@ -201,10 +235,13 @@ export const assignmentsApi = {
 
   // 과제 수정
   async updateAssignment(id: string, updates: Partial<Assignment>): Promise<Assignment> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('assignments')
       .update(updates)
       .eq('id', id)
+      .eq('user_id', user.id)
       .select()
       .single();
 
@@ -214,19 +251,25 @@ export const assignmentsApi = {
 
   // 과제 삭제
   async deleteAssignment(id: string): Promise<void> {
+    const user = await getCurrentUser();
+    
     const { error } = await supabase
       .from('assignments')
       .delete()
-      .eq('id', id);
+      .eq('id', id)
+      .eq('user_id', user.id);
 
     if (error) throw error;
   },
 
   // 과제 상태별 조회
   async getAssignmentsByStatus(status: Assignment['status']): Promise<Assignment[]> {
+    const user = await getCurrentUser();
+    
     const { data, error } = await supabase
       .from('assignments')
       .select('*')
+      .eq('user_id', user.id)
       .eq('status', status)
       .order('due_date', { ascending: true });
 
@@ -236,12 +279,14 @@ export const assignmentsApi = {
 
   // 마감일이 임박한 과제 조회
   async getUpcomingAssignments(days: number = 7): Promise<Assignment[]> {
+    const user = await getCurrentUser();
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + days);
 
     const { data, error } = await supabase
       .from('assignments')
       .select('*')
+      .eq('user_id', user.id)
       .gte('due_date', new Date().toISOString())
       .lte('due_date', futureDate.toISOString())
       .order('due_date', { ascending: true });

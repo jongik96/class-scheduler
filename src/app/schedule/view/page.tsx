@@ -24,7 +24,7 @@ const timeSlots = [
   '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00'
 ];
 
-export default function ScheduleViewPage() {
+function ScheduleViewContent() {
   const { t } = useLanguage();
   const [selectedDay, setSelectedDay] = useState('monday');
   const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('schedule');
@@ -766,5 +766,13 @@ function FriendsManagementPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ScheduleViewPage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <ScheduleViewContent />
+    </AuthGuard>
   );
 }

@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { ArrowLeft, Plus, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { coursesApi } from '@/lib/api';
+import { AuthGuard } from '@/components/AuthGuard';
 
-export default function AddCoursePage() {
+function AddCourseContent() {
   const { t } = useLanguage();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -363,5 +364,13 @@ export default function AddCoursePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AddCoursePage() {
+  return (
+    <AuthGuard requireAuth={true}>
+      <AddCourseContent />
+    </AuthGuard>
   );
 }
