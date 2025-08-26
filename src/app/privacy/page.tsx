@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {t('common.backToHome')}
+            {t('common.back')}
           </Link>
           <div className="flex items-center space-x-3 mb-4">
             <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">

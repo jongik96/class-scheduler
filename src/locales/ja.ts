@@ -194,6 +194,7 @@ export const ja = {
     scheduleView: 'スケジュール表示',
     addCourse: '授業追加',
     assignmentList: '課題一覧',
+    friends: '友達',
     login: 'ログイン',
     register: '登録',
   },
@@ -659,6 +660,30 @@ export const ja = {
         friendConnections: '友達接続および共有',
         multilingual: '多言語サポート（韓国語、英語、日本語）'
       }
+    },
+    friends: {
+      inviteFriend: '友達を招待',
+      inviteDescription: '下のリンクまたはQRコードを友達と共有してください',
+      generatingInvite: '招待リンクを生成中...',
+      showQR: 'リンクを表示',
+      showLink: 'QRコードを表示',
+      copyLink: 'リンクをコピー',
+      copied: 'コピーしました',
+      share: '共有',
+      inviteExpires: '招待リンクは7日後に期限切れになります',
+      failedToGenerate: '招待リンクの生成に失敗しました',
+      retry: '再試行',
+      inviteTitle: 'Smart Scheduler 友達招待',
+      inviteMessage: 'Smart Schedulerで一緒にスケジュールを管理しましょう！'
+    },
+    invite: {
+      title: '友達招待の受諾',
+      inviteCode: '招待コード',
+      processing: '招待を処理中...',
+      successMessage: '友達招待が正常に受諾されました！',
+      errorMessage: '友達招待の受諾に失敗しました。',
+      generalError: 'エラーが発生しました。もう一度お試しください。',
+      loginRequired: 'ログインが必要です。',
     },
     accounts: {
       title: 'ユーザーアカウント',

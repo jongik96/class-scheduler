@@ -194,6 +194,7 @@ export const ko = {
     scheduleView: '시간표 보기',
     addCourse: '수업 추가',
     assignmentList: '과제 목록',
+    friends: '친구',
     login: '로그인',
     register: '회원가입',
   },
@@ -660,6 +661,30 @@ export const ko = {
         friendConnections: '친구 연결 및 공유',
         multilingual: '다국어 지원 (한국어, 영어, 일본어)'
       }
+    },
+    friends: {
+      inviteFriend: '친구 초대하기',
+      inviteDescription: '아래 링크나 QR 코드를 친구에게 공유하세요',
+      generatingInvite: '초대 링크 생성 중...',
+      showQR: '링크 보기',
+      showLink: 'QR 코드 보기',
+      copyLink: '링크 복사',
+      copied: '복사됨',
+      share: '공유하기',
+      inviteExpires: '초대 링크는 7일 후 만료됩니다',
+      failedToGenerate: '초대 링크 생성에 실패했습니다',
+      retry: '다시 시도',
+      inviteTitle: 'Smart Scheduler 친구 초대',
+      inviteMessage: 'Smart Scheduler에서 함께 스케줄을 관리해보세요!'
+    },
+    invite: {
+      title: '친구 초대 수락',
+      inviteCode: '초대 코드',
+      processing: '초대를 처리하는 중...',
+      successMessage: '친구 초대가 성공적으로 수락되었습니다!',
+      errorMessage: '친구 초대 수락에 실패했습니다.',
+      generalError: '오류가 발생했습니다. 다시 시도해주세요.',
+      loginRequired: '로그인이 필요합니다.',
     },
     accounts: {
       title: '사용자 계정',

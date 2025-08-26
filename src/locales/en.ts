@@ -194,6 +194,7 @@ export const en = {
     scheduleView: 'View Schedule',
     addCourse: 'Add Course',
     assignmentList: 'Assignment List',
+    friends: 'Friends',
     login: 'Login',
     register: 'Register',
   },
@@ -659,6 +660,30 @@ export const en = {
         friendConnections: 'Friend connections and sharing',
         multilingual: 'Multilingual support (Korean, English, Japanese)'
       }
+    },
+    friends: {
+      inviteFriend: 'Invite Friend',
+      inviteDescription: 'Share the link or QR code below with your friend',
+      generatingInvite: 'Generating invite link...',
+      showQR: 'Show Link',
+      showLink: 'Show QR Code',
+      copyLink: 'Copy Link',
+      copied: 'Copied',
+      share: 'Share',
+      inviteExpires: 'Invite link expires in 7 days',
+      failedToGenerate: 'Failed to generate invite link',
+      retry: 'Retry',
+      inviteTitle: 'Smart Scheduler Friend Invite',
+      inviteMessage: 'Let\'s manage schedules together on Smart Scheduler!'
+    },
+    invite: {
+      title: 'Accept Friend Invite',
+      inviteCode: 'Invite Code',
+      processing: 'Processing invite...',
+      successMessage: 'Friend invite accepted successfully!',
+      errorMessage: 'Failed to accept friend invite.',
+      generalError: 'An error occurred. Please try again.',
+      loginRequired: 'Login required.',
     },
     accounts: {
       title: 'User Accounts',

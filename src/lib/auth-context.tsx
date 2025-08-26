@@ -19,52 +19,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profileComplete, setProfileComplete] = useState(false)
 
   useEffect(() => {
-    // 현재 세션 확인
-    const getSession = async () => {
-      console.log('🔍 현재 세션 확인 중...')
-      const { data: { session }, error } = await supabase.auth.getSession()
-      
-      if (error) {
-        console.error('❌ 세션 확인 오류:', error)
+    const checkSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          throw error
+        }
+        
+        if (session) {
+          setUser(session.user)
+          setLoading(false)
+        } else {
+          setUser(null)
+          setLoading(false)
+        }
+      } catch (error) {
+        setUser(null)
+        setLoading(false)
       }
-      
-      console.log('📋 세션 데이터:', session)
-      
-      if (session?.user) {
-        console.log('✅ 사용자 세션 발견:', session.user)
-        setUser({
-          id: session.user.id,
-          email: session.user.email,
-          user_metadata: session.user.user_metadata
-        })
-        // 프로필 완성 상태 확인
-        await checkProfileStatus(session.user.id)
-      } else {
-        console.log('❌ 사용자 세션 없음')
-      }
-      setLoading(false)
     }
 
-    getSession()
+    checkSession()
 
-    // 인증 상태 변경 감지
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('🔄 인증 상태 변경:', event, session?.user?.email)
-        
-        if (session?.user) {
-          console.log('✅ 로그인 상태 감지:', session.user)
-          setUser({
-            id: session.user.id,
-            email: session.user.email,
-            user_metadata: session.user.user_metadata
-          })
-          // 프로필 완성 상태 확인
-          await checkProfileStatus(session.user.id)
-        } else {
-          console.log('❌ Logout state detected')
+        if (event === 'SIGNED_IN' && session) {
+          setUser(session.user)
+        } else if (event === 'SIGNED_OUT') {
           setUser(null)
-          setProfileComplete(false)
         }
         setLoading(false)
       }
@@ -90,37 +72,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGoogle = async () => {
     try {
-      console.log('🚀 Google login started...')
-      
-      // Set redirect URL based on current environment
-      const isProduction = window.location.hostname !== 'localhost'
+      const isProduction = process.env.NODE_ENV === 'production'
       const redirectTo = isProduction 
-        ? 'https://class-scheduler-nine.vercel.app/auth/callback'
+        ? `${window.location.origin}/auth/callback`
         : `${window.location.origin}/auth/callback`
-      
-      console.log('🌐 Environment:', isProduction ? 'Production' : 'Development')
-      console.log('🔄 Callback URL:', redirectTo)
-      
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent'
-          }
-        }
+            prompt: 'consent',
+          },
+        },
       })
-      
+
       if (error) {
-        console.error('❌ Google login error:', error)
         throw error
       }
-      
-      console.log('✅ Google login redirect successful:', data)
-      console.log('🔄 Redirect URL:', data.url)
+
+      if (data.url) {
+        window.location.href = data.url
+      }
     } catch (error) {
-      console.error('❌ Google login exception:', error)
       throw error
     }
   }
@@ -128,11 +103,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut()
-      if (error) throw error
-      setUser(null)
-      setProfileComplete(false)
+      if (error) {
+        throw error
+      }
     } catch (error) {
-      console.error('Logout error:', error)
       throw error
     }
   }

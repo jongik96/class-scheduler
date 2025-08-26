@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X, Users } from 'lucide-react';
 import { useState } from 'react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import { useAuth } from '@/lib/auth-context';
+import FriendInvite from './FriendInvite';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -16,12 +17,19 @@ export default function Navigation() {
   const { theme } = useTheme();
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isFriendInviteOpen, setIsFriendInviteOpen] = useState(false);
 
   const navItems = [
     { href: '/', label: t('navigation.home'), icon: Home },
     { href: '/schedule/view', label: t('navigation.scheduleView'), icon: Eye },
     { href: '/schedule/add', label: t('navigation.addCourse'), icon: Plus },
     { href: '/assignment/list', label: t('navigation.assignmentList'), icon: CheckSquare },
+    ...(user ? [{ 
+      href: '#', 
+      label: t('navigation.friends'), 
+      icon: Users,
+      onClick: () => setIsFriendInviteOpen(true)
+    }] : []),
   ];
 
   type AuthItem = {
@@ -129,6 +137,18 @@ export default function Navigation() {
             <div className="ml-10 flex items-baseline space-x-4">
               {navItems.map((item) => {
                 const Icon = item.icon;
+                if (item.onClick) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={item.onClick}
+                      className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${getHoverClasses()}`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                }
                 return (
                   <Link
                     key={item.href}
@@ -201,12 +221,27 @@ export default function Navigation() {
             <div className="px-4 py-2 space-y-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
+                if (item.onClick) {
+                  return (
+                    <button
+                      key={item.label}
+                      onClick={() => {
+                        item.onClick?.();
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${getHoverClasses()}`}
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                }
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${
+                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-md text-base font-medium transition-all duration-200 mobile-touch-target ${
                       pathname === item.href
                         ? getActiveClasses()
                         : `${getTextClasses()} ${getHoverClasses()}`
@@ -254,6 +289,12 @@ export default function Navigation() {
           </div>
         )}
       </div>
+      
+      {/* Friend Invite Modal */}
+      <FriendInvite 
+        isOpen={isFriendInviteOpen} 
+        onClose={() => setIsFriendInviteOpen(false)} 
+      />
     </nav>
   );
 }
