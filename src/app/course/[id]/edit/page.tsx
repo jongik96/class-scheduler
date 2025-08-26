@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
-import { coursesApi, type Course } from '@/lib/api';
+import { coursesApi } from '@/lib/api';
 
 export default function EditCoursePage() {
   const { t } = useLanguage();
@@ -47,14 +47,7 @@ export default function EditCoursePage() {
     { value: 'sunday', label: t('schedule.add.sunday') }
   ];
 
-  // Load existing course data
-  useEffect(() => {
-    if (courseId) {
-      loadCourse();
-    }
-  }, [courseId]);
-
-  const loadCourse = async () => {
+  const loadCourse = useCallback(async () => {
     try {
       setIsLoadingCourse(true);
       const course = await coursesApi.getCourse(courseId);
@@ -78,7 +71,14 @@ export default function EditCoursePage() {
     } finally {
       setIsLoadingCourse(false);
     }
-  };
+  }, [courseId]);
+
+  // Load existing course data
+  useEffect(() => {
+    if (courseId) {
+      loadCourse();
+    }
+  }, [courseId, loadCourse]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

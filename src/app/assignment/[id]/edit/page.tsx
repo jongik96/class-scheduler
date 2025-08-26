@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { useLanguage } from '@/lib/language-context';
-import { assignmentsApi, coursesApi, type Course, type Assignment } from '@/lib/api';
+import { assignmentsApi, coursesApi, type Course } from '@/lib/api';
 
 export default function EditAssignmentPage() {
   const { t } = useLanguage();
@@ -32,14 +32,7 @@ export default function EditAssignmentPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Load existing assignment data
-  useEffect(() => {
-    if (assignmentId && user) {
-      loadAssignment();
-      loadCourses();
-    }
-  }, [assignmentId, user]);
-
-  const loadAssignment = async () => {
+  const loadAssignment = useCallback(async () => {
     try {
       setIsLoadingAssignment(true);
       const assignment = await assignmentsApi.getAssignment(assignmentId);
@@ -60,9 +53,9 @@ export default function EditAssignmentPage() {
     } finally {
       setIsLoadingAssignment(false);
     }
-  };
+  }, [assignmentId]);
 
-  const loadCourses = async () => {
+  const loadCourses = useCallback(async () => {
     setIsLoadingCourses(true);
     try {
       const coursesList = await coursesApi.getCourses();
@@ -72,7 +65,14 @@ export default function EditAssignmentPage() {
     } finally {
       setIsLoadingCourses(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (assignmentId && user) {
+      loadAssignment();
+      loadCourses();
+    }
+  }, [assignmentId, user, loadAssignment, loadCourses]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

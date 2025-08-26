@@ -45,16 +45,7 @@ export default function AssignmentListPage() {
     }
   };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return t('assignments.list.completed');
-      case 'overdue':
-        return t('assignments.list.overdue');
-      default:
-        return t('assignments.list.pending');
-    }
-  };
+
 
   const getPriorityText = (priority: string) => {
     switch (priority) {
