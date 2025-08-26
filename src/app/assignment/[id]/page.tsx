@@ -12,9 +12,9 @@ export default function AssignmentDetailPage() {
   const params = useParams();
   const [assignment] = useState({
     id: '1',
-    title: '웹 개발 프로젝트',
-    description: 'React와 Node.js를 사용한 풀스택 웹 애플리케이션 개발',
-    course: '웹 프로그래밍',
+    title: 'Web Development Project',
+    description: 'Full-stack web application development using React and Node.js',
+    course: 'Web Programming',
     dueDate: '2024-12-31',
     priority: 'high',
     status: 'pending',
@@ -35,7 +35,7 @@ export default function AssignmentDetailPage() {
       const shares = await getAssignmentShares(assignmentId);
       setSharedFriends(shares);
     } catch (error) {
-      console.error('공유 정보 로드 오류:', error);
+      console.error('Error loading share information:', error);
     } finally {
       setIsLoadingShares(false);
     }

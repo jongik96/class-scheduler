@@ -136,7 +136,6 @@ export const ja = {
     assignmentTitlePlaceholder: '課題タイトルを入力してください',
     assignmentDescriptionPlaceholder: '課題の説明を入力してください',
     selectCoursePlaceholder: '授業を選択してください',
-    loadingCourses: '授業一覧を読み込み中...',
     noCoursesAvailable: '登録された授業がありません',
     courseRequired: '授業の選択が必要です',
     titleRequired: 'タイトルの入力が必要です',

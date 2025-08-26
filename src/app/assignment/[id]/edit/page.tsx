@@ -31,7 +31,7 @@ export default function EditAssignmentPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 기존 과제 데이터 로드
+  // Load existing assignment data
   useEffect(() => {
     if (assignmentId && user) {
       loadAssignment();
@@ -49,14 +49,14 @@ export default function EditAssignmentPage() {
           title: assignment.title,
           description: assignment.description || '',
           course_id: assignment.course_id || '',
-          dueDate: assignment.due_date.split('T')[0], // YYYY-MM-DD 형식으로 변환
+          dueDate: assignment.due_date.split('T')[0], // Convert to YYYY-MM-DD format
           priority: assignment.priority,
           status: assignment.status
         });
       }
     } catch (err) {
-      console.error('❌ 과제 데이터 로드 실패:', err);
-      setError('과제 데이터를 불러오는데 실패했습니다.');
+      console.error('❌ Failed to load assignment data:', err);
+      setError('Failed to load assignment data.');
     } finally {
       setIsLoadingAssignment(false);
     }
@@ -89,18 +89,18 @@ export default function EditAssignmentPage() {
       };
 
       await assignmentsApi.updateAssignment(assignmentId, assignmentData);
-      console.log('✅ 과제 수정 성공');
+      console.log('✅ Assignment updated successfully');
       
       setIsSuccess(true);
       
-      // 2초 후 과제 목록 화면으로 리디렉션
+      // Redirect to assignment list after 2 seconds
       setTimeout(() => {
         router.push('/assignment/list');
       }, 2000);
       
     } catch (error) {
-      console.error('❌ 과제 수정 실패:', error);
-      alert(`과제 수정에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      console.error('❌ Failed to update assignment:', error);
+      alert(`Failed to update assignment: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }

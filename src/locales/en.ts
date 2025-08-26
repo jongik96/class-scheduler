@@ -136,7 +136,6 @@ export const en = {
     assignmentTitlePlaceholder: 'Enter assignment title',
     assignmentDescriptionPlaceholder: 'Enter assignment description',
     selectCoursePlaceholder: 'Select a course',
-    loadingCourses: 'Loading courses...',
     noCoursesAvailable: 'No courses available',
     courseRequired: 'Course selection is required',
     titleRequired: 'Title is required',

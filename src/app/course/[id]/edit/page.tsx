@@ -47,7 +47,7 @@ export default function EditCoursePage() {
     { value: 'sunday', label: t('schedule.add.sunday') }
   ];
 
-  // 기존 수업 데이터 로드
+  // Load existing course data
   useEffect(() => {
     if (courseId) {
       loadCourse();
@@ -73,8 +73,8 @@ export default function EditCoursePage() {
         });
       }
     } catch (err) {
-      console.error('❌ 수업 데이터 로드 실패:', err);
-      setError('수업 데이터를 불러오는데 실패했습니다.');
+      console.error('❌ Failed to load course data:', err);
+      setError('Failed to load course data.');
     } finally {
       setIsLoadingCourse(false);
     }
@@ -83,12 +83,12 @@ export default function EditCoursePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 시간 유효성 검사
+    // Time validation
     const startTimeIndex = timeOptions.indexOf(formData.startTime);
     const endTimeIndex = timeOptions.indexOf(formData.endTime);
     
     if (startTimeIndex >= endTimeIndex) {
-      alert('종료 시간은 시작 시간보다 늦어야 합니다.');
+      alert('End time must be later than start time.');
       return;
     }
     
@@ -108,18 +108,18 @@ export default function EditCoursePage() {
       };
 
       await coursesApi.updateCourse(courseId, courseData);
-      console.log('✅ 수업 수정 성공');
+      console.log('✅ Course updated successfully');
       
       setIsSuccess(true);
       
-      // 2초 후 스케줄 뷰 화면으로 리디렉션
+      // Redirect to schedule view after 2 seconds
       setTimeout(() => {
         router.push('/schedule/view');
       }, 2000);
       
     } catch (error) {
-      console.error('❌ 수업 수정 실패:', error);
-      alert(`수업 수정에 실패했습니다: ${error instanceof Error ? error.message : '알 수 없는 오류'}`);
+      console.error('❌ Failed to update course:', error);
+      alert(`Failed to update course: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +129,7 @@ export default function EditCoursePage() {
     setFormData(prev => {
       const newData = { ...prev, [field]: value };
       
-      // 시작 시간이 변경되면 종료 시간 자동 조정
+      // Auto-adjust end time when start time changes
       if (field === 'startTime') {
         const startTimeIndex = timeOptions.indexOf(value);
         const currentEndTimeIndex = timeOptions.indexOf(newData.endTime);
@@ -140,7 +140,7 @@ export default function EditCoursePage() {
         }
       }
       
-      // 종료 시간이 시작 시간보다 이르면 시작 시간으로부터 1.5시간 후로 설정
+      // Set end time to 1.5 hours after start time if it's earlier
       if (field === 'endTime') {
         const startTimeIndex = timeOptions.indexOf(newData.startTime);
         const endTimeIndex = timeOptions.indexOf(value);

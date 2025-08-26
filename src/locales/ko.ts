@@ -136,7 +136,6 @@ export const ko = {
     assignmentTitlePlaceholder: '과제 제목을 입력하세요',
     assignmentDescriptionPlaceholder: '과제에 대한 설명을 입력하세요',
     selectCoursePlaceholder: '수업을 선택하세요',
-    loadingCourses: '수업 목록 로딩 중...',
     noCoursesAvailable: '등록된 수업이 없습니다',
     courseRequired: '수업을 선택해야 합니다',
     titleRequired: '제목을 입력해야 합니다',

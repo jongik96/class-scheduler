@@ -251,14 +251,19 @@ export default function ScheduleViewPage() {
                         }`}
                       >
                         {courses.map((course) => (
-                          <div
+                          <Link
                             key={course.id}
-                            className="p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 transition-opacity"
+                            href={`/course/${course.id}`}
+                            className="block p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group"
                             style={{ backgroundColor: course.color }}
+                            title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
                           >
                             <div className="font-medium truncate">{course.course_name}</div>
                             <div className="opacity-90 truncate">{course.room}</div>
-                          </div>
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs">
+                              👆 클릭
+                            </div>
+                          </Link>
                         ))}
                       </div>
                     );

@@ -12,12 +12,7 @@ function LoginContent() {
   const { t } = useLanguage();
   const { signInWithGoogle } = useAuth();
   const searchParams = useSearchParams();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false
-  });
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -97,13 +92,7 @@ function LoginContent() {
             {t('auth.login.title')}
           </h2>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {t('auth.login.subtitle')}{' '}
-            <Link
-              href="/auth/register"
-              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              {t('auth.register.title')}
-            </Link>
+            구글 계정으로 로그인하여 서비스를 이용하세요
           </p>
         </div>
       </div>

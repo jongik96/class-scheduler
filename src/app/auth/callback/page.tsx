@@ -12,8 +12,8 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log('🔄 OAuth 콜백 처리 시작...')
-        console.log('📍 현재 URL:', window.location.href)
+        console.log('🔄 OAuth callback processing started...')
+        console.log('📍 Current URL:', window.location.href)
         
         // URL에서 쿼리 파라미터 확인
         const urlParams = new URLSearchParams(window.location.search)
@@ -44,27 +44,27 @@ export default function AuthCallback() {
         }
         
         setDebugInfo(JSON.stringify(debugData, null, 2))
-        console.log('🔍 URL 파라미터:', debugData)
+        console.log('🔍 URL parameters:', debugData)
         
         // 에러가 있는 경우
         if (error) {
-          console.error('❌ OAuth 에러:', error, errorDescription)
+          console.error('❌ OAuth error:', error, errorDescription)
           setIsProcessing(false)
           
           // 서버 에러인 경우 더 자세한 정보 제공
           if (error === 'server_error') {
-            console.error('🔍 서버 에러 상세:', errorDescription)
+            console.error('🔍 Server error details:', errorDescription)
             
             const errorDetails = {
               error,
               errorDescription,
               debugInfo: debugData,
               possibleSolutions: [
-                'Google OAuth 클라이언트 ID/시크릿 확인',
-                'Supabase 프로젝트 설정 확인',
-                '리디렉션 URI 설정 확인',
-                '환경 변수 설정 확인',
-                'PKCE 플로우 제거됨 - 기본 OAuth 플로우 사용'
+                'Check Google OAuth client ID/secret',
+                'Verify Supabase project settings',
+                'Check redirect URI configuration',
+                'Verify environment variables',
+                'PKCE flow removed - using basic OAuth flow'
               ]
             }
             
@@ -75,9 +75,9 @@ export default function AuthCallback() {
               errorDescription,
               debugInfo: debugData,
               possibleSolutions: [
-                '사용자가 OAuth 인증을 취소함',
-                'Google 계정 권한 확인',
-                '다시 로그인 시도'
+                'User cancelled OAuth authentication',
+                'Check Google account permissions',
+                'Try logging in again'
               ]
             }
             router.push('/auth/login?error=access_denied&details=' + encodeURIComponent(JSON.stringify(errorDetails)))
@@ -87,9 +87,9 @@ export default function AuthCallback() {
               errorDescription,
               debugInfo: debugData,
               possibleSolutions: [
-                '알 수 없는 OAuth 에러',
-                '브라우저 캐시 삭제 후 재시도',
-                '다른 브라우저에서 시도'
+                'Unknown OAuth error',
+                'Clear browser cache and retry',
+                'Try with different browser'
               ]
             }
             router.push(`/auth/login?error=${error}&details=` + encodeURIComponent(JSON.stringify(errorDetails)))
@@ -99,31 +99,31 @@ export default function AuthCallback() {
         
         // 코드가 있는 경우 (Google OAuth에서 리디렉션된 경우)
         if (code) {
-          console.log('🔑 OAuth 코드 발견, Supabase 인증 처리 중...')
+          console.log('🔑 OAuth code found, processing Supabase authentication...')
           
           try {
             // PKCE 플로우 제거 후 더 간단한 방식으로 처리
             const { data, error: signInError } = await supabase.auth.exchangeCodeForSession(code)
             
             if (signInError) {
-              console.error('❌ 코드 교환 오류:', signInError)
-              setDebugInfo(prev => prev + '\n\n코드 교환 오류: ' + JSON.stringify(signInError, null, 2))
+              console.error('❌ Code exchange error:', signInError)
+              setDebugInfo(prev => prev + '\n\nCode exchange error: ' + JSON.stringify(signInError, null, 2))
               
               // 에러 상세 정보와 함께 로그인 페이지로
               router.push('/auth/login?error=code_exchange_failed&details=' + encodeURIComponent(signInError.message))
               return
             }
             
-            console.log('✅ 코드 교환 성공:', data)
+            console.log('✅ Code exchange successful:', data)
           } catch (exchangeError) {
-            console.error('❌ 코드 교환 예외:', exchangeError)
-            setDebugInfo(prev => prev + '\n\n코드 교환 예외: ' + JSON.stringify(exchangeError, null, 2))
+            console.error('❌ Code exchange exception:', exchangeError)
+            setDebugInfo(prev => prev + '\n\nCode exchange exception: ' + JSON.stringify(exchangeError, null, 2))
           }
         }
         
         // 토큰이 있는 경우 세션 설정
         if (accessToken && refreshToken) {
-          console.log('✅ 토큰 발견, 세션 설정 중...')
+          console.log('✅ Token found, setting session...')
           
           const { data: { session }, error: sessionError } = await supabase.auth.setSession({
             access_token: accessToken,
@@ -131,33 +131,33 @@ export default function AuthCallback() {
           })
           
           if (sessionError) {
-            console.error('❌ 세션 설정 오류:', sessionError)
-            setDebugInfo(prev => prev + '\n\n세션 설정 오류: ' + JSON.stringify(sessionError, null, 2))
+            console.error('❌ Session setting error:', sessionError)
+            setDebugInfo(prev => prev + '\n\nSession setting error: ' + JSON.stringify(sessionError, null, 2))
             router.push('/auth/login?error=session_failed')
             return
           }
           
-          console.log('✅ 세션 설정 완료:', session?.user?.email)
+          console.log('✅ Session set successfully:', session?.user?.email)
         }
         
         // 더 긴 대기 시간으로 세션 확인 (PKCE 제거 후 안정성 향상)
-        console.log('⏳ 세션 설정 대기 중... (3초)')
+        console.log('⏳ Waiting for session to be confirmed... (3 seconds)')
         await new Promise(resolve => setTimeout(resolve, 3000))
         
         // 세션 확인
         const { data: { session }, error: sessionCheckError } = await supabase.auth.getSession()
         
         if (sessionCheckError) {
-          console.error('❌ 세션 확인 오류:', sessionCheckError)
-          setDebugInfo(prev => prev + '\n\n세션 확인 오류: ' + JSON.stringify(sessionCheckError, null, 2))
+          console.error('❌ Session check error:', sessionCheckError)
+          setDebugInfo(prev => prev + '\n\nSession check error: ' + JSON.stringify(sessionCheckError, null, 2))
           router.push('/auth/login?error=auth_failed')
           return
         }
 
-        console.log('📋 최종 세션 데이터:', session)
+        console.log('📋 Final session data:', session)
 
         if (session?.user) {
-          console.log('✅ 사용자 인증 성공:', session.user.email)
+          console.log('✅ User authentication successful:', session.user.email)
           setIsProcessing(false)
           
           // 프로필 완성 상태 확인
@@ -169,26 +169,26 @@ export default function AuthCallback() {
               .single()
 
             if (profile?.is_profile_complete) {
-              console.log('✅ 프로필 완성, View Schedule Page로 이동')
+              console.log('✅ Profile complete, navigating to View Schedule Page')
               router.push('/schedule/view')
             } else {
-              console.log('⚠️ 프로필 미완성, 프로필 완성 페이지로 이동')
+              console.log('⚠️ Profile incomplete, navigating to complete profile page')
               router.push('/auth/complete-profile')
             }
           } catch {
             // 프로필이 없는 경우 (새 사용자) 프로필 완성 페이지로
-            console.log('🆕 새 사용자, 프로필 완성 페이지로 이동')
+            console.log('🆕 New user, navigating to complete profile page')
             router.push('/auth/complete-profile')
           }
         } else {
-          console.log('❌ 세션 없음, 로그인 페이지로 이동')
-          setDebugInfo(prev => prev + '\n\n세션 없음 - 인증 실패')
+          console.log('❌ No session, navigating to login page')
+          setDebugInfo(prev => prev + '\n\nNo session - authentication failed')
           setIsProcessing(false)
           router.push('/auth/login?error=no_session')
         }
       } catch (error) {
-        console.error('❌ 콜백 처리 오류:', error)
-        setDebugInfo(prev => prev + '\n\n콜백 처리 예외: ' + JSON.stringify(error, null, 2))
+        console.error('❌ Callback processing error:', error)
+        setDebugInfo(prev => prev + '\n\nCallback processing exception: ' + JSON.stringify(error, null, 2))
         setIsProcessing(false)
         router.push('/auth/login?error=callback_failed')
       }
