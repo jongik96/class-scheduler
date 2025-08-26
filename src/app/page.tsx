@@ -110,7 +110,7 @@ export default function HomePage() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mobile-grid-1 sm:mobile-grid-2 lg:mobile-grid-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8 mobile-grid-1 sm:mobile-grid-2 lg:mobile-grid-1">
               <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
                 <Calendar className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4" />
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -148,6 +148,18 @@ export default function HomePage() {
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
                   {t('home.features.sharing.description')}
+                </p>
+              </div>
+              
+              <div className="text-center p-6 rounded-lg bg-gray-50 dark:bg-gray-800 hover:shadow-lg transition-all duration-200 hover:scale-105 border border-gray-200 dark:border-gray-700">
+                <div className="w-12 h-12 text-teal-600 dark:text-teal-400 mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl font-bold">🌍</span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                  외국인 유학생 지원
+                </h3>
+                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                  영어, 한국어 다국어 지원으로<br />모든 학생이 편리하게 이용
                 </p>
               </div>
             </div>
