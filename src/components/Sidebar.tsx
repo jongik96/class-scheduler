@@ -105,7 +105,7 @@ export default function Sidebar({
   return (
     <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
       isCollapsed ? 'w-16' : 'w-64'
-    } ${isCollapsed ? 'hidden sm:block' : ''} relative`}>
+    } ${isCollapsed ? 'hidden sm:block' : ''} relative z-40`}>
       {/* Toggle Button */}
       <button
         onClick={onToggleCollapse}
@@ -161,10 +161,13 @@ export default function Sidebar({
         </div>
       </div>
 
-      {/* Mobile Overlay */}
-      <div className="sm:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300" 
-           style={{ display: isCollapsed ? 'none' : 'block' }}
-           onClick={onToggleCollapse} />
+      {/* Mobile Overlay - 더 투명하게 하고 z-index 조정 */}
+      {!isCollapsed && (
+        <div 
+          className="sm:hidden fixed inset-0 bg-black/10 z-30 transition-opacity duration-300" 
+          onClick={onToggleCollapse} 
+        />
+      )}
     </div>
   );
 }
