@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/lib/language-context';
 import { useAuth } from '@/lib/auth-context';
-import { getFriends, createFriendInvite } from '@/lib/friends-api';
+import { getFriends, createFriendInvite, Friend } from '@/lib/friends-api';
 import QRCode from 'react-qr-code';
 import { Copy, Share2, QrCode, Users, UserPlus } from 'lucide-react';
 
 export default function FriendsPage() {
   const { t } = useLanguage();
   const { user } = useAuth();
-  const [friends, setFriends] = useState<any[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
   const [inviteData, setInviteData] = useState<{ invite_code: string; invite_url: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
