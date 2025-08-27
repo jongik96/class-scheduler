@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Plus, Eye, CheckSquare, Home, LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { Calendar, LogIn, UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -17,11 +17,12 @@ export default function Navigation() {
   const { user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navItems = [
-    { href: '/', label: t('navigation.home'), icon: Home },
-    { href: '/schedule/view', label: t('navigation.scheduleView'), icon: Eye },
-    { href: '/schedule/add', label: t('navigation.addCourse'), icon: Plus },
-    { href: '/assignment/list', label: t('navigation.assignmentList'), icon: CheckSquare },
+  const navItems: Array<{
+    href: string;
+    label: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }> = [
+    // 모든 네비게이션 메뉴 제거 - 사이드바로 대체
   ];
 
   type AuthItem = {

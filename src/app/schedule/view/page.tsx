@@ -294,75 +294,88 @@ function ScheduleViewContent() {
                            </span>
                          </div>
                          
-                         {/* Day cells */}
-                         {daysOfWeek.map((day) => {
-                           const courses = getCoursesForTimeSlot(day.value, time);
-                           
-                           // 현재 시간에 시작하는 수업이 있는지 확인
-                           const startTimeCourses = courses.filter(course => 
-                             course.start_time.substring(0, 5) === time
-                           );
-                           
-                           // 현재 시간에 시작하는 수업이 있다면 표시
-                           if (startTimeCourses.length > 0) {
-                             const course = startTimeCourses[0];
-                             const startMinutes = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
-                             const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
-                             const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
-                             
-                             return (
-                               <div
-                                 key={day.value}
-                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
-                                   selectedDay === day.value
-                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
-                                     : ''
-                                 }`}
-                               >
-                                 <Link
-                                   href={`/course/${course.id}`}
-                                   className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group h-full flex flex-col justify-center"
-                                   style={{ backgroundColor: migrateToPastelColor(course.color) }}
-                                   title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
-                                 >
-                                   <div className="font-semibold truncate text-xs sm:text-sm">{course.course_name}</div>
-                                   <div className="font-medium opacity-90 truncate text-xs">{course.room}</div>
-                                   <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
-                                     👆 클릭
-                                   </div>
-                                 </Link>
-                               </div>
-                             );
-                           } else if (courses.length > 0) {
-                             // 수업이 있지만 시작 시간이 아닌 경우 (병합된 셀의 일부)
-                             return (
-                               <div
-                                 key={day.value}
-                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
-                                   selectedDay === day.value
-                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
-                                     : ''
-                                 }`}
-                               >
-                                 {/* 이 셀은 병합된 수업의 일부이므로 내용을 표시하지 않음 */}
-                               </div>
-                             );
-                           } else {
-                             // 수업이 없는 경우 빈 셀
-                             return (
-                               <div
-                                 key={day.value}
-                                 className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
-                                   selectedDay === day.value
-                                     ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
-                                     : ''
-                                 }`}
-                               >
-                                 {/* 빈 셀 */}
-                               </div>
-                             );
-                           }
-                         })}
+                                                   {/* Day cells */}
+                          {daysOfWeek.map((day) => {
+                            const courses = getCoursesForTimeSlot(day.value, time);
+                            
+                            // 현재 시간에 시작하는 수업이 있는지 확인
+                            const startTimeCourses = courses.filter(course => 
+                              course.start_time.substring(0, 5) === time
+                            );
+                            
+                            // 현재 시간에 시작하는 수업이 있다면 표시
+                            if (startTimeCourses.length > 0) {
+                              const course = startTimeCourses[0];
+                              const startMinutes = parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+                              const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
+                              const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
+                              
+                              return (
+                                <div
+                                  key={day.value}
+                                  className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                    selectedDay === day.value
+                                      ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                      : ''
+                                  }`}
+                                >
+                                  <Link
+                                    href={`/course/${course.id}`}
+                                    className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group h-full flex flex-col justify-center"
+                                    style={{ backgroundColor: migrateToPastelColor(course.color) }}
+                                    title={`${course.course_name} - ${course.room} (클릭하여 상세보기)`}
+                                  >
+                                    <div className="font-semibold truncate text-xs sm:text-sm">{course.course_name}</div>
+                                    <div className="font-medium opacity-90 truncate text-xs">{course.room}</div>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
+                                      👆 클릭
+                                    </div>
+                                  </Link>
+                                </div>
+                              );
+                            } else if (courses.length > 0) {
+                              // 수업이 진행 중이지만 시작 시간이 아닌 경우 (병합된 셀의 일부)
+                              // 이 경우에도 수업 정보를 표시하되, 시작 시간이 아님을 나타냄
+                              const course = courses[0];
+                              return (
+                                <div
+                                  key={day.value}
+                                  className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                    selectedDay === day.value
+                                      ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                      : ''
+                                  }`}
+                                >
+                                  <Link
+                                    href={`/course/${course.id}`}
+                                    className="block p-1 sm:p-2 rounded text-xs text-white mb-1 cursor-pointer hover:opacity-80 hover:scale-105 transition-all duration-200 group h-full flex flex-col justify-center opacity-80"
+                                    style={{ backgroundColor: migrateToPastelColor(course.color) }}
+                                    title={`${course.course_name} - ${course.room} (진행 중) (클릭하여 상세보기)`}
+                                  >
+                                    <div className="font-semibold truncate text-xs sm:text-sm">{course.course_name}</div>
+                                    <div className="font-medium opacity-90 truncate text-xs">{course.room}</div>
+                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-center mt-1 text-xs font-medium">
+                                      🔄 진행 중
+                                    </div>
+                                  </Link>
+                                </div>
+                              );
+                            } else {
+                              // 수업이 없는 경우 빈 셀
+                              return (
+                                <div
+                                  key={day.value}
+                                  className={`p-1 border-r border-gray-200 dark:border-gray-600 ${
+                                    selectedDay === day.value
+                                      ? 'bg-[#E0F2FE] dark:bg-[#BAE1FF]/10'
+                                      : ''
+                                  }`}
+                                >
+                                  {/* 빈 셀 */}
+                                </div>
+                              );
+                            }
+                          })}
                        </div>
                      );
                    })}
