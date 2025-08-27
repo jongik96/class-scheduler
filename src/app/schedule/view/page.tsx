@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, CheckSquare, Settings, Filter, CheckCircle } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, CheckSquare, Settings, Filter, CheckCircle, LogOut } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { coursesApi, type Course, assignmentsApi, type Assignment } from '@/lib/api';
 import { 
   getFriends, 
@@ -29,6 +31,7 @@ const timeSlots = [
 
 function ScheduleViewContent() {
   const { t } = useLanguage();
+  const { user, signOut } = useAuth();
   const [selectedDay, setSelectedDay] = useState('monday');
   const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('schedule');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -41,8 +44,7 @@ function ScheduleViewContent() {
     { value: 'tuesday', label: t('schedule.view.tuesday') },
     { value: 'wednesday', label: t('schedule.view.wednesday') },
     { value: 'thursday', label: t('schedule.view.thursday') },
-    { value: 'friday', label: t('schedule.view.friday') },
-    { value: 'saturday', label: t('schedule.view.saturday') }
+    { value: 'friday', label: t('schedule.view.friday') }
   ];
 
   // 수업 데이터 로드
@@ -234,7 +236,7 @@ function ScheduleViewContent() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
               <div className="overflow-x-auto">
                 <div className="min-w-[400px] sm:min-w-[600px] md:min-w-[800px]">
-                  <div className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700">
+                  <div className="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700">
                     {/* Time column header */}
                     <div className="p-2 sm:p-3 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600">
                       <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -282,11 +284,11 @@ function ScheduleViewContent() {
                      });
 
                      return (
-                       <div 
-                         key={time} 
-                         className="grid grid-cols-7 border-b border-gray-200 dark:border-gray-700"
-                         style={{ minHeight: `${maxDurationSlots * 50}px` }}
-                       >
+                                               <div 
+                          key={time} 
+                          className="grid grid-cols-6 border-b border-gray-200 dark:border-gray-700"
+                          style={{ minHeight: `${maxDurationSlots * 50}px` }}
+                        >
                          {/* Time label */}
                          <div className="p-1 sm:p-2 bg-gray-50 dark:bg-gray-700 border-r border-gray-200 dark:border-gray-600 flex items-center">
                            <span className="text-xs text-gray-600 dark:text-gray-400">
@@ -634,7 +636,92 @@ function ScheduleViewContent() {
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.settings.title')}</h2>
             <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.settings.description')}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Not implemented yet.</p>
+            
+            {/* Account Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">계정 설정</h3>
+              <div className="space-y-4">
+                {/* Profile Information */}
+                <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-[#E0F2FE] dark:bg-[#BAE1FF]/20 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-[#1E40AF] dark:text-[#BAE1FF]" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {user?.user_metadata?.name || user?.email || '사용자'}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={async () => {
+                      if (confirm('정말로 로그아웃하시겠습니까?')) {
+                        try {
+                          await signOut();
+                        } catch (error) {
+                          console.error('로그아웃 실패:', error);
+                        }
+                      }
+                    }}
+                    className="flex-1 inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    로그아웃
+                  </button>
+                  
+                  <button
+                    onClick={() => {
+                      if (confirm('정말로 회원탈퇴하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) {
+                        alert('회원탈퇴 기능은 관리자에게 문의해주세요.');
+                      }
+                    }}
+                    className="flex-1 inline-flex items-center justify-center px-4 py-2 border border-red-300 dark:border-red-600 text-sm font-medium rounded-md text-red-700 dark:text-red-400 bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    회원탈퇴
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* App Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">앱 설정</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">다크 모드</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">테마를 다크 모드로 변경</p>
+                  </div>
+                  <ThemeSwitcher />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-gray-900 dark:text-white">언어 설정</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">앱 언어를 변경</p>
+                  </div>
+                  <LanguageSwitcher />
+                </div>
+              </div>
+            </div>
+            
+            {/* System Information */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">시스템 정보</h3>
+              <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <p>버전: 1.0.0</p>
+                <p>빌드 날짜: {new Date().toLocaleDateString()}</p>
+                <p>환경: {process.env.NODE_ENV}</p>
+              </div>
+            </div>
           </div>
         );
 
