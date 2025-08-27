@@ -10,6 +10,7 @@ export const en = {
     logoutError: 'Logout error',
     user: 'User',
     openMenu: 'Open menu',
+    closeMenu: 'Close menu',
     save: 'Save',
     cancel: 'Cancel',
     edit: 'Edit',
@@ -540,6 +541,32 @@ export const en = {
       title: 'Settings',
       description: 'Profile and settings features will be displayed here.',
       goToSettings: 'Go to Settings'
+    }
+  },
+
+  // Settings Tab
+  settings: {
+    account: {
+      title: 'Account Settings',
+      profile: 'Profile Information',
+      logout: 'Logout',
+      logoutConfirm: 'Are you sure you want to logout?',
+      withdraw: 'Withdraw Account',
+      withdrawConfirm: 'Are you sure you want to withdraw your account?\nThis action cannot be undone.',
+      withdrawInfo: 'Please contact the administrator for account withdrawal.'
+    },
+    app: {
+      title: 'App Settings',
+      darkMode: 'Dark Mode',
+      darkModeDesc: 'Change theme to dark mode',
+      language: 'Language Settings',
+      languageDesc: 'Change app language'
+    },
+    system: {
+      title: 'System Information',
+      version: 'Version',
+      buildDate: 'Build Date',
+      environment: 'Environment'
     }
   },
 

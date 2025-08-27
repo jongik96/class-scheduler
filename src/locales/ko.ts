@@ -10,6 +10,7 @@ export const ko = {
     logoutError: '로그아웃 오류',
     user: '사용자',
     openMenu: '메뉴 열기',
+    closeMenu: '메뉴 닫기',
     save: '저장',
     cancel: '취소',
     edit: '편집',
@@ -541,6 +542,32 @@ export const ko = {
       title: '설정',
       description: '개인정보 및 설정 기능이 여기에 표시됩니다.',
       goToSettings: '설정 페이지로 이동'
+    }
+  },
+
+  // 설정 탭
+  settings: {
+    account: {
+      title: '계정 설정',
+      profile: '프로필 정보',
+      logout: '로그아웃',
+      logoutConfirm: '정말로 로그아웃하시겠습니까?',
+      withdraw: '회원탈퇴',
+      withdrawConfirm: '정말로 회원탈퇴하시겠습니까?\n이 작업은 되돌릴 수 없습니다.',
+      withdrawInfo: '회원탈퇴 기능은 관리자에게 문의해주세요.'
+    },
+    app: {
+      title: '앱 설정',
+      darkMode: '다크 모드',
+      darkModeDesc: '테마를 다크 모드로 변경',
+      language: '언어 설정',
+      languageDesc: '앱 언어를 변경'
+    },
+    system: {
+      title: '시스템 정보',
+      version: '버전',
+      buildDate: '빌드 날짜',
+      environment: '환경'
     }
   },
 

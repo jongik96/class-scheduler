@@ -10,6 +10,7 @@ export const ja = {
     logoutError: 'ログアウトエラー',
     user: 'ユーザー',
     openMenu: 'メニューを開く',
+    closeMenu: 'メニューを閉じる',
     save: '保存',
     cancel: 'キャンセル',
     edit: '編集',
@@ -540,6 +541,32 @@ export const ja = {
       title: '設定',
       description: 'プロフィール・設定機能がここに表示されます。',
       goToSettings: '設定ページへ移動'
+    }
+  },
+
+  // 設定タブ
+  settings: {
+    account: {
+      title: 'アカウント設定',
+      profile: 'プロフィール情報',
+      logout: 'ログアウト',
+      logoutConfirm: '本当にログアウトしますか？',
+      withdraw: 'アカウント削除',
+      withdrawConfirm: '本当にアカウントを削除しますか？\nこの操作は元に戻せません。',
+      withdrawInfo: 'アカウント削除については管理者にお問い合わせください。'
+    },
+    app: {
+      title: 'アプリ設定',
+      darkMode: 'ダークモード',
+      darkModeDesc: 'テーマをダークモードに変更',
+      language: '言語設定',
+      languageDesc: 'アプリの言語を変更'
+    },
+    system: {
+      title: 'システム情報',
+      version: 'バージョン',
+      buildDate: 'ビルド日',
+      environment: '環境'
     }
   },
 
