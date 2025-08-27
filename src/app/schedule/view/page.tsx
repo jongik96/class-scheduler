@@ -431,9 +431,14 @@ function ScheduleViewContent() {
                               style={{ backgroundColor: migrateToPastelColor(course.color) }}
                             />
                             <div>
-                              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                                {course.course_name}
-                              </h3>
+                              <Link
+                                href={`/course/${course.id}`}
+                                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              >
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
+                                  {course.course_name}
+                                </h3>
+                              </Link>
                               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-gray-600 dark:text-gray-400">
                                 <span className="flex items-center font-medium">
                                   <BookOpen className="w-4 h-4 mr-1" />
@@ -547,9 +552,14 @@ function ScheduleViewContent() {
                               style={{ backgroundColor: migrateToPastelColor(course.color) }}
                             />
                             <div>
-                              <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                                {course.course_name}
-                              </h3>
+                              <Link
+                                href={`/course/${course.id}`}
+                                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                              >
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
+                                  {course.course_name}
+                                </h3>
+                              </Link>
                               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-gray-600 dark:text-gray-400">
                                 <span className="flex items-center font-medium">
                                   <BookOpen className="w-4 h-4 mr-1" />
