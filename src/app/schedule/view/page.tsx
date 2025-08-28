@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, CheckSquare, Settings, Filter, CheckCircle, LogOut } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, CheckSquare, Settings, Filter, CheckCircle, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
@@ -140,6 +140,10 @@ function ScheduleViewContent() {
   // 사이드바 메뉴 변경 핸들러
   const handleMenuChange = (menu: SidebarMenu) => {
     setSelectedMenu(menu);
+    // 모바일에서 탭 선택 시 사이드바 자동 숨김
+    if (window.innerWidth < 640) {
+      setIsSidebarCollapsed(true);
+    }
   };
 
   // 사이드바 토글 핸들러
@@ -425,7 +429,11 @@ function ScheduleViewContent() {
                 ) : (
                   <div className="divide-y divide-gray-200 dark:divide-gray-700">
                     {courses.map((course) => (
-                      <div key={course.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                      <Link
+                        key={course.id}
+                        href={`/course/${course.id}`}
+                        className="block p-4 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+                      >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-4">
                             <div
@@ -433,14 +441,9 @@ function ScheduleViewContent() {
                               style={{ backgroundColor: migrateToPastelColor(course.color) }}
                             />
                             <div>
-                              <Link
-                                href={`/course/${course.id}`}
-                                className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                              >
-                                <h3 className="text-lg font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
-                                  {course.course_name}
-                                </h3>
-                              </Link>
+                              <h3 className="text-lg font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer">
+                                {course.course_name}
+                              </h3>
                               <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm text-gray-600 dark:text-gray-400">
                                 <span className="flex items-center font-medium">
                                   <BookOpen className="w-4 h-4 mr-1" />
@@ -479,14 +482,17 @@ function ScheduleViewContent() {
                               <Edit className="w-4 h-4" />
                             </Link>
                             <button 
-                              onClick={() => handleDeleteCourse(course.id)}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleDeleteCourse(course.id);
+                              }}
                               className="p-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 )}
@@ -766,10 +772,13 @@ function ScheduleViewContent() {
                 <div className="sm:hidden mt-4">
                   <button
                     onClick={handleSidebarToggle}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
-                    <Calendar className="w-4 h-4 mr-2" />
-                                         {isSidebarCollapsed ? t('common.openMenu') : t('common.closeMenu')}
+                    {isSidebarCollapsed ? (
+                      <ChevronRight className="w-5 h-5" />
+                    ) : (
+                      <ChevronLeft className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -1043,10 +1052,10 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.nickname || friend.friend_profile?.full_name || t('friends.unknownNickname')}
+                        {friend.friend_profile?.nickname || friend.friend_profile?.full_name || `ID: ${friend.friend_id}`}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {friend.friend_profile?.full_name || t('friends.unknownName')} • {friend.friend_profile?.major || t('friends.unknownMajor')} • {friend.friend_profile?.grade || t('friends.unknownGrade')}
+                        {friend.friend_profile?.full_name || `ID: ${friend.friend_id}`} • {friend.friend_profile?.major || 'N/A'} • {friend.friend_profile?.grade || 'N/A'}
                       </p>
                     </div>
                   </div>
@@ -1406,16 +1415,18 @@ function AssignmentListContent() {
         ) : (
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {filteredAssignments.map((assignment) => (
-              <div key={assignment.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <Link
+                key={assignment.id}
+                href={`/assignment/${assignment.id}`}
+                className="block p-6 hover:bg-orange-50 dark:hover:bg-orange-900/20 transition-colors"
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       {getStatusIcon(assignment.status)}
-                      <Link href={`/assignment/${assignment.id}`} className="hover:underline">
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-white cursor-pointer hover:text-[#1E40AF] dark:hover:text-[#BAE1FF] transition-colors">
-                          {assignment.title}
-                        </h3>
-                      </Link>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white cursor-pointer hover:text-[#1E40AF] dark:hover:text-[#BAE1FF] transition-colors">
+                        {assignment.title}
+                      </h3>
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(assignment.priority)}`}>
                         {getPriorityText(assignment.priority)}
                       </span>
@@ -1441,21 +1452,26 @@ function AssignmentListContent() {
                     <Link
                       href={`/assignment/${assignment.id}`}
                       className="p-2 text-gray-600 dark:text-gray-400 hover:text-[#1E40AF] dark:hover:text-[#BAE1FF] transition-colors"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <Eye className="w-4 h-4" />
                     </Link>
                     <Link
                       href={`/assignment/${assignment.id}/edit`}
                       className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <Edit className="w-4 h-4" />
                     </Link>
-                    <button className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
+                    <button 
+                      className="p-2 text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <CheckCircle className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}
