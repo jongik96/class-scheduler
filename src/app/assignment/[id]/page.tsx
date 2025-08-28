@@ -125,13 +125,13 @@ export default function AssignmentDetailPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <Link
-            href="/assignment/list"
-            className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            {t('assignments.detail.backToList')}
-          </Link>
+                     <Link
+             href="/schedule/view"
+             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
+           >
+             <ArrowLeft className="w-4 h-4 mr-2" />
+             {t('assignments.detail.backToSchedule')}
+           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {assignment.title}
           </h1>

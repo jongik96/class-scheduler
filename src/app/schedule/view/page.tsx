@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, CheckSquare, Settings, Filter, CheckCircle, LogOut, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, Filter, CheckCircle, LogOut } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
@@ -740,8 +740,8 @@ function ScheduleViewContent() {
     <AuthGuard requireAuth={true}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="flex h-screen">
-          {/* Sidebar - 모바일에서 슬라이드형 */}
-          <div className={`${isSidebarCollapsed ? 'hidden sm:block' : ''} sm:block`}>
+          {/* Sidebar */}
+          <div className={`${isSidebarCollapsed ? 'hidden' : ''}`}>
             <Sidebar
               selectedMenu={selectedMenu}
               onMenuChange={handleMenuChange}
@@ -768,19 +768,7 @@ function ScheduleViewContent() {
                    selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
                 </p>
                 
-                {/* Mobile Menu Toggle Button */}
-                <div className="sm:hidden mt-4">
-                  <button
-                    onClick={handleSidebarToggle}
-                    className="inline-flex items-center p-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                  >
-                    {isSidebarCollapsed ? (
-                      <ChevronRight className="w-5 h-5" />
-                    ) : (
-                      <ChevronLeft className="w-5 h-5" />
-                    )}
-                  </button>
-                </div>
+
               </div>
 
               {/* Content */}

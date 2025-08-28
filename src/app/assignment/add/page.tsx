@@ -93,9 +93,9 @@ export default function AddAssignmentPage() {
       // 성공 상태 표시
       setIsSuccess(true);
       
-      // 2초 후 과제 목록 화면으로 리디렉션
+      // 2초 후 스케줄 뷰 화면으로 리디렉션
       setTimeout(() => {
-        router.push('/assignment/list');
+        router.push('/schedule/view');
       }, 2000);
       
     } catch (error) {

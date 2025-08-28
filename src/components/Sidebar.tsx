@@ -105,7 +105,7 @@ export default function Sidebar({
   return (
     <div className={`h-screen border-r transition-all duration-300 ${getThemeClasses()} ${
       isCollapsed ? 'w-16' : 'w-64'
-    } ${isCollapsed ? 'hidden sm:block' : ''} relative z-40`}>
+    } relative z-40`}>
       {/* Toggle Button - 모바일에서도 표시 */}
       <button
         onClick={onToggleCollapse}
