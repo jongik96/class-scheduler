@@ -313,7 +313,7 @@ export default function AssignmentDetailPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">{t('assignments.detail.createdDate')}</span>
-                  <span className="text-gray-900 dark:text-white">{assignment.createdAt}</span>
+                  <span className="text-gray-900 dark:text-white">{assignment.created_at ? new Date(assignment.created_at).toLocaleDateString() : t('common.unknown')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500 dark:text-gray-400">{t('assignments.detail.assignmentId')}</span>

@@ -23,14 +23,15 @@ export interface Course {
 export interface Assignment {
   id: string;
   title: string;
-  description: string;
-  dueDate: Date;
-  courseId: string;
-  userId: string;
-  isCompleted: boolean;
+  description?: string;
+  due_date: string;
+  course_id?: string;
+  user_id: string;
+  status: 'pending' | 'in_progress' | 'completed';
   priority: 'low' | 'medium' | 'high';
-  sharedWith: string[]; // 공유된 친구들의 ID 배열
-  createdAt: Date;
+  is_shared: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Schedule {
