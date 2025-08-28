@@ -422,7 +422,8 @@ export const ko = {
       admin: '관리자',
       editPermission: '편집',
       viewPermission: '보기',
-      loading: '로딩 중...'
+      loading: '로딩 중...',
+      noCourse: '수업 정보 없음'
     }
   },
 
@@ -485,7 +486,13 @@ export const ko = {
     accept: '수락',
     reject: '거절',
     from: '보낸이',
-    generating: '생성 중...'
+    generating: '생성 중...',
+    unknownNickname: '닉네임 없음',
+    unknownName: '이름 없음',
+    unknownMajor: '전공 정보 없음',
+    unknownGrade: '학년 정보 없음',
+    unknownInviter: '초대자 정보 없음',
+    clickInviteButton: '친구 초대 버튼을 클릭하여 친구를 추가하세요'
   },
 
   // 친구 초대 페이지

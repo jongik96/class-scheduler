@@ -1030,7 +1030,7 @@ function FriendsManagementPage() {
               <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400 mb-2">{t('friends.noFriends')}</p>
               <p className="text-sm text-gray-400 dark:text-gray-500">
-                Click the invite friends button to add friends
+                {t('friends.clickInviteButton')}
               </p>
             </div>
           ) : (
@@ -1043,10 +1043,10 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.nickname || friend.friend_profile?.full_name || `Friend ${friend.friend_id.slice(0, 8)}`}
+                        {friend.friend_profile?.nickname || friend.friend_profile?.full_name || t('friends.unknownNickname')}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {friend.friend_profile?.full_name || 'Unknown'} • {friend.friend_profile?.major || 'Unknown'} • {friend.friend_profile?.grade || 'Unknown'}
+                        {friend.friend_profile?.full_name || t('friends.unknownName')} • {friend.friend_profile?.major || t('friends.unknownMajor')} • {friend.friend_profile?.grade || t('friends.unknownGrade')}
                       </p>
                     </div>
                   </div>
@@ -1083,10 +1083,10 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {invite.inviter_profile?.nickname || invite.inviter_profile?.full_name || `User ${invite.inviter_id.slice(0, 8)}`}{t('friendInvite.sentInvite')}
+                        {invite.inviter_profile?.nickname || invite.inviter_profile?.full_name || t('friends.unknownInviter')}{t('friendInvite.sentInvite')}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {invite.inviter_profile?.full_name || 'Unknown'} • {new Date(invite.created_at).toLocaleDateString()}
+                        {invite.inviter_profile?.full_name || t('friends.unknownName')} • {new Date(invite.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -1411,9 +1411,11 @@ function AssignmentListContent() {
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
                       {getStatusIcon(assignment.status)}
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                        {assignment.title}
-                      </h3>
+                      <Link href={`/assignment/${assignment.id}`} className="hover:underline">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-white cursor-pointer hover:text-[#1E40AF] dark:hover:text-[#BAE1FF] transition-colors">
+                          {assignment.title}
+                        </h3>
+                      </Link>
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${getPriorityColor(assignment.priority)}`}>
                         {getPriorityText(assignment.priority)}
                       </span>

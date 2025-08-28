@@ -421,7 +421,8 @@ export const en = {
       admin: 'Admin',
       editPermission: 'Edit',
       viewPermission: 'View',
-      loading: 'Loading...'
+      loading: 'Loading...',
+      noCourse: 'No course info'
     }
   },
 
@@ -484,7 +485,13 @@ export const en = {
     accept: 'Accept',
     reject: 'Reject',
     from: 'From',
-    generating: 'Generating...'
+    generating: 'Generating...',
+    unknownNickname: 'No nickname',
+    unknownName: 'No name',
+    unknownMajor: 'No major info',
+    unknownGrade: 'No grade info',
+    unknownInviter: 'Unknown inviter',
+    clickInviteButton: 'Click the invite friends button to add friends'
   },
 
   // Friend invite page

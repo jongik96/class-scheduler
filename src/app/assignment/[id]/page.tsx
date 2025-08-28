@@ -6,28 +6,37 @@ import { useParams } from 'next/navigation';
 import { ArrowLeft, Edit, Trash2, Clock, Users, Share2, Eye, Edit3, Crown } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { getAssignmentShares, AssignmentShare } from '@/lib/friends-api';
+import { assignmentsApi, type Assignment } from '@/lib/api';
 
 export default function AssignmentDetailPage() {
   const { t } = useLanguage();
   const params = useParams();
-  const [assignment] = useState({
-    id: '1',
-    title: 'Web Development Project',
-    description: 'Full-stack web application development using React and Node.js',
-    course: 'Web Programming',
-    dueDate: '2024-12-31',
-    priority: 'high',
-    status: 'pending',
-    createdAt: '2024-01-15'
-  });
+  const [assignment, setAssignment] = useState<Assignment | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [sharedFriends, setSharedFriends] = useState<AssignmentShare[]>([]);
   const [isLoadingShares, setIsLoadingShares] = useState(false);
 
   useEffect(() => {
     if (params.id) {
+      loadAssignment(params.id as string);
       loadAssignmentShares(params.id as string);
     }
   }, [params.id]);
+
+  const loadAssignment = async (assignmentId: string) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await assignmentsApi.getAssignment(assignmentId);
+      setAssignment(data);
+    } catch (err) {
+      console.error('❌ 과제 데이터 로드 실패:', err);
+      setError(err instanceof Error ? err.message : '과제 데이터를 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const loadAssignmentShares = async (assignmentId: string) => {
     setIsLoadingShares(true);
@@ -78,6 +87,38 @@ export default function AssignmentDetailPage() {
       default: return t('assignments.detail.viewPermission');
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto mb-4"></div>
+            <p className="text-gray-600 dark:text-gray-400">과제를 불러오는 중...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !assignment) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center py-12 text-red-600 dark:text-red-400">
+            <p className="mb-4">{error || '과제를 찾을 수 없습니다.'}</p>
+            <Link
+              href="/assignment/list"
+              className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              과제 목록으로 돌아가기
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -141,7 +182,7 @@ export default function AssignmentDetailPage() {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {t('assignments.detail.course')}
                     </label>
-                    <p className="text-gray-900 dark:text-white">{assignment.course}</p>
+                    <p className="text-gray-900 dark:text-white">{assignment.course_id || t('assignments.detail.noCourse')}</p>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -149,7 +190,7 @@ export default function AssignmentDetailPage() {
                     </label>
                     <div className="flex items-center text-gray-900 dark:text-white">
                       <Clock className="w-4 h-4 mr-2" />
-                      {assignment.dueDate}
+                      {new Date(assignment.due_date).toLocaleDateString()}
                     </div>
                   </div>
                 </div>

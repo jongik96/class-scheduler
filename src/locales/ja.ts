@@ -421,7 +421,8 @@ export const ja = {
       admin: '管理者',
       editPermission: '編集',
       viewPermission: '表示',
-      loading: '読み込み中...'
+      loading: '読み込み中...',
+      noCourse: '授業情報なし'
     }
   },
 
@@ -484,7 +485,13 @@ export const ja = {
     accept: '承認',
     reject: '拒否',
     from: '送信者',
-    generating: '生成中...'
+    generating: '生成中...',
+    unknownNickname: 'ニックネームなし',
+    unknownName: '名前なし',
+    unknownMajor: '専攻情報なし',
+    unknownGrade: '学年情報なし',
+    unknownInviter: '招待者情報なし',
+    clickInviteButton: '友達招待ボタンをクリックして友達を追加してください'
   },
 
   // 友達招待ページ
