@@ -186,7 +186,18 @@ export const en = {
     insufficientStorage: 'Insufficient storage',
     loopDetected: 'Loop detected',
     notExtended: 'Not extended',
-    networkAuthenticationRequired: 'Network authentication required'
+    networkAuthenticationRequired: 'Network Authentication Required',
+    // Additional keys
+    courseCount: '',
+    clickToViewDetails: 'Click to view details',
+    clickToView: '👆 Click',
+    inProgressStatus: '🔄 In Progress',
+    courseDeleteConfirm: 'Are you sure you want to delete this course?',
+    courseDeleteFailed: 'Failed to delete course.',
+    courseCreationFailed: 'Failed to create course.',
+    colorSelection: 'Color Selection',
+    loadingCourseData: 'Loading course data...',
+    refreshCourseList: 'Refresh list'
   },
 
   // Navigation

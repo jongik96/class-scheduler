@@ -93,9 +93,9 @@ export default function EditAssignmentPage() {
       
       setIsSuccess(true);
       
-      // Redirect to schedule view after 2 seconds
+      // Redirect to schedule view assignments tab after 2 seconds
       setTimeout(() => {
-        router.push('/schedule/view');
+        router.push('/schedule/view?menu=assignments');
       }, 2000);
       
     } catch (error) {
@@ -130,7 +130,7 @@ export default function EditAssignmentPage() {
           <div className="text-center py-12">
             <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
             <Link
-              href="/assignment/list"
+              href="/schedule/view?menu=assignments"
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -148,11 +148,11 @@ export default function EditAssignmentPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/schedule/view"
+            href="/schedule/view?menu=assignments"
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            스케줄 뷰로 돌아가기
+            {t('common.backToAssignmentList')}
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {t('common.editAssignmentTitle')}

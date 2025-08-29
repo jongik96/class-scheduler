@@ -186,7 +186,18 @@ export const ja = {
     insufficientStorage: 'ストレージが不足しています',
     loopDetected: 'ループが検出されました',
     notExtended: '拡張されていません',
-    networkAuthenticationRequired: 'ネットワーク認証が必要です'
+    networkAuthenticationRequired: 'ネットワーク認証が必要です',
+    // 追加されたキー
+    courseCount: '個',
+    clickToViewDetails: '詳細を見るにはクリック',
+    clickToView: '👆 クリック',
+    inProgressStatus: '🔄 進行中',
+    courseDeleteConfirm: 'この授業を削除してもよろしいですか？',
+    courseDeleteFailed: '授業の削除に失敗しました。',
+    courseCreationFailed: '授業の作成に失敗しました。',
+    colorSelection: '色の選択',
+    loadingCourseData: '授業データを読み込み中...',
+    refreshCourseList: 'リストを更新'
   },
 
   // ナビゲーション

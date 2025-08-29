@@ -93,9 +93,9 @@ export default function AddAssignmentPage() {
       // 성공 상태 표시
       setIsSuccess(true);
       
-      // 2초 후 스케줄 뷰 화면으로 리디렉션
+      // 2초 후 스케줄 뷰 화면의 과제 탭으로 리디렉션
       setTimeout(() => {
-        router.push('/schedule/view');
+        router.push('/schedule/view?menu=assignments');
       }, 2000);
       
     } catch (error) {
@@ -124,7 +124,7 @@ export default function AddAssignmentPage() {
         {/* Header */}
         <div className="mb-8">
           <Link
-            href="/assignment/list"
+            href="/schedule/view?menu=assignments"
             className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

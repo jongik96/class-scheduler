@@ -186,7 +186,18 @@ export const ko = {
     insufficientStorage: '저장 공간이 부족합니다',
     loopDetected: '루프가 감지되었습니다',
     notExtended: '확장되지 않았습니다',
-    networkAuthenticationRequired: '네트워크 인증이 필요합니다'
+    networkAuthenticationRequired: '네트워크 인증이 필요합니다',
+    // 추가된 키들
+    courseCount: '개',
+    clickToViewDetails: '클릭하여 상세보기',
+    clickToView: '👆 클릭',
+    inProgressStatus: '🔄 진행 중',
+    courseDeleteConfirm: '정말로 이 수업을 삭제하시겠습니까?',
+    courseDeleteFailed: '수업 삭제에 실패했습니다.',
+    courseCreationFailed: '수업 생성에 실패했습니다.',
+    colorSelection: '색상 선택',
+    loadingCourseData: '수업 데이터를 불러오는 중...',
+    refreshCourseList: '목록 새로고침'
   },
 
   // 네비게이션

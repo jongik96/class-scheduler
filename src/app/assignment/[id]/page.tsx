@@ -108,11 +108,11 @@ export default function AssignmentDetailPage() {
           <div className="text-center py-12 text-red-600 dark:text-red-400">
             <p className="mb-4">{error || '과제를 찾을 수 없습니다.'}</p>
             <Link
-              href="/assignment/list"
+              href="/schedule/view?menu=assignments"
               className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              과제 목록으로 돌아가기
+              {t('common.backToAssignmentList')}
             </Link>
           </div>
         </div>
@@ -126,11 +126,11 @@ export default function AssignmentDetailPage() {
         {/* Header */}
         <div className="mb-8">
                      <Link
-             href="/schedule/view"
+             href="/schedule/view?menu=assignments"
              className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4"
            >
              <ArrowLeft className="w-4 h-4 mr-2" />
-             {t('assignments.detail.backToSchedule')}
+             {t('common.backToAssignmentList')}
            </Link>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {assignment.title}

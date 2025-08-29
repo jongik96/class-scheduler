@@ -34,6 +34,15 @@ function ScheduleViewContent() {
   const { user, signOut } = useAuth();
   const [selectedDay, setSelectedDay] = useState('monday');
   const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('schedule');
+
+  // URL 파라미터에서 메뉴 설정 읽기
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const menuParam = urlParams.get('menu') as SidebarMenu;
+    if (menuParam && ['schedule', 'assignments', 'courses', 'friends', 'settings'].includes(menuParam)) {
+      setSelectedMenu(menuParam);
+    }
+  }, []);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,11 +66,11 @@ function ScheduleViewContent() {
       setIsLoading(true);
       setError(null);
       const coursesData = await coursesApi.getCourses();
-      console.log('✅ 로드된 수업 데이터:', coursesData);
+      console.log('✅ {t("common.loadingCourseData")}:', coursesData);
       setCourses(coursesData);
     } catch (err) {
-      console.error('수업 데이터 로드 실패:', err);
-      setError(err instanceof Error ? err.message : '수업 데이터를 불러오는데 실패했습니다.');
+      console.error('{t("common.courseDataLoadError")}:', err);
+      setError(err instanceof Error ? err.message : t('common.courseDataLoadError'));
     } finally {
       setIsLoading(false);
     }
@@ -101,7 +110,7 @@ function ScheduleViewContent() {
     const courseStart = course.start_time.substring(0, 5);
     if (courseStart !== time) return null;
 
-    // 수업이 몇 개의 30분 슬롯을 차지하는지 계산
+          // {t('common.courseCount')} 수업이 몇 개의 30분 슬롯을 차지하는지 계산
     const startMinutes = parseInt(courseStart.split(':')[0]) * 60 + parseInt(courseStart.split(':')[1]);
     const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
     const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
@@ -153,13 +162,13 @@ function ScheduleViewContent() {
 
   // 수업 삭제 핸들러
   const handleDeleteCourse = async (courseId: string) => {
-    if (confirm('정말로 이 수업을 삭제하시겠습니까?')) {
+    if (confirm(t('common.courseDeleteConfirm'))) {
       try {
         await coursesApi.deleteCourse(courseId);
-        await loadCourses(); // 목록 새로고침
+        await loadCourses(); // {t('common.refreshCourseList')}
       } catch (err) {
-        console.error('수업 삭제 실패:', err);
-        alert('수업 삭제에 실패했습니다.');
+        console.error('{t("common.courseDeleteFailed")}:', err);
+        alert(t('common.courseDeleteFailed'));
       }
     }
   };
