@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(null)
           setLoading(false)
         }
-      } catch (error) {
+      } catch {
         setUser(null)
         setLoading(false)
       }
@@ -55,20 +55,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const checkProfileStatus = async (userId: string) => {
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('is_profile_complete')
-        .eq('id', userId)
-        .single()
-
-      setProfileComplete(profile?.is_profile_complete || false)
-    } catch (error) {
-      console.error('Profile status check error:', error)
-      setProfileComplete(false)
-    }
-  }
 
   const signInWithGoogle = async () => {
     try {

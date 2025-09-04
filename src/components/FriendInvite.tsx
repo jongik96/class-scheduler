@@ -22,7 +22,7 @@ export default function FriendInvite({ isOpen, onClose }: FriendInviteProps) {
     if (isOpen && !inviteData) {
       generateInvite();
     }
-  }, [isOpen]);
+  }, [isOpen, inviteData]);
 
   const generateInvite = async () => {
     setLoading(true);

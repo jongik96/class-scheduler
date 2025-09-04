@@ -58,7 +58,7 @@ export function AuthGuard({
       setIsTimeout(false)
       setError(null)
     }
-  }, [loading])
+  }, [loading, t])
 
   useEffect(() => {
     if (loading) return // 로딩 중이면 대기

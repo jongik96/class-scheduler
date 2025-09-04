@@ -305,7 +305,7 @@ interface UserProfile {
 }
 
 // Search users
-export async function searchUsers(query: string): Promise<UserProfile[]> {
+export async function searchUsers(_query: string): Promise<UserProfile[]> {
   try {
     // 임시로 비활성화 - profiles 테이블 문제 해결 후 활성화
     console.log('User search temporarily disabled - profiles table not properly configured');
