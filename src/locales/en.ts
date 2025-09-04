@@ -266,6 +266,8 @@ export const en = {
       checkAssignments: 'Check Assignments',
       checkAssignmentsDesc: 'Check and manage your assignment status'
     },
+    tryDemo: 'Try Demo',
+    exitDemoMode: 'Exit Demo Mode',
     footer: {
       description: 'Smart schedule and assignment management system for university students',
       copyright: '© 2024 Smart Scheduler',
@@ -276,6 +278,9 @@ export const en = {
 
   // Authentication
   auth: {
+    timeoutTitle: 'Authentication Timeout',
+    timeoutError: 'Authentication verification has timed out. Please check your network connection.',
+    verifying: 'Verifying authentication...',
     login: {
       title: 'Login',
       subtitle: "Don't have an account?",

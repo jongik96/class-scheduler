@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, Filter, CheckCircle, LogOut } from 'lucide-react';
+import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, Filter, CheckCircle, LogOut, CheckSquare, Settings } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
@@ -58,6 +58,21 @@ function ScheduleViewContent() {
 
   // 수업 데이터 로드
   useEffect(() => {
+    // 데모 모드 확인
+    const isDemoMode = localStorage.getItem('demoMode') === 'true';
+    if (isDemoMode) {
+      const demoCourses = localStorage.getItem('demoCourses');
+      if (demoCourses) {
+        try {
+          const courses = JSON.parse(demoCourses);
+          setCourses(courses);
+          setIsLoading(false);
+          return;
+        } catch (error) {
+          console.error('데모 데이터 파싱 오류:', error);
+        }
+      }
+    }
     loadCourses();
   }, []);
 
@@ -66,10 +81,10 @@ function ScheduleViewContent() {
       setIsLoading(true);
       setError(null);
       const coursesData = await coursesApi.getCourses();
-      console.log('✅ {t("common.loadingCourseData")}:', coursesData);
+      console.log('✅ 로드된 수업 데이터:', coursesData);
       setCourses(coursesData);
     } catch (err) {
-      console.error('{t("common.courseDataLoadError")}:', err);
+      console.error('수업 데이터 로드 실패:', err);
       setError(err instanceof Error ? err.message : t('common.courseDataLoadError'));
     } finally {
       setIsLoading(false);
@@ -110,7 +125,7 @@ function ScheduleViewContent() {
     const courseStart = course.start_time.substring(0, 5);
     if (courseStart !== time) return null;
 
-          // {t('common.courseCount')} 수업이 몇 개의 30분 슬롯을 차지하는지 계산
+          // 수업이 몇 개의 30분 슬롯을 차지하는지 계산
     const startMinutes = parseInt(courseStart.split(':')[0]) * 60 + parseInt(courseStart.split(':')[1]);
     const endMinutes = parseInt(course.end_time.substring(0, 5).split(':')[0]) * 60 + parseInt(course.end_time.substring(0, 5).split(':')[1]);
     const durationSlots = Math.ceil((endMinutes - startMinutes) / 30);
@@ -165,9 +180,9 @@ function ScheduleViewContent() {
     if (confirm(t('common.courseDeleteConfirm'))) {
       try {
         await coursesApi.deleteCourse(courseId);
-        await loadCourses(); // {t('common.refreshCourseList')}
+        await loadCourses(); // 목록 새로고침
       } catch (err) {
-        console.error('{t("common.courseDeleteFailed")}:', err);
+        console.error('수업 삭제 실패:', err);
         alert(t('common.courseDeleteFailed'));
       }
     }
@@ -776,8 +791,38 @@ function ScheduleViewContent() {
                    selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
                    selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
                 </p>
-                
+              </div>
 
+              {/* Top Navigation Tabs */}
+              <div className="mb-6">
+                <div className="border-b border-gray-200 dark:border-gray-700">
+                  <nav className="-mb-px flex space-x-8 overflow-x-auto">
+                    {[
+                      { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
+                      { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
+                      { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
+                      { key: 'friends', label: t('sidebar.friends'), icon: Users },
+                      { key: 'settings', label: t('sidebar.settings'), icon: Settings }
+                    ].map(({ key, label, icon: Icon }) => (
+                      <button
+                        key={key}
+                        onClick={() => handleMenuChange(key as SidebarMenu)}
+                        className={`group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                          selectedMenu === key
+                            ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                        }`}
+                      >
+                        <Icon className={`w-4 h-4 mr-2 ${
+                          selectedMenu === key
+                            ? 'text-blue-500 dark:text-blue-400'
+                            : 'text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300'
+                        }`} />
+                        {label}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
               </div>
 
               {/* Content */}
@@ -1137,6 +1182,23 @@ function AssignmentListContent() {
     try {
       setIsLoading(true);
       setError(null);
+      
+      // 데모 모드 확인
+      const isDemoMode = localStorage.getItem('demoMode') === 'true';
+      if (isDemoMode) {
+        const demoAssignments = localStorage.getItem('demoAssignments');
+        if (demoAssignments) {
+          try {
+            const assignments = JSON.parse(demoAssignments);
+            setAssignments(assignments);
+            setIsLoading(false);
+            return;
+          } catch (error) {
+            console.error('데모 과제 데이터 파싱 오류:', error);
+          }
+        }
+      }
+      
       const data = await assignmentsApi.getAssignments();
       setAssignments(data);
       console.log('✅ 과제 데이터 로드 성공:', data);
@@ -1479,8 +1541,24 @@ function AssignmentListContent() {
 
 export default function ScheduleViewPage() {
   return (
-    <AuthGuard requireAuth={true}>
-      <ScheduleViewContent />
-    </AuthGuard>
+    <>
+      <head>
+        <title>스마트 스케줄러 | 시간표 보기</title>
+        <meta name="description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+        <meta name="keywords" content="시간표, 스케줄러, 대학생, 과제관리, 수업일정, 스마트스케줄러" />
+        <meta property="og:title" content="스마트 스케줄러 | 시간표 보기" />
+        <meta property="og:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://smart-scheduler.vercel.app/schedule/view" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="스마트 스케줄러 | 시간표 보기" />
+        <meta name="twitter:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://smart-scheduler.vercel.app/schedule/view" />
+      </head>
+      <AuthGuard requireAuth={true}>
+        <ScheduleViewContent />
+      </AuthGuard>
+    </>
   );
 }

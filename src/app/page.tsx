@@ -1,26 +1,43 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Plus, Eye, CheckSquare, Calendar, Users } from 'lucide-react';
+import { Plus, Eye, CheckSquare, Calendar, Users, Play, Square } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
+import demoData from '@/data/demo-schedule.json';
 
 export default function HomePage() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { user, profileComplete, loading } = useAuth();
   const router = useRouter();
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   // 로그인된 사용자는 View Schedule Page로 리다이렉트
   useEffect(() => {
-    if (!loading && user && profileComplete) {
+    if (!loading && user && profileComplete && !isDemoMode) {
       router.push('/schedule/view');
     }
-  }, [user, profileComplete, loading, router]);
+  }, [user, profileComplete, loading, router, isDemoMode]);
+
+  const handleDemoToggle = () => {
+    setIsDemoMode(!isDemoMode);
+    if (!isDemoMode) {
+      // 데모 모드 활성화 시 로컬 스토리지에 데모 데이터 저장
+      localStorage.setItem('demoMode', 'true');
+      localStorage.setItem('demoCourses', JSON.stringify(demoData.courses));
+      localStorage.setItem('demoAssignments', JSON.stringify(demoData.assignments));
+    } else {
+      // 데모 모드 비활성화 시 로컬 스토리지에서 제거
+      localStorage.removeItem('demoMode');
+      localStorage.removeItem('demoCourses');
+      localStorage.removeItem('demoAssignments');
+    }
+  };
 
   // 테마별 히어로 섹션 스타일
   const getHeroStyles = () => {
@@ -68,7 +85,22 @@ export default function HomePage() {
 
   return (
     <AuthGuard requireAuth={false}>
-      <div className="min-h-screen">
+      <>
+        <head>
+          <title>스마트 스케줄러 | 대학생을 위한 스마트한 시간표 관리</title>
+          <meta name="description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요. 무료로 체험해보세요!" />
+          <meta name="keywords" content="시간표, 스케줄러, 대학생, 과제관리, 수업일정, 스마트스케줄러, 무료, 체험" />
+          <meta property="og:title" content="스마트 스케줄러 | 대학생을 위한 스마트한 시간표 관리" />
+          <meta property="og:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요. 무료로 체험해보세요!" />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://smart-scheduler.vercel.app" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="스마트 스케줄러 | 대학생을 위한 스마트한 시간표 관리" />
+          <meta name="twitter:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요. 무료로 체험해보세요!" />
+          <meta name="robots" content="index, follow" />
+          <link rel="canonical" href="https://smart-scheduler.vercel.app" />
+        </head>
+        <div className="min-h-screen">
         {/* Hero Section */}
         <section className={`bg-gradient-to-br ${heroStyles.gradient} py-12 sm:py-16 md:py-20 transition-all duration-300`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -94,6 +126,22 @@ export default function HomePage() {
                 <Eye className="w-5 h-5 mr-2" />
                 {t('home.viewSchedule')}
               </Link>
+              <button
+                onClick={handleDemoToggle}
+                className={`inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-all duration-200 hover:scale-105 ${isDemoMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-white'} w-full sm:w-auto mobile-touch-target`}
+              >
+                {isDemoMode ? (
+                  <>
+                    <Square className="w-5 h-5 mr-2" />
+                    {t('home.exitDemoMode')}
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-5 h-5 mr-2" />
+                    {t('home.tryDemo')}
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </section>
@@ -244,7 +292,8 @@ export default function HomePage() {
             </div>
           </div>
         </footer>
-      </div>
+        </div>
+      </>
     </AuthGuard>
   );
 }

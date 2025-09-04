@@ -266,6 +266,8 @@ export const ja = {
       checkAssignments: '課題確認',
       checkAssignmentsDesc: '課題の状況を確認して管理しましょう'
     },
+    tryDemo: 'デモを体験',
+    exitDemoMode: 'デモモード終了',
     footer: {
       description: '大学生のためのスマートなスケジュールと課題管理システム',
       copyright: '© 2024 Smart Scheduler',
@@ -276,6 +278,9 @@ export const ja = {
 
   // 認証
   auth: {
+    timeoutTitle: '認証確認タイムアウト',
+    timeoutError: '認証確認がタイムアウトしました。ネットワーク接続を確認してください。',
+    verifying: '認証確認中...',
     login: {
       title: 'ログイン',
       subtitle: 'アカウントをお持ちでない方は',

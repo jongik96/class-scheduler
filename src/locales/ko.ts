@@ -266,6 +266,8 @@ export const ko = {
       checkAssignments: '과제 확인',
       checkAssignmentsDesc: '과제 현황을 확인하고 관리하세요'
     },
+    tryDemo: '데모 체험하기',
+    exitDemoMode: '데모 모드 종료',
     footer: {
       description: '대학생을 위한 스마트한 시간표 및 과제 관리 시스템',
       copyright: '© 2024 Smart Scheduler',
@@ -276,6 +278,9 @@ export const ko = {
 
   // 인증
   auth: {
+    timeoutTitle: '인증 확인 시간 초과',
+    timeoutError: '인증 확인이 시간 초과되었습니다. 네트워크 연결을 확인해주세요.',
+    verifying: '인증 확인 중...',
     login: {
       title: '로그인',
       subtitle: '계정이 없으신가요?',
