@@ -832,7 +832,7 @@ function ScheduleViewContent() {
             {/* Desktop Navigation Tabs */}
             <div className="mb-6 hidden lg:block">
               <div className="border-b border-gray-200 dark:border-gray-700">
-                <nav className="-mb-px flex space-x-8 overflow-x-auto">
+                <nav className="-mb-px flex space-x-8">
                   {[
                     { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
                     { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
