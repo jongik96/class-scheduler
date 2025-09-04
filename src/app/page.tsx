@@ -3,45 +3,27 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Plus, Eye, CheckSquare, Calendar, Users, Play, Square } from 'lucide-react';
+import { Plus, Eye, CheckSquare, Calendar, Users, Play } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
-import demoData from '@/data/demo-schedule.json';
 
 export default function HomePage() {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const { user, profileComplete, loading } = useAuth();
   const router = useRouter();
-  const [isDemoMode, setIsDemoMode] = useState(false);
-
   // 로그인된 사용자는 View Schedule Page로 리다이렉트
   useEffect(() => {
-    if (!loading && user && profileComplete && !isDemoMode) {
+    if (!loading && user && profileComplete) {
       router.push('/schedule/view');
     }
-  }, [user, profileComplete, loading, router, isDemoMode]);
+  }, [user, profileComplete, loading, router]);
 
   const handleDemoToggle = () => {
-    const newDemoMode = !isDemoMode;
-    setIsDemoMode(newDemoMode);
-    
-    if (newDemoMode) {
-      // 데모 모드 활성화 시 로컬 스토리지에 데모 데이터 저장
-      localStorage.setItem('demoMode', 'true');
-      localStorage.setItem('demoCourses', JSON.stringify(demoData.courses));
-      localStorage.setItem('demoAssignments', JSON.stringify(demoData.assignments));
-      
-      // 데모 모드로 스케줄 뷰 페이지로 이동
-      router.push('/schedule/view');
-    } else {
-      // 데모 모드 비활성화 시 로컬 스토리지에서 제거
-      localStorage.removeItem('demoMode');
-      localStorage.removeItem('demoCourses');
-      localStorage.removeItem('demoAssignments');
-    }
+    // 데모 페이지로 이동
+    router.push('/demo');
   };
 
   // 테마별 히어로 섹션 스타일
@@ -133,19 +115,10 @@ export default function HomePage() {
               </Link>
               <button
                 onClick={handleDemoToggle}
-                className={`inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-all duration-200 hover:scale-105 ${isDemoMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-yellow-500 hover:bg-yellow-600 text-white'} w-full sm:w-auto mobile-touch-target`}
+                className="inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-md transition-all duration-200 hover:scale-105 bg-yellow-500 hover:bg-yellow-600 text-white w-full sm:w-auto mobile-touch-target"
               >
-                {isDemoMode ? (
-                  <>
-                    <Square className="w-5 h-5 mr-2" />
-                    {t('home.exitDemoMode')}
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-5 h-5 mr-2" />
-                    {t('home.tryDemo')}
-                  </>
-                )}
+                <Play className="w-5 h-5 mr-2" />
+                {t('home.tryDemo')}
               </button>
             </div>
           </div>
