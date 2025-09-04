@@ -761,114 +761,111 @@ function ScheduleViewContent() {
   };
 
   return (
-    <AuthGuard requireAuth={true}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Mobile Header */}
-        <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {selectedMenu === 'schedule' ? t('schedule.view.title') : 
-               selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
-               selectedMenu === 'assignments' ? t('assignments.list.title') :
-               selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
-            </h1>
-            <button
-              onClick={handleMobileMenuToggle}
-              className="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Mobile Header */}
+      <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {selectedMenu === 'schedule' ? t('schedule.view.title') : 
+             selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
+             selectedMenu === 'assignments' ? t('assignments.list.title') :
+             selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
+          </h1>
+          <button
+            onClick={handleMobileMenuToggle}
+            className="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+          <div className="px-4 py-2 space-y-1">
+            {[
+              { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
+              { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
+              { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
+              { key: 'friends', label: t('sidebar.friends'), icon: Users },
+              { key: 'settings', label: t('sidebar.settings'), icon: Settings }
+            ].map(({ key, label, icon: Icon }) => (
+              <button
+                key={key}
+                onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
+                className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                  selectedMenu === key
+                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                <Icon className="w-4 h-4 mr-3" />
+                {label}
+              </button>
+            ))}
           </div>
         </div>
+      )}
 
-        {/* Mobile Menu Dropdown */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <div className="px-4 py-2 space-y-1">
-              {[
-                { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
-                { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
-                { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
-                { key: 'friends', label: t('sidebar.friends'), icon: Users },
-                { key: 'settings', label: t('sidebar.settings'), icon: Settings }
-              ].map(({ key, label, icon: Icon }) => (
-                <button
-                  key={key}
-                  onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
-                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                    selectedMenu === key
-                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-3" />
-                  {label}
-                </button>
-              ))}
+      {/* Main Content */}
+      <div className="flex-1 min-w-0 overflow-auto">
+        <div className="py-4 sm:py-8 px-4 sm:px-6">
+            {/* Header */}
+            <div className="mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                {selectedMenu === 'schedule' ? t('schedule.view.title') : 
+                 selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
+                 selectedMenu === 'assignments' ? t('assignments.list.title') :
+                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
+                {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
+                 selectedMenu === 'courses' ? t('sidebarContent.courses.description') :
+                 selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
+                 selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
+              </p>
             </div>
-          </div>
-        )}
 
-        {/* Main Content */}
-        <div className="flex-1 min-w-0 overflow-auto">
-          <div className="py-4 sm:py-8 px-4 sm:px-6">
-              {/* Header */}
-              <div className="mb-6 sm:mb-8">
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                  {selectedMenu === 'schedule' ? t('schedule.view.title') : 
-                   selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
-                   selectedMenu === 'assignments' ? t('assignments.list.title') :
-                   selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
-                  {selectedMenu === 'schedule' ? t('schedule.view.subtitle') : 
-                   selectedMenu === 'courses' ? t('sidebarContent.courses.description') :
-                   selectedMenu === 'assignments' ? t('assignments.list.subtitle') :
-                   selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.description')}
-                </p>
+            {/* Desktop Navigation Tabs */}
+            <div className="mb-6 hidden lg:block">
+              <div className="border-b border-gray-200 dark:border-gray-700">
+                <nav className="-mb-px flex space-x-8 overflow-x-auto">
+                  {[
+                    { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
+                    { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
+                    { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
+                    { key: 'friends', label: t('sidebar.friends'), icon: Users },
+                    { key: 'settings', label: t('sidebar.settings'), icon: Settings }
+                  ].map(({ key, label, icon: Icon }) => (
+                    <button
+                      key={key}
+                      onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
+                      className={`group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                        selectedMenu === key
+                          ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 mr-2 ${
+                        selectedMenu === key
+                          ? 'text-blue-500 dark:text-blue-400'
+                          : 'text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300'
+                      }`} />
+                      {label}
+                    </button>
+                  ))}
+                </nav>
               </div>
-
-              {/* Desktop Navigation Tabs */}
-              <div className="mb-6 hidden lg:block">
-                <div className="border-b border-gray-200 dark:border-gray-700">
-                  <nav className="-mb-px flex space-x-8 overflow-x-auto">
-                    {[
-                      { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
-                      { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
-                      { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
-                      { key: 'friends', label: t('sidebar.friends'), icon: Users },
-                      { key: 'settings', label: t('sidebar.settings'), icon: Settings }
-                    ].map(({ key, label, icon: Icon }) => (
-                      <button
-                        key={key}
-                        onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
-                        className={`group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
-                          selectedMenu === key
-                            ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
-                        }`}
-                      >
-                        <Icon className={`w-4 h-4 mr-2 ${
-                          selectedMenu === key
-                            ? 'text-blue-500 dark:text-blue-400'
-                            : 'text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300'
-                        }`} />
-                        {label}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
-              </div>
-
-              {/* Content */}
-              {renderContent()}
             </div>
+
+            {/* Content */}
+            {renderContent()}
           </div>
         </div>
       </div>
-    </AuthGuard>
   );
 }
 
@@ -1578,24 +1575,24 @@ function AssignmentListContent() {
 
 export default function ScheduleViewPage() {
   return (
-    <>
-      <head>
-        <title>스마트 스케줄러 | 시간표 보기</title>
-        <meta name="description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
-        <meta name="keywords" content="시간표, 스케줄러, 대학생, 과제관리, 수업일정, 스마트스케줄러" />
-        <meta property="og:title" content="스마트 스케줄러 | 시간표 보기" />
-        <meta property="og:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://smart-scheduler.vercel.app/schedule/view" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="스마트 스케줄러 | 시간표 보기" />
-        <meta name="twitter:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://smart-scheduler.vercel.app/schedule/view" />
-      </head>
-      <AuthGuard requireAuth={true}>
+    <AuthGuard requireAuth={true}>
+      <>
+        <head>
+          <title>스마트 스케줄러 | 시간표 보기</title>
+          <meta name="description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+          <meta name="keywords" content="시간표, 스케줄러, 대학생, 과제관리, 수업일정, 스마트스케줄러" />
+          <meta property="og:title" content="스마트 스케줄러 | 시간표 보기" />
+          <meta property="og:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://smart-scheduler.vercel.app/schedule/view" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="스마트 스케줄러 | 시간표 보기" />
+          <meta name="twitter:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+          <meta name="robots" content="index, follow" />
+          <link rel="canonical" href="https://smart-scheduler.vercel.app/schedule/view" />
+        </head>
         <ScheduleViewContent />
-      </AuthGuard>
-    </>
+      </>
+    </AuthGuard>
   );
 }
