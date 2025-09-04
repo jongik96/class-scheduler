@@ -212,10 +212,10 @@ function ScheduleViewContent() {
                 {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                    새로고침 중...
+                    {t('common.refreshing')}
                   </>
                 ) : (
-                  '새로고침'
+                  {t('common.refresh')}
                 )}
               </button>
             </div>
@@ -1339,12 +1339,12 @@ function AssignmentListContent() {
                          {isLoading ? (
                <>
                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                 {safeTranslate('common.refreshing', '새로고침 중...')}
+                 {safeTranslate('common.refreshing', {t('common.refreshing')})}
                </>
              ) : (
                <>
                  <RefreshCw className="w-4 h-4 mr-2" />
-                 {safeTranslate('common.refresh', '새로고침')}
+                 {safeTranslate('common.refresh', {t('common.refresh')})}
                </>
              )}
           </button>
