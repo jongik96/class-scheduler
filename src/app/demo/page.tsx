@@ -32,8 +32,7 @@ interface DemoAssignment {
   due_date: string;
   priority: string;
   status: string;
-  created_at: string;
-  updated_at: string;
+  is_shared: boolean;
 }
 
 const timeSlots = [
