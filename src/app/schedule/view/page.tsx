@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Plus, Eye, Edit, Trash2, Clock, MapPin, User, BookOpen, Users, QrCode, Search, UserPlus, RefreshCw, AlertCircle, Calendar, Filter, CheckCircle, LogOut, CheckSquare, Settings } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
-import Sidebar, { SidebarMenu } from '@/components/Sidebar';
+// import Sidebar, { SidebarMenu } from '@/components/Sidebar';
 import { useAuth } from '@/lib/auth-context';
 import { AuthGuard } from '@/components/AuthGuard';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
@@ -33,17 +33,17 @@ function ScheduleViewContent() {
   const { t } = useLanguage();
   const { user, signOut } = useAuth();
   const [selectedDay, setSelectedDay] = useState('monday');
-  const [selectedMenu, setSelectedMenu] = useState<SidebarMenu>('schedule');
+  const [selectedMenu, setSelectedMenu] = useState<'schedule' | 'assignments' | 'courses' | 'friends' | 'settings'>('schedule');
 
   // URL 파라미터에서 메뉴 설정 읽기
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const menuParam = urlParams.get('menu') as SidebarMenu;
+    const menuParam = urlParams.get('menu') as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings';
     if (menuParam && ['schedule', 'assignments', 'courses', 'friends', 'settings'].includes(menuParam)) {
       setSelectedMenu(menuParam);
     }
   }, []);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -161,18 +161,18 @@ function ScheduleViewContent() {
     return time.slice(0, 5);
   };
 
-  // 사이드바 메뉴 변경 핸들러
-  const handleMenuChange = (menu: SidebarMenu) => {
+  // 메뉴 변경 핸들러
+  const handleMenuChange = (menu: 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings') => {
     setSelectedMenu(menu);
-    // 모바일에서 탭 선택 시 사이드바 자동 숨김
+    // 모바일에서 탭 선택 시 메뉴 자동 닫기
     if (window.innerWidth < 640) {
-      setIsSidebarCollapsed(true);
+      setIsMobileMenuOpen(false);
     }
   };
 
-  // 사이드바 토글 핸들러
-  const handleSidebarToggle = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+  // 모바일 메뉴 토글 핸들러
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   // 수업 삭제 핸들러
@@ -763,20 +763,57 @@ function ScheduleViewContent() {
   return (
     <AuthGuard requireAuth={true}>
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex h-screen">
-          {/* Sidebar */}
-          <div className={`${isSidebarCollapsed ? 'hidden' : ''}`}>
-            <Sidebar
-              selectedMenu={selectedMenu}
-              onMenuChange={handleMenuChange}
-              isCollapsed={isSidebarCollapsed}
-              onToggleCollapse={handleSidebarToggle}
-            />
+        {/* Mobile Header */}
+        <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {selectedMenu === 'schedule' ? t('schedule.view.title') : 
+               selectedMenu === 'courses' ? t('sidebarContent.courses.title') :
+               selectedMenu === 'assignments' ? t('assignments.list.title') :
+               selectedMenu === 'friends' ? t('friends.title') : t('sidebarContent.settings.title')}
+            </h1>
+            <button
+              onClick={handleMobileMenuToggle}
+              className="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
+        </div>
 
-          {/* Main Content */}
-          <div className="flex-1 min-w-0 overflow-auto w-full sm:w-auto">
-            <div className="py-4 sm:py-8 px-4 sm:px-6">
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <div className="px-4 py-2 space-y-1">
+              {[
+                { key: 'schedule', label: t('sidebar.schedule'), icon: Calendar },
+                { key: 'assignments', label: t('sidebar.assignments'), icon: CheckSquare },
+                { key: 'courses', label: t('sidebar.courses'), icon: BookOpen },
+                { key: 'friends', label: t('sidebar.friends'), icon: Users },
+                { key: 'settings', label: t('sidebar.settings'), icon: Settings }
+              ].map(({ key, label, icon: Icon }) => (
+                <button
+                  key={key}
+                  onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
+                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                    selectedMenu === key
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 mr-3" />
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 min-w-0 overflow-auto">
+          <div className="py-4 sm:py-8 px-4 sm:px-6">
               {/* Header */}
               <div className="mb-6 sm:mb-8">
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
@@ -793,8 +830,8 @@ function ScheduleViewContent() {
                 </p>
               </div>
 
-              {/* Top Navigation Tabs */}
-              <div className="mb-6">
+              {/* Desktop Navigation Tabs */}
+              <div className="mb-6 hidden lg:block">
                 <div className="border-b border-gray-200 dark:border-gray-700">
                   <nav className="-mb-px flex space-x-8 overflow-x-auto">
                     {[
@@ -806,7 +843,7 @@ function ScheduleViewContent() {
                     ].map(({ key, label, icon: Icon }) => (
                       <button
                         key={key}
-                        onClick={() => handleMenuChange(key as SidebarMenu)}
+                        onClick={() => handleMenuChange(key as 'schedule' | 'assignments' | 'courses' | 'friends' | 'settings')}
                         className={`group inline-flex items-center py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
                           selectedMenu === key
                             ? 'border-blue-500 text-blue-600 dark:text-blue-400'

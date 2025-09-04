@@ -17,7 +17,7 @@ export function AuthGuard({
   requireAuth = true, 
   redirectTo = '/auth/login' 
 }: AuthGuardProps) {
-  const { user, loading, signIn } = useAuth()
+  const { user, loading } = useAuth()
   const { t } = useLanguage()
   const router = useRouter()
   const [isTimeout, setIsTimeout] = useState(false)
