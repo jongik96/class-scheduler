@@ -293,7 +293,11 @@ export const en = {
       googleLoginError: 'Google login failed. Please try again.',
       loggingIn: 'Signing in...',
       emailPlaceholder: 'Enter your email',
-      passwordPlaceholder: 'Enter your password'
+      passwordPlaceholder: 'Enter your password',
+      lineAppDetected: 'You are accessing from LINE app!',
+      lineAppWarning: 'Google login may be blocked in LINE app. Please login using an external browser.',
+      openInChrome: 'Open in Chrome',
+      openInSafari: 'Open in Safari'
     },
     register: {
       title: 'Register',

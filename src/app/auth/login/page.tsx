@@ -13,6 +13,14 @@ function LoginContent() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLineApp, setIsLineApp] = useState(false);
+
+  // LINE 앱 감지
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isLine = userAgent.includes('line/') || userAgent.includes('line-');
+    setIsLineApp(isLine);
+  }, []);
 
   // URL 파라미터에서 에러 정보 읽기
   useEffect(() => {
@@ -82,6 +90,51 @@ function LoginContent() {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
             <div className="space-y-6">
+              {/* LINE 앱 안내 메시지 */}
+              {isLineApp && (
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
+                  <div className="flex">
+                    <AlertCircle className="h-5 w-5 text-yellow-400 dark:text-yellow-300 flex-shrink-0" />
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+                        📱 {t('auth.login.lineAppDetected')}
+                      </h3>
+                      <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-3">
+                        {t('auth.login.lineAppWarning')}
+                      </p>
+                      <div className="space-y-2">
+                        <button
+                          onClick={() => {
+                            const url = window.location.href;
+                            // Chrome으로 열기 시도
+                            window.open(`googlechrome://navigate?url=${encodeURIComponent(url)}`, '_blank');
+                          }}
+                          className="w-full inline-flex items-center justify-center px-3 py-2 border border-yellow-300 dark:border-yellow-600 text-sm font-medium rounded-md text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/30 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 transition-colors"
+                        >
+                          <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          </svg>
+                          {t('auth.login.openInChrome')}
+                        </button>
+                        <button
+                          onClick={() => {
+                            const url = window.location.href;
+                            // Safari로 열기 시도 (iOS)
+                            window.open(`x-web-search://?${encodeURIComponent(url)}`, '_blank');
+                          }}
+                          className="w-full inline-flex items-center justify-center px-3 py-2 border border-yellow-300 dark:border-yellow-600 text-sm font-medium rounded-md text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/30 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 transition-colors"
+                        >
+                          <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                          </svg>
+                          {t('auth.login.openInSafari')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Error Message */}
               {error && (
                 <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">

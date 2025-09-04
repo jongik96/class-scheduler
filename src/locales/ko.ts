@@ -293,7 +293,11 @@ export const ko = {
       googleLoginError: 'Google 로그인에 실패했습니다. 다시 시도해주세요.',
       loggingIn: '로그인 중...',
       emailPlaceholder: '이메일을 입력하세요',
-      passwordPlaceholder: '비밀번호를 입력하세요'
+      passwordPlaceholder: '비밀번호를 입력하세요',
+      lineAppDetected: 'LINE 앱에서 접속하셨네요!',
+      lineAppWarning: 'Google 로그인이 LINE 앱에서 차단될 수 있습니다. 외부 브라우저에서 로그인해주세요.',
+      openInChrome: 'Chrome에서 열기',
+      openInSafari: 'Safari에서 열기'
     },
     register: {
       title: '회원가입',

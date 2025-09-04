@@ -293,7 +293,11 @@ export const ja = {
       googleLoginError: 'Googleログインに失敗しました。再度お試しください。',
       loggingIn: 'ログイン中...',
       emailPlaceholder: 'メールアドレスを入力してください',
-      passwordPlaceholder: 'パスワードを入力してください'
+      passwordPlaceholder: 'パスワードを入力してください',
+      lineAppDetected: 'LINEアプリからアクセスしていますね！',
+      lineAppWarning: 'LINEアプリではGoogleログインがブロックされる可能性があります。外部ブラウザでログインしてください。',
+      openInChrome: 'Chromeで開く',
+      openInSafari: 'Safariで開く'
     },
     register: {
       title: '登録',

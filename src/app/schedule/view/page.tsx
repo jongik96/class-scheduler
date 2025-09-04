@@ -1128,10 +1128,7 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.nickname || friend.friend_profile?.full_name || `ID: ${friend.friend_id}`}
-                      </p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {friend.friend_profile?.full_name || `ID: ${friend.friend_id}`} • {friend.friend_profile?.major || 'N/A'} • {friend.friend_profile?.grade || 'N/A'}
+                        {friend.friend_profile?.nickname || `ID: ${friend.friend_id}`}
                       </p>
                     </div>
                   </div>
