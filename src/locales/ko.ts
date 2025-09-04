@@ -268,8 +268,6 @@ export const ko = {
       checkAssignments: '과제 확인',
       checkAssignmentsDesc: '과제 현황을 확인하고 관리하세요'
     },
-    tryDemo: '데모 체험하기',
-    exitDemoMode: '데모 모드 종료',
     footer: {
       description: '대학생을 위한 스마트한 시간표 및 과제 관리 시스템',
       copyright: '© 2024 Smart Scheduler',
