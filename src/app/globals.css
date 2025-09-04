@@ -94,11 +94,6 @@ body {
   color: var(--text-primary);
 }
 
-.theme-pink nav {
-  background-color: var(--bg-primary);
-  border-color: var(--border-color);
-  color: var(--text-primary);
-}
 
 /* 테마별 버튼 및 입력 필드 스타일 */
 .theme-white button,
