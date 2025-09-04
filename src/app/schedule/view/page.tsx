@@ -215,7 +215,7 @@ function ScheduleViewContent() {
                     {t('common.refreshing')}
                   </>
                 ) : (
-                  {t('common.refresh')}
+                  t('common.refresh')
                 )}
               </button>
             </div>
