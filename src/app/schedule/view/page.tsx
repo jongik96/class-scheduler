@@ -1258,13 +1258,6 @@ function AssignmentListContent() {
   const [priorityFilter, setPriorityFilter] = useState('all');
 
   // 에러 방지를 위한 안전한 번역 함수
-  const safeTranslate = (key: string, fallback: string) => {
-    try {
-      return t(key) || fallback;
-    } catch {
-      return fallback;
-    }
-  };
 
   const loadAssignments = async () => {
     try {
@@ -1316,11 +1309,11 @@ function AssignmentListContent() {
      const getPriorityText = (priority: string) => {
      switch (priority) {
        case 'high':
-         return safeTranslate('priority.high', '높음');
-       case 'medium':
-         return safeTranslate('priority.medium', '보통');
-       case 'low':
-         return safeTranslate('priority.low', '낮음');
+                 return t('priority.high');
+      case 'medium':
+        return t('priority.medium');
+      case 'low':
+        return t('priority.low');
        default:
          return priority;
      }
@@ -1381,10 +1374,10 @@ function AssignmentListContent() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-             {safeTranslate('assignments.list.title', '과제 목록')}
+             {t('assignments.list.title')}
            </h2>
            <p className="text-gray-600 dark:text-gray-400 mt-2">
-             {safeTranslate('assignments.list.subtitle', '모든 과제를 관리하세요')}
+             {t('assignments.list.subtitle')}
            </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
@@ -1396,12 +1389,12 @@ function AssignmentListContent() {
                          {isLoading ? (
                <>
                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
-                 {safeTranslate('common.refreshing', {t('common.refreshing')})}
+                 {t('common.refreshing')}
                </>
              ) : (
                <>
                  <RefreshCw className="w-4 h-4 mr-2" />
-                 {safeTranslate('common.refresh', {t('common.refresh')})}
+                 {t('common.refresh')}
                </>
              )}
           </button>
@@ -1410,7 +1403,7 @@ function AssignmentListContent() {
              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-gray-800 bg-[#BAE1FF] hover:bg-[#87CEEB] transition-colors"
            >
              <Plus className="w-4 h-4 mr-2" />
-             {safeTranslate('assignments.list.addAssignment', '과제 추가')}
+             {t('assignments.list.addAssignment')}
            </Link>
         </div>
       </div>
@@ -1424,7 +1417,7 @@ function AssignmentListContent() {
             </div>
             <div className="ml-4">
                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                 {safeTranslate('assignments.list.total', '전체')}
+                 {t('assignments.list.total')}
                </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.total}
@@ -1440,7 +1433,7 @@ function AssignmentListContent() {
             </div>
             <div className="ml-4">
                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                 {safeTranslate('assignments.list.inProgress', '진행 중')}
+                 {t('assignments.list.inProgress')}
                </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.inProgress}
@@ -1456,7 +1449,7 @@ function AssignmentListContent() {
             </div>
             <div className="ml-4">
                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                 {safeTranslate('assignments.list.completed', '완료')}
+                 {t('assignments.list.completed')}
                </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.completed}
@@ -1472,7 +1465,7 @@ function AssignmentListContent() {
             </div>
             <div className="ml-4">
                              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                 {safeTranslate('assignments.list.overdue', '지연')}
+                 {t('assignments.list.overdue')}
                </p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {stats.overdue}
@@ -1490,7 +1483,7 @@ function AssignmentListContent() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                              <input
                  type="text"
-                 placeholder={safeTranslate('assignments.list.searchPlaceholder', '과제 검색...')}
+                 placeholder={t('assignments.list.searchPlaceholder')}
                  value={searchTerm}
                  onChange={(e) => setSearchTerm(e.target.value)}
                  className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white"
@@ -1506,10 +1499,10 @@ function AssignmentListContent() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white text-sm"
               >
-                                 <option value="all">{safeTranslate('assignments.list.allStatus', '모든 상태')}</option>
-                 <option value="pending">{safeTranslate('assignments.list.pending', '진행 중')}</option>
-                 <option value="completed">{safeTranslate('assignments.list.completed', '완료')}</option>
-                 <option value="overdue">{safeTranslate('assignments.list.overdue', '지연')}</option>
+                                 <option value="all">{t('assignments.list.allStatus')}</option>
+                 <option value="pending">{t('assignments.list.pending')}</option>
+                 <option value="completed">{t('assignments.list.completed')}</option>
+                 <option value="overdue">{t('assignments.list.overdue')}</option>
               </select>
             </div>
             
@@ -1519,10 +1512,10 @@ function AssignmentListContent() {
                 onChange={(e) => setPriorityFilter(e.target.value)}
                 className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E40AF] dark:bg-gray-700 dark:text-white text-sm"
               >
-                                 <option value="all">{safeTranslate('assignments.list.allPriority', '모든 우선순위')}</option>
-                 <option value="high">{safeTranslate('priority.high', '높음')}</option>
-                 <option value="medium">{safeTranslate('priority.medium', '보통')}</option>
-                 <option value="low">{safeTranslate('priority.low', '낮음')}</option>
+                                 <option value="all">{t('assignments.list.allPriority')}</option>
+                 <option value="high">{t('priority.high')}</option>
+                 <option value="medium">{t('priority.medium')}</option>
+                 <option value="low">{t('priority.low')}</option>
               </select>
             </div>
           </div>
@@ -1534,7 +1527,7 @@ function AssignmentListContent() {
         {isLoading ? (
           <div className="text-center py-12">
             <RefreshCw className="w-12 h-12 text-gray-400 mx-auto mb-4 animate-spin" />
-                         <p className="text-gray-600 dark:text-gray-400">{safeTranslate('common.loadingAssignments', '과제를 불러오는 중...')}</p>
+                         <p className="text-gray-600 dark:text-gray-400">{t('common.loadingAssignments')}</p>
           </div>
         ) : error ? (
           <div className="text-center py-12 text-red-600 dark:text-red-400">
@@ -1551,12 +1544,12 @@ function AssignmentListContent() {
         ) : filteredAssignments.length === 0 ? (
           <div className="text-center py-12">
             <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                         <p className="text-gray-600 dark:text-gray-400 mb-2">{safeTranslate('common.noAssignments', '과제가 없습니다')}</p>
+                         <p className="text-gray-600 dark:text-gray-400 mb-2">{t('common.noAssignments')}</p>
              <Link
                href="/assignment/add"
                className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm"
              >
-               {safeTranslate('common.addFirstAssignment', '첫 번째 과제 추가하기')}
+               {t('common.addFirstAssignment')}
              </Link>
           </div>
         ) : (
@@ -1590,7 +1583,7 @@ function AssignmentListContent() {
                       </span>
                       <span className="flex items-center">
                         <Calendar className="w-4 h-4 mr-2" />
-                                                 {getDaysUntilDue(assignment.due_date).days === 0 ? safeTranslate('dueDate.today', '오늘') : getDaysUntilDue(assignment.due_date).days === 1 ? safeTranslate('dueDate.tomorrow', '내일') : safeTranslate('dueDate.daysLeft', `${getDaysUntilDue(assignment.due_date).days}일 남음`)}
+                                                 {getDaysUntilDue(assignment.due_date).days === 0 ? t('dueDate.today') : getDaysUntilDue(assignment.due_date).days === 1 ? t('dueDate.tomorrow') : t('dueDate.daysLeft', { days: getDaysUntilDue(assignment.due_date).days })}
                       </span>
                     </div>
                   </div>
