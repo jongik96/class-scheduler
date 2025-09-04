@@ -25,12 +25,17 @@ export default function HomePage() {
   }, [user, profileComplete, loading, router, isDemoMode]);
 
   const handleDemoToggle = () => {
-    setIsDemoMode(!isDemoMode);
-    if (!isDemoMode) {
+    const newDemoMode = !isDemoMode;
+    setIsDemoMode(newDemoMode);
+    
+    if (newDemoMode) {
       // 데모 모드 활성화 시 로컬 스토리지에 데모 데이터 저장
       localStorage.setItem('demoMode', 'true');
       localStorage.setItem('demoCourses', JSON.stringify(demoData.courses));
       localStorage.setItem('demoAssignments', JSON.stringify(demoData.assignments));
+      
+      // 데모 모드로 스케줄 뷰 페이지로 이동
+      router.push('/schedule/view');
     } else {
       // 데모 모드 비활성화 시 로컬 스토리지에서 제거
       localStorage.removeItem('demoMode');

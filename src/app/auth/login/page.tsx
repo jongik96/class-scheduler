@@ -106,8 +106,37 @@ function LoginContent() {
                         <button
                           onClick={() => {
                             const url = window.location.href;
-                            // Chrome으로 열기 시도
-                            window.open(`googlechrome://navigate?url=${encodeURIComponent(url)}`, '_blank');
+                            // 여러 방법으로 외부 브라우저 열기 시도
+                            try {
+                              // 1. Chrome Custom Tabs 시도 (Android)
+                              if (window.open(`googlechrome://navigate?url=${encodeURIComponent(url)}`, '_blank')) {
+                                return;
+                              }
+                            } catch (e) {
+                              console.log('Chrome Custom Tabs failed:', e);
+                            }
+                            
+                            try {
+                              // 2. Intent URL 시도 (Android)
+                              if (window.open(`intent://${url.replace(/^https?:\/\//, '')}#Intent;scheme=https;package=com.android.chrome;end`, '_blank')) {
+                                return;
+                              }
+                            } catch (e) {
+                              console.log('Intent URL failed:', e);
+                            }
+                            
+                            try {
+                              // 3. 일반적인 새 창 열기
+                              const newWindow = window.open(url, '_blank');
+                              if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                                // 팝업이 차단된 경우 사용자에게 알림
+                                alert(t('auth.login.popupBlocked'));
+                              }
+                            } catch (e) {
+                              console.log('Window open failed:', e);
+                              // 최후의 수단: 현재 창에서 URL 변경
+                              window.location.href = url;
+                            }
                           }}
                           className="w-full inline-flex items-center justify-center px-3 py-2 border border-yellow-300 dark:border-yellow-600 text-sm font-medium rounded-md text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/30 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 transition-colors"
                         >
@@ -119,8 +148,25 @@ function LoginContent() {
                         <button
                           onClick={() => {
                             const url = window.location.href;
-                            // Safari로 열기 시도 (iOS)
-                            window.open(`x-web-search://?${encodeURIComponent(url)}`, '_blank');
+                            try {
+                              // Safari로 열기 시도 (iOS)
+                              if (window.open(`x-web-search://?${encodeURIComponent(url)}`, '_blank')) {
+                                return;
+                              }
+                            } catch (e) {
+                              console.log('Safari URL scheme failed:', e);
+                            }
+                            
+                            try {
+                              // 일반적인 새 창 열기
+                              const newWindow = window.open(url, '_blank');
+                              if (!newWindow || newWindow.closed || typeof newWindow.closed == 'undefined') {
+                                alert(t('auth.login.popupBlocked'));
+                              }
+                            } catch (e) {
+                              console.log('Window open failed:', e);
+                              window.location.href = url;
+                            }
                           }}
                           className="w-full inline-flex items-center justify-center px-3 py-2 border border-yellow-300 dark:border-yellow-600 text-sm font-medium rounded-md text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/30 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 transition-colors"
                         >
@@ -128,6 +174,30 @@ function LoginContent() {
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                           </svg>
                           {t('auth.login.openInSafari')}
+                        </button>
+                        
+                        {/* URL 복사 버튼 추가 */}
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(window.location.href).then(() => {
+                              alert(t('auth.login.urlCopied'));
+                            }).catch(() => {
+                              // 클립보드 API가 지원되지 않는 경우
+                              const textArea = document.createElement('textarea');
+                              textArea.value = window.location.href;
+                              document.body.appendChild(textArea);
+                              textArea.select();
+                              document.execCommand('copy');
+                              document.body.removeChild(textArea);
+                              alert(t('auth.login.urlCopied'));
+                            });
+                          }}
+                          className="w-full inline-flex items-center justify-center px-3 py-2 border border-yellow-300 dark:border-yellow-600 text-sm font-medium rounded-md text-yellow-700 dark:text-yellow-300 bg-yellow-100 dark:bg-yellow-800/30 hover:bg-yellow-200 dark:hover:bg-yellow-700/50 transition-colors"
+                        >
+                          <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                          </svg>
+                          {t('auth.login.copyUrl')}
                         </button>
                       </div>
                     </div>

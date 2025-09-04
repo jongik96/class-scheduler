@@ -297,7 +297,10 @@ export const ko = {
       lineAppDetected: 'LINE 앱에서 접속하셨네요!',
       lineAppWarning: 'Google 로그인이 LINE 앱에서 차단될 수 있습니다. 외부 브라우저에서 로그인해주세요.',
       openInChrome: 'Chrome에서 열기',
-      openInSafari: 'Safari에서 열기'
+      openInSafari: 'Safari에서 열기',
+      copyUrl: 'URL 복사하기',
+      urlCopied: 'URL이 클립보드에 복사되었습니다. 브라우저 주소창에 붙여넣기 하세요.',
+      popupBlocked: '팝업이 차단되었습니다. 브라우저 설정에서 팝업을 허용하거나, 수동으로 브라우저를 열어주세요.'
     },
     register: {
       title: '회원가입',

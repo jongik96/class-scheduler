@@ -22,6 +22,28 @@ export function AuthGuard({
   const router = useRouter()
   const [isTimeout, setIsTimeout] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isDemoMode, setIsDemoMode] = useState(false)
+
+  // 데모 모드 확인
+  useEffect(() => {
+    const checkDemoMode = () => {
+      const demoMode = localStorage.getItem('demoMode') === 'true'
+      setIsDemoMode(demoMode)
+    }
+    
+    checkDemoMode()
+    
+    // localStorage 변경 감지
+    const handleStorageChange = () => {
+      checkDemoMode()
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
 
   // 3초 타임아웃 설정
   useEffect(() => {
@@ -41,6 +63,12 @@ export function AuthGuard({
   useEffect(() => {
     if (loading) return // 로딩 중이면 대기
 
+    // 데모 모드인 경우 인증 요구하지 않음
+    if (isDemoMode) {
+      console.log('🎮 데모 모드: 인증 없이 접근 허용')
+      return
+    }
+
     if (requireAuth && !user) {
       // 인증이 필요한 페이지인데 로그인하지 않은 경우
       console.log('🚫 인증 필요: 로그인 페이지로 리다이렉트')
@@ -50,7 +78,7 @@ export function AuthGuard({
       console.log('✅ 이미 로그인됨: 스케줄 페이지로 리다이렉트')
       router.push('/schedule/view')
     }
-  }, [user, loading, requireAuth, redirectTo, router])
+  }, [user, loading, requireAuth, redirectTo, router, isDemoMode])
 
   const handleRetry = () => {
     setIsTimeout(false)
@@ -59,8 +87,8 @@ export function AuthGuard({
     window.location.reload()
   }
 
-  // 로딩 중이거나 리다이렉트 중인 경우
-  if (loading) {
+  // 로딩 중이거나 리다이렉트 중인 경우 (데모 모드가 아닌 경우에만)
+  if (loading && !isDemoMode) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
