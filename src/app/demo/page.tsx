@@ -124,7 +124,7 @@ export default function DemoPage() {
             className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             <Square className="w-4 h-4 mr-2" />
-            데모 종료
+            {t('demo.exitDemo')}
           </button>
         </div>
       </div>
@@ -261,7 +261,7 @@ export default function DemoPage() {
             </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
-                데모 모드에서는 수업 관리 기능을 사용할 수 없습니다.
+                {t('demo.featuresDisabled', { feature: t('demo.courseManagement') })}
               </p>
             </div>
           </div>
@@ -277,7 +277,7 @@ export default function DemoPage() {
             </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
-                데모 모드에서는 친구 관리 기능을 사용할 수 없습니다.
+                {t('demo.featuresDisabled', { feature: t('demo.friendManagement') })}
               </p>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function DemoPage() {
             </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
-                데모 모드에서는 설정 기능을 사용할 수 없습니다.
+                {t('demo.featuresDisabled', { feature: t('demo.settings') })}
               </p>
             </div>
           </div>
@@ -316,10 +316,10 @@ export default function DemoPage() {
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                🎮 데모 모드로 실행 중입니다
+                🎮 {t('demo.title')}
               </p>
               <p className="text-xs text-yellow-700 dark:text-yellow-300">
-                실제 데이터가 아닌 샘플 데이터를 보고 있습니다
+                {t('demo.subtitle')}
               </p>
             </div>
           </div>
@@ -328,7 +328,7 @@ export default function DemoPage() {
             className="inline-flex items-center px-3 py-1 border border-yellow-300 dark:border-yellow-600 text-xs font-medium rounded text-yellow-700 dark:text-yellow-300 bg-yellow-50 dark:bg-yellow-800/30 hover:bg-yellow-100 dark:hover:bg-yellow-700/50 transition-colors"
           >
             <Square className="w-3 h-3 mr-1" />
-            데모 종료
+            {t('demo.exitDemo')}
           </button>
         </div>
       </div>

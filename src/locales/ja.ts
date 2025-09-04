@@ -276,6 +276,17 @@ export const ja = {
     }
   },
 
+  // デモページ
+  demo: {
+    title: 'デモモードで実行中です',
+    subtitle: '実際のデータではなく、サンプルデータを表示しています',
+    exitDemo: 'デモ終了',
+    featuresDisabled: 'デモモードでは{feature}機能は使用できません。',
+    courseManagement: '授業管理',
+    friendManagement: '友達管理',
+    settings: '設定'
+  },
+
   // 認証
   auth: {
     timeoutTitle: '認証確認タイムアウト',

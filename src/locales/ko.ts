@@ -232,6 +232,8 @@ export const ko = {
     description: '시간표 관리부터 과제 관리까지, 대학생활을 더욱 체계적이고 효율적으로 만들어보세요. 친구와 과제를 공유하고 함께 성장할 수 있습니다.',
     addFirstCourse: '첫 수업 추가하기',
     viewSchedule: '시간표 보기',
+    tryDemo: '데모 체험하기',
+    exitDemoMode: '데모 모드 종료',
     features: {
       title: '주요 기능',
       subtitle: '스케줄러가 제공하는 핵심 기능들을 확인해보세요',
@@ -274,6 +276,17 @@ export const ko = {
       privacy: 'Privacy Policy',
       terms: 'Terms of Service'
     }
+  },
+
+  // 데모 페이지
+  demo: {
+    title: '데모 모드로 실행 중입니다',
+    subtitle: '실제 데이터가 아닌 샘플 데이터를 보고 있습니다',
+    exitDemo: '데모 종료',
+    featuresDisabled: '데모 모드에서는 {feature} 기능을 사용할 수 없습니다.',
+    courseManagement: '수업 관리',
+    friendManagement: '친구 관리',
+    settings: '설정'
   },
 
   // 인증

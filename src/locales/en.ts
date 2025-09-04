@@ -276,6 +276,17 @@ export const en = {
     }
   },
 
+  // Demo page
+  demo: {
+    title: 'Running in demo mode',
+    subtitle: 'You are viewing sample data, not real data',
+    exitDemo: 'Exit Demo',
+    featuresDisabled: 'The {feature} feature is not available in demo mode.',
+    courseManagement: 'Course Management',
+    friendManagement: 'Friend Management',
+    settings: 'Settings'
+  },
+
   // Authentication
   auth: {
     timeoutTitle: 'Authentication Timeout',
