@@ -6,9 +6,35 @@ import { useLanguage } from '@/lib/language-context';
 import { useTheme } from '@/lib/theme-context';
 import ThemeSwitcher from '@/components/ThemeSwitcher';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
-import { coursesApi, type Course, assignmentsApi, type Assignment } from '@/lib/api';
 import { migrateToPastelColor } from '@/lib/constants';
 import demoData from '@/data/demo-schedule.json';
+
+// 데모 전용 타입 정의
+interface DemoCourse {
+  id: string;
+  course_name: string;
+  course_code: string;
+  professor: string;
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+  room: string;
+  color: string;
+  description: string;
+  is_active: boolean;
+}
+
+interface DemoAssignment {
+  id: string;
+  title: string;
+  description: string;
+  course_id: string;
+  due_date: string;
+  priority: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
 
 const timeSlots = [
   '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30',
@@ -22,8 +48,8 @@ export default function DemoPage() {
   const [selectedDay, setSelectedDay] = useState('monday');
   const [selectedMenu, setSelectedMenu] = useState<'schedule' | 'assignments' | 'courses' | 'friends' | 'settings'>('schedule');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [courses, setCourses] = useState<DemoCourse[]>([]);
+  const [assignments, setAssignments] = useState<DemoAssignment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,7 +93,7 @@ export default function DemoPage() {
     });
   };
 
-  const getCourseHeight = (course: Course) => {
+  const getCourseHeight = (course: DemoCourse) => {
     const startTime = course.start_time;
     const endTime = course.end_time;
     const startIndex = timeSlots.indexOf(startTime);
@@ -75,7 +101,7 @@ export default function DemoPage() {
     return ((endIndex - startIndex) * 40) + 'px';
   };
 
-  const getCourseTop = (course: Course) => {
+  const getCourseTop = (course: DemoCourse) => {
     const startTime = course.start_time;
     const startIndex = timeSlots.indexOf(startTime);
     return (startIndex * 40) + 'px';
@@ -152,10 +178,10 @@ export default function DemoPage() {
                       height: getCourseHeight(course),
                       zIndex: 10 + index
                     }}
-                    title={`${course.name} (${course.start_time} - ${course.end_time})`}
+                    title={`${course.course_name} (${course.start_time} - ${course.end_time})`}
                   >
-                    <div className="truncate">{course.name}</div>
-                    <div className="truncate opacity-90">{course.location}</div>
+                    <div className="truncate">{course.course_name}</div>
+                    <div className="truncate opacity-90">{course.room}</div>
                   </div>
                 ))}
               </div>
