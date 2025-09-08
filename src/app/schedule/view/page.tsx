@@ -1625,16 +1625,16 @@ export default function ScheduleViewPage() {
     <AuthGuard requireAuth={true}>
       <>
         <head>
-          <title>스마트 스케줄러 | 시간표 보기</title>
-          <meta name="description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
-          <meta name="keywords" content="시간표, 스케줄러, 대학생, 과제관리, 수업일정, 스마트스케줄러" />
-          <meta property="og:title" content="스마트 스케줄러 | 시간표 보기" />
-          <meta property="og:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+          <title>スマートスケジューラー | 時間割表示</title>
+          <meta name="description" content="大学生のためのスマートな時間割管理システム。授業スケジュール、課題管理、友達との共有まで全てを一箇所で管理できます。" />
+          <meta name="keywords" content="時間割, スケジューラー, 大学生, 課題管理, 授業スケジュール, スマートスケジューラー" />
+          <meta property="og:title" content="スマートスケジューラー | 時間割表示" />
+          <meta property="og:description" content="大学生のためのスマートな時間割管理システム。授業スケジュール、課題管理、友達との共有まで全てを一箇所で管理できます。" />
           <meta property="og:type" content="website" />
           <meta property="og:url" content="https://smart-scheduler.vercel.app/schedule/view" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="스마트 스케줄러 | 시간표 보기" />
-          <meta name="twitter:description" content="대학생을 위한 스마트한 시간표 관리 시스템. 수업 일정, 과제 관리, 친구와의 공유까지 모든 것을 한 곳에서 관리하세요." />
+          <meta name="twitter:title" content="スマートスケジューラー | 時間割表示" />
+          <meta name="twitter:description" content="大学生のためのスマートな時間割管理システム。授業スケジュール、課題管理、友達との共有まで全てを一箇所で管理できます。" />
           <meta name="robots" content="index, follow" />
           <link rel="canonical" href="https://smart-scheduler.vercel.app/schedule/view" />
         </head>

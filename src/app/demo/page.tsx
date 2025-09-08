@@ -108,26 +108,6 @@ export default function DemoPage() {
 
   const renderSchedule = () => (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {t('schedule.view.title')}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            {t('schedule.view.subtitle')}
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={() => window.location.href = '/'}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            <Square className="w-4 h-4 mr-2" />
-            {t('demo.exitDemo')}
-          </button>
-        </div>
-      </div>
 
       {/* Day Selector */}
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
@@ -193,17 +173,6 @@ export default function DemoPage() {
 
   const renderAssignments = () => (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-            {t('assignments.list.title')}
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            {t('assignments.list.subtitle')}
-          </p>
-        </div>
-      </div>
 
       {/* Assignment List */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
@@ -253,12 +222,6 @@ export default function DemoPage() {
       case 'courses':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t('sidebarContent.courses.title')}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {t('sidebarContent.courses.description')}
-            </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
                 {t('demo.featuresDisabled', { feature: t('demo.courseManagement') })}
@@ -269,12 +232,6 @@ export default function DemoPage() {
       case 'friends':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t('friends.title')}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {t('friends.title')}
-            </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
                 {t('demo.featuresDisabled', { feature: t('demo.friendManagement') })}
@@ -285,12 +242,6 @@ export default function DemoPage() {
       case 'settings':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {t('sidebarContent.settings.title')}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {t('sidebarContent.settings.description')}
-            </p>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <p className="text-gray-600 dark:text-gray-400">
                 {t('demo.featuresDisabled', { feature: t('demo.settings') })}
