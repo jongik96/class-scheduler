@@ -555,9 +555,6 @@ function ScheduleViewContent() {
       case 'courses':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.courses.title')}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.courses.description')}</p>
-            
             {/* Course List */}
             <div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -686,9 +683,6 @@ function ScheduleViewContent() {
       case 'settings':
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('sidebarContent.settings.title')}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{t('sidebarContent.settings.description')}</p>
-            
             {/* Account Settings */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('settings.account.title')}</h3>
@@ -1025,7 +1019,6 @@ function FriendsManagementPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{t('friends.title')}</h2>
         <div className="flex flex-col gap-3 w-full sm:w-auto">
           <button
             onClick={() => setShowSearch(!showSearch)}
@@ -1372,14 +1365,6 @@ function AssignmentListContent() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-             {t('assignments.list.title')}
-           </h2>
-           <p className="text-gray-600 dark:text-gray-400 mt-2">
-             {t('assignments.list.subtitle')}
-           </p>
-        </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={loadAssignments}
