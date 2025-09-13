@@ -1178,7 +1178,15 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.full_name || friend.friend_profile?.nickname || `ID: ${friend.friend_id}`}
+                        {(() => {
+                          console.log('Friend data for display:', {
+                            friend_id: friend.friend_id,
+                            friend_profile: friend.friend_profile,
+                            full_name: friend.friend_profile?.full_name,
+                            nickname: friend.friend_profile?.nickname
+                          });
+                          return friend.friend_profile?.full_name || friend.friend_profile?.nickname || `ID: ${friend.friend_id}`;
+                        })()}
                       </p>
                     </div>
                   </div>

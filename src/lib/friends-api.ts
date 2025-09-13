@@ -159,9 +159,11 @@ export async function getFriends(): Promise<Friend[]> {
     }
     
     console.log('Raw friends data:', friends);
+    console.log('Number of friends found:', friends?.length || 0);
     
     if (!friends || friends.length === 0) {
-      console.log('No friends found');
+      console.log('No friends found - you need to add friends first!');
+      console.log('Try using the invite feature to add friends.');
       return [];
     }
     
@@ -173,6 +175,7 @@ export async function getFriends(): Promise<Friend[]> {
     console.log('Friend IDs to fetch profiles for:', friendIds);
     
     // Try to get profiles for all friends
+    console.log('Attempting to fetch profiles for friend IDs:', friendIds);
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
@@ -180,6 +183,21 @@ export async function getFriends(): Promise<Friend[]> {
     
     console.log('Profiles fetched:', profiles);
     console.log('Profile error if any:', profileError);
+    
+    // If no profiles found, try to fetch them one by one to debug
+    if (!profiles || profiles.length === 0) {
+      console.log('No profiles found in batch query. Trying individual queries...');
+      for (const friendId of friendIds) {
+        const { data: singleProfile, error: singleError } = await supabase
+          .from('profiles')
+          .select('id, full_name, nickname, avatar_url, major, grade')
+          .eq('id', friendId)
+          .single();
+        
+        console.log(`Profile for ${friendId}:`, singleProfile);
+        console.log(`Error for ${friendId}:`, singleError);
+      }
+    }
     
     // Create profile map
     let profileMap = new Map();
