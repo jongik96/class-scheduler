@@ -17,6 +17,7 @@ import {
   updateAssignmentProgress
 } from '@/lib/friends-api';
 import { assignmentsApi, type Assignment } from '@/lib/api';
+import { supabase } from '@/lib/supabase';
 
 export default function AssignmentDetailPage() {
   const { t } = useLanguage();
@@ -38,6 +39,7 @@ export default function AssignmentDetailPage() {
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [progressStatus, setProgressStatus] = useState<'pending' | 'in_progress' | 'completed'>('pending');
   const [progressNotes, setProgressNotes] = useState('');
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (params.id) {
@@ -47,6 +49,21 @@ export default function AssignmentDetailPage() {
       loadAssignmentProgress(params.id as string);
     }
   }, [params.id]);
+
+  // Load current user ID
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          setCurrentUserId(user.id);
+        }
+      } catch (error) {
+        console.error('Error getting current user:', error);
+      }
+    };
+    getCurrentUser();
+  }, []);
 
   const loadAssignment = async (assignmentId: string) => {
     try {
@@ -319,8 +336,16 @@ export default function AssignmentDetailPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.progress')}</h3>
               <div className="space-y-6">
                 {(() => {
+                  // Debug logging
+                  console.log('Debug - currentUserId:', currentUserId);
+                  console.log('Debug - assignmentProgress:', assignmentProgress);
+                  
                   // Find current user's progress
-                  const currentUserProgress = assignmentProgress.find(p => p.user_id === assignment?.user_id);
+                  const currentUserProgress = currentUserId 
+                    ? assignmentProgress.find(p => p.user_id === currentUserId)
+                    : null;
+                  
+                  console.log('Debug - currentUserProgress:', currentUserProgress);
                   
                   // Calculate team average progress
                   const teamAverageProgress = assignmentProgress.length > 0 
