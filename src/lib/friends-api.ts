@@ -159,11 +159,9 @@ export async function getFriends(): Promise<Friend[]> {
     }
     
     console.log('Raw friends data:', friends);
-    console.log('Number of friends found:', friends?.length || 0);
     
     if (!friends || friends.length === 0) {
-      console.log('No friends found - you need to add friends first!');
-      console.log('Try using the invite feature to add friends.');
+      console.log('No friends found');
       return [];
     }
     
@@ -175,7 +173,6 @@ export async function getFriends(): Promise<Friend[]> {
     console.log('Friend IDs to fetch profiles for:', friendIds);
     
     // Try to get profiles for all friends
-    console.log('Attempting to fetch profiles for friend IDs:', friendIds);
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
@@ -184,45 +181,13 @@ export async function getFriends(): Promise<Friend[]> {
     console.log('Profiles fetched:', profiles);
     console.log('Profile error if any:', profileError);
     
-    // If no profiles found, try to fetch them one by one to debug
-    if (!profiles || profiles.length === 0) {
-      console.log('No profiles found in batch query. Trying individual queries...');
-      for (const friendId of friendIds) {
-        const { data: singleProfile, error: singleError } = await supabase
-          .from('profiles')
-          .select('id, full_name, nickname, avatar_url, major, grade')
-          .eq('id', friendId)
-          .single();
-        
-        console.log(`Profile for ${friendId}:`, singleProfile);
-        console.log(`Error for ${friendId}:`, singleError);
-      }
-    }
-    
     // Create profile map
     let profileMap = new Map();
     if (profiles && profiles.length > 0) {
       profileMap = new Map(profiles.map(p => [p.id, p]));
-      console.log('Successfully loaded profiles for friends');
     } else {
       console.log('No profiles found or error occurred. This might be due to RLS policies.');
-      console.log('Profile error details:', profileError);
-      
-      // Try to get at least the current user's profile to test if profiles table is accessible
-      const { data: currentUserProfile, error: currentUserError } = await supabase
-        .from('profiles')
-        .select('id, full_name, nickname, avatar_url, major, grade')
-        .eq('id', user.id)
-        .single();
-      
-      console.log('Current user profile test:', currentUserProfile);
-      console.log('Current user profile error:', currentUserError);
-      
-      if (currentUserError) {
-        console.log('Cannot access profiles table at all. RLS policies may be blocking access.');
-      } else {
-        console.log('Can access current user profile, but not friend profiles. RLS policy issue.');
-      }
+      console.log('Friends will show as ID only until profiles are accessible.');
     }
     
     console.log('Profile map created:', profileMap);
@@ -234,6 +199,7 @@ export async function getFriends(): Promise<Friend[]> {
       const otherPersonProfile = profileMap.get(otherPersonId);
       
       console.log(`Friend ${friend.id}: otherPersonId=${otherPersonId}, profile=`, otherPersonProfile);
+      console.log(`Profile full_name: ${otherPersonProfile?.full_name}, nickname: ${otherPersonProfile?.nickname}`);
       
       return {
         ...friend,
