@@ -443,43 +443,58 @@ export default function AssignmentDetailPage() {
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   {sharedFriends.map((share) => (
-                    <div key={share.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                          <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                    <div key={share.id} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                      {/* Main content row */}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center space-x-3 min-w-0 flex-1">
+                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                              {share.shared_with_profile?.full_name || share.shared_with_profile?.nickname || t('common.unknown')}
+                            </p>
+                            {share.shared_with_profile?.nickname && share.shared_with_profile?.full_name && (
+                              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                {share.shared_with_profile.nickname}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {share.shared_with_profile?.full_name || share.shared_with_profile?.nickname || t('common.unknown')}
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {share.shared_with_profile?.nickname}
-                          </p>
+                        
+                        {/* Action buttons */}
+                        <div className="flex items-center space-x-2 flex-shrink-0">
+                          <button
+                            onClick={() => setShowProgressViewModal(true)}
+                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded transition-colors"
+                            title={t('assignments.detail.sharedFriends.viewProgress')}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => setShowProgressViewModal(true)}
-                          className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                          title={t('assignments.detail.sharedFriends.viewProgress')}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
+                      
+                      {/* Permission row */}
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           {getPermissionIcon(share.permission)}
-                          <select
-                            value={share.permission}
-                            onChange={(e) => handleUpdateSharePermission(share.id, e.target.value as 'view' | 'edit' | 'admin')}
-                            className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            title={t('assignments.detail.sharedFriends.changePermission')}
-                          >
-                            <option value="view">{t('assignments.detail.shareModal.viewOnly')}</option>
-                            <option value="edit">{t('assignments.detail.shareModal.editPermission')}</option>
-                            <option value="admin">{t('assignments.detail.shareModal.adminPermission')}</option>
-                          </select>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {getPermissionText(share.permission)}
+                          </span>
                         </div>
+                        
+                        <select
+                          value={share.permission}
+                          onChange={(e) => handleUpdateSharePermission(share.id, e.target.value as 'view' | 'edit' | 'admin')}
+                          className="text-xs px-2 py-1 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 min-w-0"
+                          title={t('assignments.detail.sharedFriends.changePermission')}
+                        >
+                          <option value="view">{t('assignments.detail.shareModal.viewOnly')}</option>
+                          <option value="edit">{t('assignments.detail.shareModal.editPermission')}</option>
+                          <option value="admin">{t('assignments.detail.shareModal.adminPermission')}</option>
+                        </select>
                       </div>
                     </div>
                   ))}
