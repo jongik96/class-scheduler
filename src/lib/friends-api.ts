@@ -145,17 +145,16 @@ export async function getFriends(): Promise<Friend[]> {
     
     console.log('Current user ID:', user.id);
 
-    // Get friends first, then fetch profiles separately
-    // This avoids foreign key relationship issues
-    const { data: friends, error } = await supabase
+    // First get friends, then get profiles separately to avoid foreign key issues
+    const { data: friends, error: friendsError } = await supabase
       .from('friends')
       .select('*')
       .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
       .eq('status', 'accepted');
 
-    if (error) {
-      console.error('Error fetching friends:', error);
-      throw error;
+    if (friendsError) {
+      console.error('Error fetching friends:', friendsError);
+      throw friendsError;
     }
     
     console.log('Raw friends data:', friends);
@@ -172,7 +171,7 @@ export async function getFriends(): Promise<Friend[]> {
     
     console.log('Friend IDs to fetch profiles for:', friendIds);
     
-    // Try to get profiles for all friends
+    // Get profiles for all friends
     const { data: profiles, error: profileError } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
@@ -182,24 +181,19 @@ export async function getFriends(): Promise<Friend[]> {
     console.log('Profile error if any:', profileError);
     
     // Create profile map
-    let profileMap = new Map();
+    const profileMap = new Map();
     if (profiles && profiles.length > 0) {
       profileMap = new Map(profiles.map(p => [p.id, p]));
+      console.log('Profile map created successfully');
     } else {
-      console.log('No profiles found or error occurred. This might be due to RLS policies.');
-      console.log('Friends will show as ID only until profiles are accessible.');
+      console.log('No profiles found - this might be due to RLS policies');
     }
     
-    console.log('Profile map created:', profileMap);
-    
-    // Transform friends to always show the other person as friend_id
-    const transformedFriends = friends.map(friend => {
+    // Transform friends to include profile data
+    const friendsWithProfiles = friends.map(friend => {
       const isUserInitiator = friend.user_id === user.id;
       const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
       const otherPersonProfile = profileMap.get(otherPersonId);
-      
-      console.log(`Friend ${friend.id}: otherPersonId=${otherPersonId}, profile=`, otherPersonProfile);
-      console.log(`Profile full_name: ${otherPersonProfile?.full_name}, nickname: ${otherPersonProfile?.nickname}`);
       
       return {
         ...friend,
@@ -208,9 +202,9 @@ export async function getFriends(): Promise<Friend[]> {
         friend_profile: otherPersonProfile
       };
     });
-    
-    console.log('Final transformed friends:', transformedFriends);
-    return transformedFriends;
+
+    console.log('Final friends with profiles:', friendsWithProfiles);
+    return friendsWithProfiles;
   } catch (error) {
     console.error('Friends list retrieval error:', error);
     return [];
