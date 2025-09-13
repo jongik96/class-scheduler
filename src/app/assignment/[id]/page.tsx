@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, Edit, Trash2, Clock, Users, Share2, Eye, Edit3, Crown, X, Check, Plus } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, Clock, Users, Share2, Eye, Edit3, Crown, X } from 'lucide-react';
 import { useLanguage } from '@/lib/language-context';
 import { 
   getAssignmentShares, 
@@ -11,7 +11,6 @@ import {
   getFriends, 
   Friend,
   shareAssignmentWithFriends,
-  removeAssignmentShare,
   updateAssignmentSharePermission,
   getAssignmentProgress,
   AssignmentProgress,
@@ -139,16 +138,6 @@ export default function AssignmentDetailPage() {
     }
   };
 
-  const handleRemoveShare = async (shareId: string) => {
-    try {
-      const success = await removeAssignmentShare(shareId);
-      if (success && assignment) {
-        await loadAssignmentShares(assignment.id);
-      }
-    } catch (error) {
-      console.error('Error removing share:', error);
-    }
-  };
 
   const handleUpdateSharePermission = async (shareId: string, permission: 'view' | 'edit' | 'admin') => {
     try {
@@ -328,63 +317,99 @@ export default function AssignmentDetailPage() {
             {/* Progress Tracking */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('assignments.detail.progress')}</h3>
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {(() => {
                   // Find current user's progress
                   const currentUserProgress = assignmentProgress.find(p => p.user_id === assignment?.user_id);
                   
-                  if (currentUserProgress) {
-                    return (
+                  // Calculate team average progress
+                  const teamAverageProgress = assignmentProgress.length > 0 
+                    ? Math.round(assignmentProgress.reduce((sum, p) => sum + p.progress_percentage, 0) / assignmentProgress.length)
+                    : 0;
+                  
+                  return (
+                    <div className="space-y-4">
+                      {/* Personal Progress */}
                       <div>
-                        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                          <span>{t('assignments.detail.progressPercent')}</span>
-                          <span>{currentUserProgress.progress_percentage}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div 
-                            className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                            style={{ width: `${currentUserProgress.progress_percentage}%` }}
-                          ></div>
-                        </div>
-                        <div className="mt-2">
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            currentUserProgress.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
-                            currentUserProgress.status === 'in_progress' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
-                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
-                          }`}>
-                            {currentUserProgress.status === 'completed' ? t('assignments.detail.progressModal.completed') :
-                             currentUserProgress.status === 'in_progress' ? t('assignments.detail.progressModal.inProgress') : 
-                             t('assignments.detail.progressModal.pending')}
-                          </span>
-                        </div>
-                        {currentUserProgress.notes && (
-                          <div className="mt-2">
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              <strong>메모:</strong> {currentUserProgress.notes}
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('assignments.detail.progressSection.personalProgress')}</h4>
+                        {currentUserProgress ? (
+                          <div>
+                            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                              <span>진행률</span>
+                              <span>{currentUserProgress.progress_percentage}%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div 
+                                className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                                style={{ width: `${currentUserProgress.progress_percentage}%` }}
+                              ></div>
+                            </div>
+                            <div className="mt-2">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                currentUserProgress.status === 'completed' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' :
+                                currentUserProgress.status === 'in_progress' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' :
+                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+                              }`}>
+                                {currentUserProgress.status === 'completed' ? t('assignments.detail.progressModal.completed') :
+                                 currentUserProgress.status === 'in_progress' ? t('assignments.detail.progressModal.inProgress') : 
+                                 t('assignments.detail.progressModal.pending')}
+                              </span>
+                            </div>
+                            {currentUserProgress.notes && (
+                              <div className="mt-2">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  <strong>메모:</strong> {currentUserProgress.notes}
+                                </p>
+                              </div>
+                            )}
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                              마지막 업데이트: {new Date(currentUserProgress.updated_at).toLocaleString()}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
+                              <span>진행률</span>
+                              <span>0%</span>
+                            </div>
+                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '0%' }}></div>
+                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+                              {t('assignments.detail.noProgress')}
                             </p>
                           </div>
                         )}
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                          마지막 업데이트: {new Date(currentUserProgress.updated_at).toLocaleString()}
-                        </div>
                       </div>
-                    );
-                  } else {
-                    return (
+
+                      {/* Team Progress */}
                       <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t('assignments.detail.progressSection.teamProgress')} 
+                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                            ({assignmentProgress.length}{t('assignments.detail.progressSection.participants')})
+                          </span>
+                        </h4>
                         <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                          <span>{t('assignments.detail.progressPercent')}</span>
-                          <span>0%</span>
+                          <span>{t('assignments.detail.progressSection.averageProgress')}</span>
+                          <span>{teamAverageProgress}%</span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '0%' }}></div>
+                          <div 
+                            className="bg-green-600 h-2 rounded-full transition-all duration-300" 
+                            style={{ width: `${teamAverageProgress}%` }}
+                          ></div>
                         </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                          {t('assignments.detail.noProgress')}
-                        </p>
+                        {assignmentProgress.length > 0 && (
+                          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            {assignmentProgress.filter(p => p.status === 'completed').length}{t('assignments.detail.progressSection.completed')}, 
+                            {assignmentProgress.filter(p => p.status === 'in_progress').length}{t('assignments.detail.progressSection.inProgress')}, 
+                            {assignmentProgress.filter(p => p.status === 'pending').length}{t('assignments.detail.progressSection.pending')}
+                          </div>
+                        )}
                       </div>
-                    );
-                  }
+                    </div>
+                  );
                 })()}
               </div>
             </div>
@@ -442,19 +467,19 @@ export default function AssignmentDetailPage() {
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center space-x-2">
                           {getPermissionIcon(share.permission)}
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {getPermissionText(share.permission)}
-                          </span>
+                          <select
+                            value={share.permission}
+                            onChange={(e) => handleUpdateSharePermission(share.id, e.target.value as 'view' | 'edit' | 'admin')}
+                            className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            title="권한 변경"
+                          >
+                            <option value="view">{t('assignments.detail.shareModal.viewOnly')}</option>
+                            <option value="edit">{t('assignments.detail.shareModal.editPermission')}</option>
+                            <option value="admin">{t('assignments.detail.shareModal.adminPermission')}</option>
+                          </select>
                         </div>
-                        <button
-                          onClick={() => handleRemoveShare(share.id)}
-                          className="p-1 text-gray-500 hover:text-red-600 transition-colors"
-                          title="공유 제거"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
                       </div>
                     </div>
                   ))}

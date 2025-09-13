@@ -487,6 +487,15 @@ export const ko = {
         progressLabel: '진행률',
         memoLabel: '메모',
         lastUpdated: '업데이트'
+      },
+      progressSection: {
+        personalProgress: '내 진행상황',
+        teamProgress: '팀 전체 진행상황',
+        averageProgress: '평균 진행률',
+        participants: '명 참여',
+        completed: '명 완료',
+        inProgress: '명 진행중',
+        pending: '명 대기중'
       }
     }
   },
