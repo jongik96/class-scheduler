@@ -145,118 +145,85 @@ export async function getFriends(): Promise<Friend[]> {
     
     console.log('Current user ID:', user.id);
 
-    // Try to get friends with profiles using a single query with JOIN
-    // This approach should work better with RLS policies
+    // Get friends first, then fetch profiles separately
+    // This avoids foreign key relationship issues
     const { data: friends, error } = await supabase
       .from('friends')
-      .select(`
-        *,
-        friend_profile:profiles!friends_friend_id_fkey(
-          id,
-          full_name,
-          nickname,
-          avatar_url,
-          major,
-          grade
-        )
-      `)
+      .select('*')
       .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
       .eq('status', 'accepted');
 
     if (error) {
-      console.error('Error fetching friends with profiles:', error);
-      
-      // Fallback: try without profiles
-      console.log('Falling back to friends without profiles...');
-      const { data: friendsOnly, error: friendsError } = await supabase
-        .from('friends')
-        .select('*')
-        .or(`user_id.eq.${user.id},friend_id.eq.${user.id}`)
-        .eq('status', 'accepted');
-      
-      if (friendsError) {
-        console.error('Error fetching friends:', friendsError);
-        throw friendsError;
-      }
-      
-      console.log('Raw friends data (no profiles):', friendsOnly);
-      
-      if (!friendsOnly || friendsOnly.length === 0) {
-        console.log('No friends found');
-        return [];
-      }
-      
-      // Transform friends without profiles
-      const transformedFriends = friendsOnly.map(friend => {
-        const isUserInitiator = friend.user_id === user.id;
-        const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
-        
-        return {
-          ...friend,
-          user_id: user.id,
-          friend_id: otherPersonId,
-          friend_profile: null
-        };
-      });
-      
-      return transformedFriends;
+      console.error('Error fetching friends:', error);
+      throw error;
     }
     
-    console.log('Raw friends data with profiles:', friends);
+    console.log('Raw friends data:', friends);
     
     if (!friends || friends.length === 0) {
       console.log('No friends found');
       return [];
     }
     
+    // Get all unique friend IDs (excluding the current user)
+    const friendIds = friends.map(friend => 
+      friend.user_id === user.id ? friend.friend_id : friend.user_id
+    );
+    
+    console.log('Friend IDs to fetch profiles for:', friendIds);
+    
+    // Try to get profiles for all friends
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, full_name, nickname, avatar_url, major, grade')
+      .in('id', friendIds);
+    
+    console.log('Profiles fetched:', profiles);
+    console.log('Profile error if any:', profileError);
+    
+    // Create profile map
+    let profileMap = new Map();
+    if (profiles && profiles.length > 0) {
+      profileMap = new Map(profiles.map(p => [p.id, p]));
+      console.log('Successfully loaded profiles for friends');
+    } else {
+      console.log('No profiles found or error occurred. This might be due to RLS policies.');
+      console.log('Profile error details:', profileError);
+      
+      // Try to get at least the current user's profile to test if profiles table is accessible
+      const { data: currentUserProfile, error: currentUserError } = await supabase
+        .from('profiles')
+        .select('id, full_name, nickname, avatar_url, major, grade')
+        .eq('id', user.id)
+        .single();
+      
+      console.log('Current user profile test:', currentUserProfile);
+      console.log('Current user profile error:', currentUserError);
+      
+      if (currentUserError) {
+        console.log('Cannot access profiles table at all. RLS policies may be blocking access.');
+      } else {
+        console.log('Can access current user profile, but not friend profiles. RLS policy issue.');
+      }
+    }
+    
+    console.log('Profile map created:', profileMap);
+    
     // Transform friends to always show the other person as friend_id
     const transformedFriends = friends.map(friend => {
       const isUserInitiator = friend.user_id === user.id;
       const otherPersonId = isUserInitiator ? friend.friend_id : friend.user_id;
+      const otherPersonProfile = profileMap.get(otherPersonId);
       
-      // For friends where current user is the initiator, we have friend_profile
-      // For friends where current user is the target, we need to get the initiator's profile
-      let profile = null;
-      if (isUserInitiator) {
-        profile = friend.friend_profile;
-      } else {
-        // We need to fetch the profile of the user who initiated the friendship
-        // This is a limitation of the current JOIN approach
-        profile = null;
-      }
-      
-      console.log(`Friend ${friend.id}: otherPersonId=${otherPersonId}, isUserInitiator=${isUserInitiator}, profile=`, profile);
+      console.log(`Friend ${friend.id}: otherPersonId=${otherPersonId}, profile=`, otherPersonProfile);
       
       return {
         ...friend,
         user_id: user.id,
         friend_id: otherPersonId,
-        friend_profile: profile
+        friend_profile: otherPersonProfile
       };
     });
-    
-    // For friends where we don't have profiles, try to fetch them separately
-    const friendsNeedingProfiles = transformedFriends.filter(f => !f.friend_profile);
-    if (friendsNeedingProfiles.length > 0) {
-      console.log('Fetching profiles for friends where we are the target...');
-      
-      const friendIds = friendsNeedingProfiles.map(f => f.friend_id);
-      const { data: additionalProfiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, full_name, nickname, avatar_url, major, grade')
-        .in('id', friendIds);
-      
-      if (!profileError && additionalProfiles) {
-        const additionalProfileMap = new Map(additionalProfiles.map(p => [p.id, p]));
-        
-        // Update friends that needed additional profile fetch
-        transformedFriends.forEach(friend => {
-          if (!friend.friend_profile) {
-            friend.friend_profile = additionalProfileMap.get(friend.friend_id) || null;
-          }
-        });
-      }
-    }
     
     console.log('Final transformed friends:', transformedFriends);
     return transformedFriends;
