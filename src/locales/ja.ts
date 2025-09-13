@@ -453,7 +453,53 @@ export const ja = {
       editPermission: '編集',
       viewPermission: '表示',
       loading: '読み込み中...',
-      noCourse: '授業情報なし'
+      noCourse: '授業情報なし',
+      shareModal: {
+        title: '友達と課題を共有',
+        permissionLabel: '権限設定',
+        friendSelectionLabel: '友達選択',
+        shareButton: '共有',
+        cancelButton: 'キャンセル',
+        viewOnly: '表示のみ',
+        editPermission: '編集可能',
+        adminPermission: '管理者権限',
+        noAvailableFriends: '共有可能な友達がいません。すべての友達が既にこの課題にアクセスしています。'
+      },
+      progressModal: {
+        title: '進捗状況更新',
+        progressLabel: '進捗率',
+        statusLabel: 'ステータス',
+        notesLabel: 'メモ（任意）',
+        notesPlaceholder: '進捗状況についてメモを入力してください...',
+        updateButton: '更新',
+        cancelButton: 'キャンセル',
+        pending: '待機中',
+        inProgress: '進行中',
+        completed: '完了'
+      },
+      progressViewModal: {
+        title: '友達の進捗状況',
+        noProgress: 'まだ進捗状況がありません。',
+        progressLabel: '進捗率',
+        memoLabel: 'メモ',
+        lastUpdated: '更新'
+      },
+      progressSection: {
+        personalProgress: '私の進捗状況',
+        teamProgress: 'チーム全体の進捗状況',
+        averageProgress: '平均進捗率',
+        participants: '名参加',
+        completed: '名完了',
+        inProgress: '名進行中',
+        pending: '名待機中',
+        progressRate: '進捗率',
+        memo: 'メモ',
+        lastUpdate: '最終更新'
+      },
+      sharedFriends: {
+        viewProgress: '進捗状況表示',
+        changePermission: '権限変更'
+      }
     }
   },
 

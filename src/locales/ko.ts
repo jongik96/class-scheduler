@@ -495,7 +495,14 @@ export const ko = {
         participants: '명 참여',
         completed: '명 완료',
         inProgress: '명 진행중',
-        pending: '명 대기중'
+        pending: '명 대기중',
+        progressRate: '진행률',
+        memo: '메모',
+        lastUpdate: '마지막 업데이트'
+      },
+      sharedFriends: {
+        viewProgress: '진행상황 보기',
+        changePermission: '권한 변경'
       }
     }
   },

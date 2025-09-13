@@ -453,7 +453,53 @@ export const en = {
       editPermission: 'Edit',
       viewPermission: 'View',
       loading: 'Loading...',
-      noCourse: 'No course info'
+      noCourse: 'No course info',
+      shareModal: {
+        title: 'Share Assignment with Friends',
+        permissionLabel: 'Permission Settings',
+        friendSelectionLabel: 'Select Friends',
+        shareButton: 'Share',
+        cancelButton: 'Cancel',
+        viewOnly: 'View Only',
+        editPermission: 'Edit Permission',
+        adminPermission: 'Admin Permission',
+        noAvailableFriends: 'No friends available to share with. All friends already have access to this assignment.'
+      },
+      progressModal: {
+        title: 'Update Progress',
+        progressLabel: 'Progress Rate',
+        statusLabel: 'Status',
+        notesLabel: 'Notes (Optional)',
+        notesPlaceholder: 'Enter notes about your progress...',
+        updateButton: 'Update',
+        cancelButton: 'Cancel',
+        pending: 'Pending',
+        inProgress: 'In Progress',
+        completed: 'Completed'
+      },
+      progressViewModal: {
+        title: 'Friends\' Progress',
+        noProgress: 'No progress yet.',
+        progressLabel: 'Progress Rate',
+        memoLabel: 'Memo',
+        lastUpdated: 'Updated'
+      },
+      progressSection: {
+        personalProgress: 'My Progress',
+        teamProgress: 'Team Overall Progress',
+        averageProgress: 'Average Progress Rate',
+        participants: ' participants',
+        completed: ' completed',
+        inProgress: ' in progress',
+        pending: ' pending',
+        progressRate: 'Progress Rate',
+        memo: 'Memo',
+        lastUpdate: 'Last Update'
+      },
+      sharedFriends: {
+        viewProgress: 'View Progress',
+        changePermission: 'Change Permission'
+      }
     }
   },
 

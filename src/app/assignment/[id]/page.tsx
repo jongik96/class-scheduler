@@ -335,7 +335,7 @@ export default function AssignmentDetailPage() {
                         {currentUserProgress ? (
                           <div>
                             <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                              <span>진행률</span>
+                              <span>{t('assignments.detail.progressSection.progressRate')}</span>
                               <span>{currentUserProgress.progress_percentage}%</span>
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -358,18 +358,18 @@ export default function AssignmentDetailPage() {
                             {currentUserProgress.notes && (
                               <div className="mt-2">
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  <strong>메모:</strong> {currentUserProgress.notes}
+                                  <strong>{t('assignments.detail.progressSection.memo')}:</strong> {currentUserProgress.notes}
                                 </p>
                               </div>
                             )}
                             <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                              마지막 업데이트: {new Date(currentUserProgress.updated_at).toLocaleString()}
+                              {t('assignments.detail.progressSection.lastUpdate')}: {new Date(currentUserProgress.updated_at).toLocaleString()}
                             </div>
                           </div>
                         ) : (
                           <div>
                             <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                              <span>진행률</span>
+                              <span>{t('assignments.detail.progressSection.progressRate')}</span>
                               <span>0%</span>
                             </div>
                             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -463,7 +463,7 @@ export default function AssignmentDetailPage() {
                         <button
                           onClick={() => setShowProgressViewModal(true)}
                           className="p-1 text-gray-500 hover:text-blue-600 transition-colors"
-                          title={t('assignments.detail.progressViewModal.title')}
+                          title={t('assignments.detail.sharedFriends.viewProgress')}
                         >
                           <Eye className="w-4 h-4" />
                         </button>
@@ -473,7 +473,7 @@ export default function AssignmentDetailPage() {
                             value={share.permission}
                             onChange={(e) => handleUpdateSharePermission(share.id, e.target.value as 'view' | 'edit' | 'admin')}
                             className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            title="권한 변경"
+                            title={t('assignments.detail.sharedFriends.changePermission')}
                           >
                             <option value="view">{t('assignments.detail.shareModal.viewOnly')}</option>
                             <option value="edit">{t('assignments.detail.shareModal.editPermission')}</option>
