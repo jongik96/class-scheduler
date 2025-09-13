@@ -457,7 +457,36 @@ export const ko = {
       editPermission: '편집',
       viewPermission: '보기',
       loading: '로딩 중...',
-      noCourse: '수업 정보 없음'
+      noCourse: '수업 정보 없음',
+      shareModal: {
+        title: '친구와 과제 공유하기',
+        permissionLabel: '권한 설정',
+        friendSelectionLabel: '친구 선택',
+        shareButton: '공유하기',
+        cancelButton: '취소',
+        viewOnly: '보기만 가능',
+        editPermission: '편집 가능',
+        adminPermission: '관리자 권한'
+      },
+      progressModal: {
+        title: '진행상황 업데이트',
+        progressLabel: '진행률',
+        statusLabel: '상태',
+        notesLabel: '메모 (선택사항)',
+        notesPlaceholder: '진행상황에 대한 메모를 입력하세요...',
+        updateButton: '업데이트',
+        cancelButton: '취소',
+        pending: '대기중',
+        inProgress: '진행중',
+        completed: '완료'
+      },
+      progressViewModal: {
+        title: '친구들의 진행상황',
+        noProgress: '아직 진행상황이 없습니다.',
+        progressLabel: '진행률',
+        memoLabel: '메모',
+        lastUpdated: '업데이트'
+      }
     }
   },
 

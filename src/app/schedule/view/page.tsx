@@ -1170,15 +1170,7 @@ function FriendsManagementPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {friends.map((friend) => {
-                console.log('Rendering friend:', {
-                  id: friend.id,
-                  friend_id: friend.friend_id,
-                  friend_profile: friend.friend_profile,
-                  full_name: friend.friend_profile?.full_name,
-                  nickname: friend.friend_profile?.nickname
-                });
-                return (
+              {friends.map((friend) => (
                 <div key={friend.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-[#E0F2FE] dark:bg-[#BAE1FF]/20 rounded-full flex items-center justify-center">
@@ -1202,8 +1194,7 @@ function FriendsManagementPage() {
                     {t('common.delete')}
                   </button>
                 </div>
-                );
-              })}
+              ))}
             </div>
           )}
         </div>

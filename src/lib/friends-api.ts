@@ -143,9 +143,7 @@ export async function getFriends(): Promise<Friend[]> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
     
-    console.log('Current user ID:', user.id);
-
-    // First get friends, then get profiles separately to avoid foreign key issues
+    // Get friends and their profiles
     const { data: friends, error: friendsError } = await supabase
       .from('friends')
       .select('*')
@@ -157,10 +155,7 @@ export async function getFriends(): Promise<Friend[]> {
       throw friendsError;
     }
     
-    console.log('Raw friends data:', friends);
-    
     if (!friends || friends.length === 0) {
-      console.log('No friends found');
       return [];
     }
     
@@ -169,45 +164,35 @@ export async function getFriends(): Promise<Friend[]> {
       friend.user_id === user.id ? friend.friend_id : friend.user_id
     );
     
-    console.log('Friend IDs to fetch profiles for:', friendIds);
-    
     // Get profiles for all friends
-    console.log('Attempting to fetch profiles for friend IDs:', friendIds);
-    const { data: profiles, error: profileError } = await supabase
+    let { data: profiles } = await supabase
       .from('profiles')
       .select('id, full_name, nickname, avatar_url, major, grade')
       .in('id', friendIds);
     
-    console.log('Profiles fetched:', profiles);
-    console.log('Profile error if any:', profileError);
-    
-    // If no profiles found, try to fetch current user's profile to test RLS
+    // If no profiles found, try individual queries
     if (!profiles || profiles.length === 0) {
-      console.log('No profiles found for friends. Testing RLS with current user profile...');
-      const { data: currentUserProfile, error: currentUserError } = await supabase
-        .from('profiles')
-        .select('id, full_name, nickname, avatar_url, major, grade')
-        .eq('id', user.id)
-        .single();
+      const individualProfiles = [];
       
-      console.log('Current user profile (for RLS test):', currentUserProfile);
-      console.log('Current user profile error:', currentUserError);
-      
-      if (currentUserProfile) {
-        console.log('✅ Can access current user profile - RLS is working');
-        console.log('❌ Cannot access friend profiles - RLS policy issue');
-      } else {
-        console.log('❌ Cannot access any profiles - RLS blocking all access');
+      for (const friendId of friendIds) {
+        const { data: singleProfile } = await supabase
+          .from('profiles')
+          .select('id, full_name, nickname, avatar_url, major, grade')
+          .eq('id', friendId)
+          .single();
+        
+        if (singleProfile) {
+          individualProfiles.push(singleProfile);
+        }
       }
+      
+      profiles = individualProfiles;
     }
     
     // Create profile map
     let profileMap = new Map();
     if (profiles && profiles.length > 0) {
       profileMap = new Map(profiles.map(p => [p.id, p]));
-      console.log('Profile map created successfully');
-    } else {
-      console.log('No profiles found - this might be due to RLS policies');
     }
     
     // Transform friends to include profile data
@@ -224,7 +209,6 @@ export async function getFriends(): Promise<Friend[]> {
       };
     });
 
-    console.log('Final friends with profiles:', friendsWithProfiles);
     return friendsWithProfiles;
   } catch (error) {
     console.error('Friends list retrieval error:', error);
@@ -313,7 +297,7 @@ interface UserProfile {
 }
 
 // Search users
-export async function searchUsers(_query: string): Promise<UserProfile[]> {
+export async function searchUsers(query: string): Promise<UserProfile[]> {
   try {
     // 임시로 비활성화 - profiles 테이블 문제 해결 후 활성화
     console.log('User search temporarily disabled - profiles table not properly configured');
@@ -423,6 +407,191 @@ export async function getAssignmentShares(assignmentId: string): Promise<Assignm
   } catch (error) {
     console.error('Assignment shares retrieval error:', error);
     return [];
+  }
+}
+
+// Share assignment with friends
+export async function shareAssignmentWithFriends(
+  assignmentId: string, 
+  friendIds: string[], 
+  permission: 'view' | 'edit' | 'admin' = 'view'
+): Promise<boolean> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User is not logged in.');
+
+    const shares = friendIds.map(friendId => ({
+      assignment_id: assignmentId,
+      shared_by: user.id,
+      shared_with: friendId,
+      permission
+    }));
+
+    const { error } = await supabase
+      .from('assignment_shares')
+      .insert(shares);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Assignment sharing error:', error);
+    return false;
+  }
+}
+
+// Remove assignment share
+export async function removeAssignmentShare(shareId: string): Promise<boolean> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User is not logged in.');
+
+    const { error } = await supabase
+      .from('assignment_shares')
+      .delete()
+      .eq('id', shareId)
+      .eq('shared_by', user.id);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Assignment share removal error:', error);
+    return false;
+  }
+}
+
+// Update assignment share permission
+export async function updateAssignmentSharePermission(
+  shareId: string, 
+  permission: 'view' | 'edit' | 'admin'
+): Promise<boolean> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User is not logged in.');
+
+    const { error } = await supabase
+      .from('assignment_shares')
+      .update({ permission })
+      .eq('id', shareId)
+      .eq('shared_by', user.id);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error('Assignment share permission update error:', error);
+    return false;
+  }
+}
+
+// Assignment progress tracking types
+export interface AssignmentProgress {
+  id: string;
+  assignment_id: string;
+  user_id: string;
+  progress_percentage: number;
+  status: 'pending' | 'in_progress' | 'completed';
+  notes?: string;
+  updated_at: string;
+  user_profile?: {
+    full_name: string;
+    nickname: string;
+    avatar_url?: string;
+  };
+}
+
+// Get assignment progress for all users
+export async function getAssignmentProgress(assignmentId: string): Promise<AssignmentProgress[]> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User is not logged in.');
+
+    // Get all progress entries for this assignment
+    const { data: progress, error } = await supabase
+      .from('assignment_progress')
+      .select('*')
+      .eq('assignment_id', assignmentId)
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    
+    if (!progress || progress.length === 0) return [];
+    
+    // Get user profiles for all progress entries
+    const userIds = progress.map(p => p.user_id);
+    const { data: profiles, error: profileError } = await supabase
+      .from('profiles')
+      .select('id, full_name, nickname, avatar_url')
+      .in('id', userIds);
+    
+    if (profileError) {
+      console.error('Profile retrieval error:', profileError);
+      return progress; // Return progress without profiles if profile fetch fails
+    }
+    
+    // Map profiles to progress
+    const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+    const progressWithProfiles = progress.map(p => ({
+      ...p,
+      user_profile: profileMap.get(p.user_id)
+    }));
+    
+    return progressWithProfiles;
+  } catch (error) {
+    console.error('Assignment progress retrieval error:', error);
+    return [];
+  }
+}
+
+// Update assignment progress
+export async function updateAssignmentProgress(
+  assignmentId: string,
+  progressPercentage: number,
+  status: 'pending' | 'in_progress' | 'completed',
+  notes?: string
+): Promise<boolean> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User is not logged in.');
+
+    // Check if progress entry already exists
+    const { data: existingProgress } = await supabase
+      .from('assignment_progress')
+      .select('id')
+      .eq('assignment_id', assignmentId)
+      .eq('user_id', user.id)
+      .single();
+
+    if (existingProgress) {
+      // Update existing progress
+      const { error } = await supabase
+        .from('assignment_progress')
+        .update({
+          progress_percentage: progressPercentage,
+          status,
+          notes,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingProgress.id);
+
+      if (error) throw error;
+    } else {
+      // Create new progress entry
+      const { error } = await supabase
+        .from('assignment_progress')
+        .insert({
+          assignment_id: assignmentId,
+          user_id: user.id,
+          progress_percentage: progressPercentage,
+          status,
+          notes
+        });
+
+      if (error) throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Assignment progress update error:', error);
+    return false;
   }
 }
 

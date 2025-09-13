@@ -83,6 +83,19 @@ CREATE TABLE IF NOT EXISTS assignment_shares (
   UNIQUE(assignment_id, shared_with)
 );
 
+-- 과제 진행상황 추적 테이블
+CREATE TABLE IF NOT EXISTS assignment_progress (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  assignment_id UUID REFERENCES assignments(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  progress_percentage INTEGER CHECK (progress_percentage >= 0 AND progress_percentage <= 100) DEFAULT 0,
+  status TEXT CHECK (status IN ('pending', 'in_progress', 'completed')) DEFAULT 'pending',
+  notes TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(assignment_id, user_id)
+);
+
 -- =====================================================
 -- ROW LEVEL SECURITY (RLS) 활성화
 -- =====================================================
@@ -93,6 +106,7 @@ ALTER TABLE assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE friends ENABLE ROW LEVEL SECURITY;
 ALTER TABLE friend_invites ENABLE ROW LEVEL SECURITY;
 ALTER TABLE assignment_shares ENABLE ROW LEVEL SECURITY;
+ALTER TABLE assignment_progress ENABLE ROW LEVEL SECURITY;
 
 -- =====================================================
 -- 보안 정책 (Policies)
@@ -183,6 +197,26 @@ CREATE POLICY "Users can update their own shares" ON assignment_shares
 CREATE POLICY "Users can delete their own shares" ON assignment_shares
   FOR DELETE USING (auth.uid() = shared_by);
 
+-- 과제 진행상황 테이블 정책
+CREATE POLICY "Users can view assignment progress" ON assignment_progress
+  FOR SELECT USING (
+    auth.uid() = user_id OR 
+    EXISTS (
+      SELECT 1 FROM assignment_shares 
+      WHERE assignment_id = assignment_progress.assignment_id 
+      AND shared_with = auth.uid()
+    )
+  );
+
+CREATE POLICY "Users can update their own progress" ON assignment_progress
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own progress" ON assignment_progress
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own progress" ON assignment_progress
+  FOR DELETE USING (auth.uid() = user_id);
+
 -- =====================================================
 -- 인덱스 생성
 -- =====================================================
@@ -217,6 +251,11 @@ CREATE INDEX IF NOT EXISTS idx_friend_invites_status ON friend_invites(status);
 -- 과제 공유 인덱스
 CREATE INDEX IF NOT EXISTS idx_assignment_shares_assignment ON assignment_shares(assignment_id);
 CREATE INDEX IF NOT EXISTS idx_assignment_shares_shared_with ON assignment_shares(shared_with);
+
+-- 과제 진행상황 인덱스
+CREATE INDEX IF NOT EXISTS idx_assignment_progress_assignment ON assignment_progress(assignment_id);
+CREATE INDEX IF NOT EXISTS idx_assignment_progress_user ON assignment_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_assignment_progress_status ON assignment_progress(status);
 
 -- =====================================================
 -- 함수 및 트리거
@@ -257,6 +296,11 @@ CREATE TRIGGER update_assignments_updated_at
 
 CREATE TRIGGER update_friends_updated_at 
   BEFORE UPDATE ON friends 
+  FOR EACH ROW 
+  EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_assignment_progress_updated_at 
+  BEFORE UPDATE ON assignment_progress 
   FOR EACH ROW 
   EXECUTE FUNCTION update_updated_at_column();
 
