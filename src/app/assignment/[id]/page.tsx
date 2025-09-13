@@ -422,7 +422,7 @@ export default function AssignmentDetailPage() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                   <Share2 className="w-5 h-5 mr-2" />
-                  {t('assignments.detail.sharedFriends')}
+                  {t('assignments.detail.sharedFriendsTitle')}
                 </h3>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {t('assignments.detail.sharedFriendsCount', { count: sharedFriends.length })}

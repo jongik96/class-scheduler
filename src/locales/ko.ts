@@ -441,7 +441,7 @@ export const ko = {
       progress: '진행 상황',
       progressPercent: '전체 진행률',
       noProgress: '아직 진행 상황이 기록되지 않았습니다.',
-      sharedFriends: '공유된 친구',
+      sharedFriendsTitle: '공유된 친구',
       sharedFriendsCount: '{count}명',
       noSharedFriends: '공유된 친구가 없습니다',
       shareWithFriends: '과제를 친구와 공유해보세요',

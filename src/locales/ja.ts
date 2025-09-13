@@ -437,7 +437,7 @@ export const ja = {
       progress: '進捗状況',
       progressPercent: '全体進捗',
       noProgress: 'まだ進捗が記録されていません。',
-      sharedFriends: '共有されている友達',
+      sharedFriendsTitle: '共有されている友達',
       sharedFriendsCount: '{count}人',
       noSharedFriends: '共有されている友達がいません',
       shareWithFriends: 'この課題を友達と共有しましょう',

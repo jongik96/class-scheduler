@@ -437,7 +437,7 @@ export const en = {
       progress: 'Progress',
       progressPercent: 'Overall Progress',
       noProgress: 'No progress recorded yet.',
-      sharedFriends: 'Shared Friends',
+      sharedFriendsTitle: 'Shared Friends',
       sharedFriendsCount: '{count} friends',
       noSharedFriends: 'No shared friends',
       shareWithFriends: 'Share this assignment with friends',
