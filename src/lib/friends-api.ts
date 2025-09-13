@@ -420,7 +420,22 @@ export async function shareAssignmentWithFriends(
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User is not logged in.');
 
-    const shares = friendIds.map(friendId => ({
+    // Check existing shares to avoid duplicates
+    const { data: existingShares } = await supabase
+      .from('assignment_shares')
+      .select('shared_with')
+      .eq('assignment_id', assignmentId)
+      .eq('shared_by', user.id);
+
+    const existingFriendIds = existingShares?.map(share => share.shared_with) || [];
+    const newFriendIds = friendIds.filter(friendId => !existingFriendIds.includes(friendId));
+
+    if (newFriendIds.length === 0) {
+      console.log('All selected friends already have access to this assignment');
+      return true;
+    }
+
+    const shares = newFriendIds.map(friendId => ({
       assignment_id: assignmentId,
       shared_by: user.id,
       shared_with: friendId,
@@ -511,7 +526,14 @@ export async function getAssignmentProgress(assignmentId: string): Promise<Assig
       .eq('assignment_id', assignmentId)
       .order('updated_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      // If table doesn't exist, return empty array
+      if (error.code === 'PGRST205') {
+        console.log('Assignment progress table not found - returning empty array');
+        return [];
+      }
+      throw error;
+    }
     
     if (!progress || progress.length === 0) return [];
     
@@ -553,12 +575,18 @@ export async function updateAssignmentProgress(
     if (!user) throw new Error('User is not logged in.');
 
     // Check if progress entry already exists
-    const { data: existingProgress } = await supabase
+    const { data: existingProgress, error: checkError } = await supabase
       .from('assignment_progress')
       .select('id')
       .eq('assignment_id', assignmentId)
       .eq('user_id', user.id)
       .single();
+
+    // If table doesn't exist, return false
+    if (checkError && checkError.code === 'PGRST205') {
+      console.log('Assignment progress table not found - cannot update progress');
+      return false;
+    }
 
     if (existingProgress) {
       // Update existing progress
