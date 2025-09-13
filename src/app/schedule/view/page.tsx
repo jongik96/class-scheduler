@@ -1065,8 +1065,8 @@ function FriendsManagementPage() {
               {searchResults.map((user) => (
                 <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">{user.nickname}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.full_name} • {user.major}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{user.full_name || user.nickname}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{user.nickname} • {user.major}</p>
                   </div>
                   <button className="text-[#1E40AF] hover:text-[#BAE1FF] text-sm font-medium">
                     {t('friends.invite')}
@@ -1178,7 +1178,7 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {friend.friend_profile?.nickname || `ID: ${friend.friend_id}`}
+                        {friend.friend_profile?.full_name || friend.friend_profile?.nickname || `ID: ${friend.friend_id}`}
                       </p>
                     </div>
                   </div>
@@ -1215,10 +1215,10 @@ function FriendsManagementPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">
-                        {invite.inviter_profile?.nickname || invite.inviter_profile?.full_name || t('friends.unknownInviter')}{t('friendInvite.sentInvite')}
+                        {invite.inviter_profile?.full_name || invite.inviter_profile?.nickname || t('friends.unknownInviter')}{t('friendInvite.sentInvite')}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {invite.inviter_profile?.full_name || t('friends.unknownName')} • {new Date(invite.created_at).toLocaleDateString()}
+                        {invite.inviter_profile?.nickname || t('friends.unknownName')} • {new Date(invite.created_at).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
