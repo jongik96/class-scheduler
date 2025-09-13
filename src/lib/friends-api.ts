@@ -181,7 +181,7 @@ export async function getFriends(): Promise<Friend[]> {
     console.log('Profile error if any:', profileError);
     
     // Create profile map
-    const profileMap = new Map();
+    let profileMap = new Map();
     if (profiles && profiles.length > 0) {
       profileMap = new Map(profiles.map(p => [p.id, p]));
       console.log('Profile map created successfully');
