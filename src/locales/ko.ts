@@ -458,16 +458,17 @@ export const ko = {
       viewPermission: '보기',
       loading: '로딩 중...',
       noCourse: '수업 정보 없음',
-      shareModal: {
-        title: '친구와 과제 공유하기',
-        permissionLabel: '권한 설정',
-        friendSelectionLabel: '친구 선택',
-        shareButton: '공유하기',
-        cancelButton: '취소',
-        viewOnly: '보기만 가능',
-        editPermission: '편집 가능',
-        adminPermission: '관리자 권한'
-      },
+        shareModal: {
+          title: '친구와 과제 공유하기',
+          permissionLabel: '권한 설정',
+          friendSelectionLabel: '친구 선택',
+          shareButton: '공유하기',
+          cancelButton: '취소',
+          viewOnly: '보기만 가능',
+          editPermission: '편집 가능',
+          adminPermission: '관리자 권한',
+          noAvailableFriends: '공유 가능한 친구가 없습니다. 모든 친구에게 이미 공유되었습니다.'
+        },
       progressModal: {
         title: '진행상황 업데이트',
         progressLabel: '진행률',
